@@ -1,0 +1,30 @@
+superuser
+-------------
+maria
+mariakoi800@gmail.com
+Mariakoi9august
+-----------
+Admin
+Mariakoi9august
+----------
+start server= python manage.py runserver
+stop server= ctrl+c
+-----------
+Creating an environment= mkvirtualenv " place then name of your environment here"
+activating the virtual environment= env\Scripts\activate or workon env(where env is the virtual environment)
+install django= pip install django
+to create the project folder= mkdir projects(where projects is the name of your folder)
+to move to the project folder = cd project
+create your project inside the empty folder created= django-admin startproject jobs(where jobs repr the name of your project)
+
+-------------
+pip install -r requirements.txt  
+pip freeze > requirements.txt
+---------------
+To build tables = python manage.py migrate
+python manage.py makemigrations(Turn off the server first then run this migration)
+Run this command again to create the table in your database; python manage.py migrate
+Register the created tables with the admin panel
+-----------------
+Query database =python manage .py shell
+from jobseeker.models import *
