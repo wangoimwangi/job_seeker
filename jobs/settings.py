@@ -81,12 +81,16 @@ WSGI_APPLICATION = 'jobs.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+#Postgresql Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+
+
 
 
 # Password validation
@@ -113,10 +117,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Africa/Nairobi'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
 
@@ -141,8 +145,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ADDED: Custom django auth settings
 AUTH_USER_MODEL = 'job_seeker.User'
-#LOGIN_URL = 'login'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = 'logout'
 
-#LOGOUT_URL = 'logout'
+HOME = 'home'
 
-#HOME = 'home'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+
+

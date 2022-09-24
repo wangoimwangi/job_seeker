@@ -1,81 +1,15 @@
-<!--The home page plus the sign up page-->
-
+<!--This is the official home page-->
 {% extends 'base.html' %}
+{% block title %} Job Seeker | Home {% endblock %}
 {% load static %}
 
-{% block title %} Job Seeker | Home {% endblock %}
-
 {% block body %}
-
 <section class="section-start p-5">
     <div class="container text-center">
         <h1 class="mb-5">Welcome to Job Seeker</h1>
-        <p class="mb-3">Get your Dream Job Today!<br> Have you been struggling looking for a job search no more the job seeker got you. Join us today and build your career now.</p>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#signupModal">JOIN US
-        </button>
+        <p class="mb-3"><h3>Get your Dream Job Today!</h3> <h4>Have you been struggling looking for a job search no more the job seeker got you.<br>Join us today and build your career now.</h4></p>
+        <a role="button" class="btn btn-primary" href="{% url 'register' %}">JOIN US</a>
     </div>
 </section>
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="signupModalLabel">Sign up</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                
-                <div class="row row-cols-1 row-cols-md-2 g-3 mb-3">
-                    <div class="col col-md-5">
-                        <label for="firstName">First Name:</label>
-                    </div>
-                    <div class="col col-md-7">
-                        <input type="text" name="" id="firstName" class="form-control">
-                    </div>
-                </div>
-                <div class="row row-cols-1 row-cols-md-2 g-3 mb-3">
-                    <div class="col col-md-5">
-                        <label for="lastname">Last Name:</label>
-                    </div>
-                    <div class="col col-md-7">
-                        <input type="text" name="" id="lastname" class="form-control">
-                    </div>
-                </div>
-                <div class="row row-cols-1 row-cols-md-2 g-3 mb-3">
-                    <div class="col col-md-5">
-                        <label for="Email">Email:</label>
-                    </div>
-                    <div class="col col-md-7">
-                        <input type="text" name="" id="email" class="form-control">
-                    </div>
-                </div>
-                <div class="row row-cols-1 row-cols-md-2 g-3 mb-3">
-                    <div class="col col-md-5">
-                        <label for="password">Password:</label>
-                    </div>
-                    <div class="col col-md-7">
-                        <input type="text" name="" id="password" class="form-control">
-                    </div>
-                </div>
-                <div class="row row-cols-1 row-cols-md-2 g-3 mb-3">
-                    <div class="col col-md-5">
-                        <label for="confirmpassword">Confirm password:</label>
-                    </div>
-                    <div class="col col-md-7">
-                        <input type="text" name="" id="confirm password" class="form-control">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 {% endblock body %}

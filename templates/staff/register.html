@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} Staff Registration {% endblock %}
+
+{% block body %}
+<div class="container text-center">
+<h2>Staff Registration</h2>
+<br><br>
+<form action="{% url 'register-staff' %}" method="POST">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-field mb-3">
+        {{ field.label_tag }}
+        {{ field }}
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary">
+        Create Account
+    </button>
+    {{form.errors}}
+    
+    <br>
+    <span>Already have an account?</span><br>
+    <a href="{% url 'login' %}">Login</a>
+    <br>
+    <a href="{% url 'home' %}">Go back Home</a>
+</form>
+</div>
+
+{% endblock body %}

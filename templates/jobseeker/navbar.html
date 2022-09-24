@@ -1,51 +1,46 @@
-
 {% load static %}
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">BEVCARE</a> alt=""> 
-    alt="">
-    alt="">
-    alt="">
-    alt="">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home</a>
-            </li>alt="">
-            <li class="nav-item">
-                <a class="nav-link" href="#">JobList</a>
-            </li>alt="">
-            <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-            </li>alt="">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center me-5" href="#">
+            <img src="{% static 'img/logo.jpg' %}" width="50" height="50" class="rounded" alt="Logo" />
+            <h4 class="ms-2">Bevcare</h4>
+        </a>
 
-            <li class="nav-item">
-                <a class="nav-link" href="#">Contact</a>
-            </li>alt="">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Relevant_Jobs </a>
+                </li>
 
+                <li class="nav-item">
+                    <a class="nav-link btn btn-success ml-4 mr-4 text-light" href="{% url 'login' %}">Login</a>
+                </li>
 
-        </ul>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link btn btn-danger ml-4 mr-4 text-light ms-2" href="{% url 'logout' %}">Logout</a>
+                </li>
+                {% endif %}
+            </ul>
 
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
-        </form>
+            <form class="form-inline my-2 my-lg-0 ms-auto">
+                <div class="d-flex">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0 ms-2" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 </nav>
-
-
-
-
-
-
-
-
-
-
-
-

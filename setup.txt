@@ -1,30 +1,70 @@
 superuser
--------------
-maria
-mariakoi800@gmail.com
-Mariakoi9august
------------
 Admin
 Mariakoi9august
-----------
-start server= python manage.py runserver
+--------------------------------------------------------
+staff
+maria_koi, faith_nzilani, maria
+Password: Mariakoi9august
+-------------------------------------------------
+John_wafula        Joy_wangoi
+9AUGUSTkoi         KOI9August
+jwafula@gmail.com  jwangoi@gmail.com
+0714568790         0714768790
+-------------------------------------------------
+applicant:Becky_kimani
+Password: MARIA9august
+becky@gmail.com
+0768580221
+--------------------------------------python manage.py runserver-----------------------
+start server= 
 stop server= ctrl+c
------------
-Creating an environment= mkvirtualenv " place then name of your environment here"
-activating the virtual environment= env\Scripts\activate or workon env(where env is the virtual environment)
+---------------------------------------------------------------
+Set up a virtual environment;python -m venv env
+Activate the virtual environment;
+    If error; Set-ExecutionPolicy Unrestricted -Scope P.\\env\Scripts\activaterocess
+              .\\env\Scripts\activate
+-----------------------------------------------------------------
 install django= pip install django
 to create the project folder= mkdir projects(where projects is the name of your folder)
 to move to the project folder = cd project
 create your project inside the empty folder created= django-admin startproject jobs(where jobs repr the name of your project)
 
--------------
+
+----------------------------------------------------------------------------
 pip install -r requirements.txt  
-pip freeze > requirements.txt
----------------
+Pin your dependencies;python -m pip freeze > requirements.txt
+----------------------------------------------------------------------
+Set up a Django project; django-admin startproject <projectname>
+-----------------------------------------------------------------------
+Start a Django app;python manage.py startapp <appname>
+------------------------------------------------------------------------
 To build tables = python manage.py migrate
 python manage.py makemigrations(Turn off the server first then run this migration)
 Run this command again to create the table in your database; python manage.py migrate
 Register the created tables with the admin panel
------------------
+--------------------------------------------------------------------------
+Creating a Super User;python manage.py createsuperuser
+---------------------------------------------------------------
 Query database =python manage .py shell
 from jobseeker.models import *
+------------------------------------------------------
+pip install django-widget-tweaks
+pip install phonenumbers
+pip install django-phonenumber-field
+ -------------------------------------------------------
+ctrl k+u comment all
+----------------------------------------------------------
+
+
+#System users
+----------------------------
+STAFF!!
+kimanthi
+maria9august
+......................................
+APPLICANT
+koi
+mariakoi9august
+---------------------------
+
+-------------------------------------------------

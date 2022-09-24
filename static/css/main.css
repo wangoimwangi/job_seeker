@@ -4,12 +4,18 @@
 }
 
 
-body {
-
+.home{
     width: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.5)50%, rgba(0, 0, 0, 0.5)50%), url("../img/02.jpg");
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5)50%, rgba(0, 0, 0, 0.5)50%), url("../img/04.jpg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     height: 140vh;
 }
+
+body{
+    background-color: coral;
+    font-family: "Lato";
+    font-size: 20px;
+}
+
