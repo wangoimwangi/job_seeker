@@ -1,14 +1,11 @@
 from django.urls import path, include
 from . import views
-#from django.conf.urls.static import static
-#from django.conf import settings
-#from main.settings import LOGIN_URL, LOGOUT_URL
 
 
 urlpatterns = [
+                    #USER URLS
     path('', views.home, name='home'),
     path('applicant/', views.applicant, name='applicant'),
-    path('staff/', views.staff, name='staff'),
     path('profile/', views.my_profile, name='my-profile'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
@@ -17,7 +14,7 @@ urlpatterns = [
     path('register/applicant/', views.RegisterApplicant.as_view(), name='register-applicant'),
     path('staff/jobs/', views.staff_jobs, name='staff_jobs'),
     path('applicant/applied/', views.applicant_applied, name='applicant_applied'),
-    
+                          #APPLICANT URLS
     path('job/', views.job_search_list, name='job_search_list'),
     path('job/<slug>', views.job_detail, name='job-detail'),
     path('relevant_jobs/', views.intelligent_search, name='intelligent-search'),
@@ -29,5 +26,17 @@ urlpatterns = [
     path('saved_job_list/', views.saved_jobs, name='saved-jobs'),
     path('applied_job_list/', views.applied_jobs, name='applied-jobs'),
     path('job/<slug>/remove/', views.remove_job, name='remove-job'),
+                            #STAFF URLS
+    path('job/add', views.add_job, name='add-job'),
+    path('job/<slug>/edit/', views.edit_job, name='edit-job-post'),
+    path('job/<slug>', views.job_detail, name='add-job-detail'),
+    path('jobs/', views.all_jobs, name='job-list'),
+    path('applicant/search/', views.search_applicant, name='search-applicant'),
+    path('job/<slug>/search/', views.job_applicant_search, name='job-applicant-search'),
+    path('job/<slug>/candidates', views.candidate_list, name='candidate-list'),
+    path('job/<slug>/selected', views.selected_list, name='selected-list'),
+    path('job/<job_id>/select-candidate/<can_id>/', views.select_candidate, name='select-candidate'),
+    path('job/<job_id>>/remove-candidate/<can_id>/', views.remove_candidate, name='remove-candidate'),
+
 
 ]

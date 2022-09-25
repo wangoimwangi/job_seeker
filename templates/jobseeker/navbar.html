@@ -1,5 +1,11 @@
+<!--Contains the header and footer of the webapp-->
+<!--It has 2 parts of the navbar  one for applicant and one for the staff-->
+<!--The default opening is on the applicant side-->
+<!--Has the login button which appears when not signed in-->
+<!--The login button dissapers when logged in  and the logout button appears-->
+<!--The footer is the same for all users-->
+               <!--NAVIGATION BAR FOR THE APPLICANTS-->
 {% load static %}
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center me-5" href="#">
@@ -14,27 +20,16 @@
 
         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">My Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Relevant_Jobs </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link btn btn-success ml-4 mr-4 text-light" href="{% url 'login' %}">Login</a>
-                </li>
+                <li class="nav-item active"><a class="nav-link" href="#">Home</a> </li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'my-profile' %}">My Profile</a> </li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'intelligent-search' %}">Relevant_Jobs </a> </li>
+                <li class="nav-item"><a class="nav-link btn btn-success ml-4 mr-4 text-light" href="{% url 'login' %}">Login</a> </li>
 
                 {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link btn btn-danger ml-4 mr-4 text-light ms-2" href="{% url 'logout' %}">Logout</a>
-                </li>
+                <li class="nav-item"><a class="nav-link btn btn-danger ml-4 mr-4 text-light ms-2" href="{% url 'logout' %}">Logout</a></li>
                 {% endif %}
-            </ul>
-
+               
+            </ul> 
             <form class="form-inline my-2 my-lg-0 ms-auto">
                 <div class="d-flex">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -44,3 +39,7 @@
         </div>
     </div>
 </nav>
+
+<!--NAVIGATION BAR FOR THE STAFF USERS-->
+
+<!--FOOTER FOR JOB_SEEKER-->

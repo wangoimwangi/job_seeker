@@ -1,0 +1,67 @@
+<!--Display the candidates for a specific job-->
+<!--Staff can view all the applicants who have applied for a paticular job post-->
+<!--Staff can view the applicants resume and profiles-->
+<!--Staff can accept or reject the candidate which moves him to further rounds-->
+<!--If accepted the candidate i moved to theselected list -->
+<!--If rejected his application is removed-->
+<!--The Applicant can also see if they have been selected,rejected or pending-->
+{% extends 'base.html' %}
+{% block title %}Candidate List{% endblock %}
+{% load static %}
+{% block body %}
+<br /><br />
+<div>
+    <h3 class="text-center">
+        <b>Candidates for {{job.title}}</b>
+    </h3>
+    <br />
+    {% if profiles %}
+    <div class="row">
+        {% for profile in profiles %}
+        <div class="col-md-4">
+            <div class="card card-signin my-5">
+                <span class="ml-3 mt-3">
+                    <a href="{% url 'profile-view' profile.slug %}">
+                        {% if profile.full_name %}
+                        <h4 class="text-dark">
+                            <b>{{profile.full_name}}</b>
+                        </h4>
+                        {% else %}
+                        <h4 class="text-dark">
+                            <b>{{profile.user.username}}</b>
+                        </h4>
+                        {% endif %}
+                    </a>
+                    <p style="font-size: 17px">
+                        {{profile.user.email}}<br />
+                    </p>
+                    {% if profile.resume %}
+                    <a href="{{profile.resume.url}}">Click here to view the Resume</a>
+                    {% else %}
+                    <p>No Resume Available!</p>
+                    {% endif %}
+                </span>
+
+                <div class="card-footer">
+                    <a class="btn btn-success mr-2"
+                        href="{% url 'select-applicant' can_id=profile.slug job_id=job.slug %}">Select
+                    </a>
+                    <a class="btn btn-danger mr-2"
+                        href="{% url 'remove-applicant' can_id=profile.slug job_id=job.slug %}">Reject
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center">
+        No new applications kindly check later! Go to
+        <a href="{% url 'selected-list' job.slug %}">selected list</a> by clicking
+        here!
+    </p>
+
+    <br />
+    {% endif %}
+</div>
+{% endblock%}

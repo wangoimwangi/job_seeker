@@ -19,6 +19,8 @@ from job_seeker.models import Job, Candidates, Selected
 from job_seeker.models import Profile, Skill, AppliedJobs, SavedJobs
 from job_seeker.forms import ProfileUpdateForm, NewSkillForm
 #---------------------------------------------------------------------------
+#STAFF IMPORTS
+from job_seeker.forms import NewJobForm
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
@@ -28,7 +30,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
-#----------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 from .models import *
 from .forms import *
 #-------------------------------------------------------------------------------
@@ -53,48 +55,38 @@ def user_logout(request):
     return render(request, 'jobseeker/logout.html')
 
 def user_login(request):
-    if request.method == 'GET':
-        form = AuthenticationForm()
+    if not request.method == 'POST':
+        login_form = AuthenticationForm()
         print(User.STAFF)
-        return render(request, 'jobseeker/login.html', {'form': form})
+        return render(request, 'jobseeker/login.html', context={'form': login_form})
+    form = AuthenticationForm(data=request.POST)
+    if not form.is_valid():
+      messages.error(request, form.errors) 
+      return redirect('login')
+    username = form.cleaned_data['username']
+    password = form.cleaned_data['password']
+    user = authenticate(username=username, password=password)
+    if user is None:
+      messages.error(request, 'Invalid username or password!')
+      return redirect('login')
+    login(request, user)
+    messages.success(request, 'Successfully logged in!')
+    return redirect('home')
 
-    if(request.method == 'POST'):
-        form = AuthenticationForm(data=request.POST)
-
-        if not form.is_valid():
-            # messages.error(request, form.errors) 
-            return redirect('login')
-
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        user = authenticate(request, username=username, password=password)
-
-        if user is None:
-            # messages.error(request, 'Invalid username or password!')
-            return redirect('login')
-
-        login(request, user)
-        # messages.success(request, 'Successfully logged in!')
-        print(f'\n\nUser: {user.id}')
-        print(f'\n\nUser: {user.pk}')
-
-        user = User.objects.get(pk=user.id)
-        print(f'\n\nUser Type: {user.user_type}\n\n')
-
-        if user.user_type == User.STAFF:
-            print('\n\n User is staff! \n\n')
-            return redirect('staff_jobs')
-
-        elif user.user_type == User.APPLICANT:
-            pass
-
-        return redirect('home')
+#user = User.objects.get(pk=user.id)
+#print(f'\n\nUser Type: {user.user_type}\n\n')
+#if user.user_type == User.STAFF:
+    #print('\n\n User is staff! \n\n')
+    #return redirect('staff_jobs')
+#elif user.user_type == User.APPLICANT:
+            #pass
+    #return redirect('my-profile')#'home'
 
 
 @login_required
 def user_logout(request):
     logout(request)
-    # messages.success(request, 'Successfully logged out!')
+    messages.success(request, 'Successfully logged out!')
     return redirect('home')
 #----------------------------------------------------------------------------------------------------
                     #REGISTRATION PART
@@ -108,7 +100,7 @@ class RegisterStaff(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        # messages.success(self.request, 'Registration successful!')
+        messages.success(self.request, 'Registration successful!')
         return redirect('staff_jobs')
 
 
@@ -401,3 +393,219 @@ def remove_job(request, slug):
 #------------------------------------------------------------------------------
                         #STAFF VIEWS!!
 #-----------------------------------------------------------------------------------------
+                    #ADD JOBS
+#Used by the staff to add a new job post
+#Redirect to the job list page
+@login_required
+def add_job(request):
+    user = request.user
+    if request.method == "POST":
+        form = NewJobForm(request.POST)
+        if form.is_valid():
+            data = form.save(commit=False)
+            data.recruiter = user
+            data.save()
+            return redirect('job-list')
+    else:
+        form = NewJobForm()
+    context = {
+        'add_job_page': "active",
+        'form': form,
+        'rec_navbar': 1,
+    }
+    return render(request, 'staff/add_job.html', context)
+#-----------------------------------------------------------------------------
+                  #EDIT JOB
+#Used to update job post
+#Redirects to job details page
+@login_required
+def edit_job(request, slug):
+    user = request.user
+    job = get_object_or_404(Job, slug=slug)
+    if request.method == "POST":
+        form = NewJobForm(request.POST, instance=job)
+        if form.is_valid():
+            data = form.save(commit=False)
+            data.save()
+            return redirect('add-job-detail', slug)
+    else:
+        form = NewJobForm(instance=job)
+    context = {
+        'form': form,
+        'rec_navbar': 1,
+        'job': job,
+    }
+    return render(request, 'staff/edit_job.html', context)
+#---------------------------------------------------------------------------
+                    #JOB DETAILS
+#Display the details of the job
+@login_required
+def job_detail(request, slug):
+    job = get_object_or_404(Job, slug=slug)
+    context = {
+        'job': job,
+        'rec_navbar': 1,
+    }
+    return render(request, 'staff/job_detail.html', context)
+#----------------------------------------------------------------------------------------
+                    #ALL JOBS
+#Display all jobs posted by the staff
+#Has a paginator to restrict the job posts to 20 per page
+@login_required
+def all_jobs(request):
+    jobs = Job.objects.filter(recruiter=request.user).order_by('-date_posted')
+    paginator = Paginator(jobs, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'manage_jobs_page': "active",
+        'jobs': page_obj,
+        'rec_navbar': 1,
+    }
+    return render(request, 'staff/job_posts.html', context)
+#---------------------------------------------------------------------------------------------
+                        #APPLICANTS SEARCH
+#Allows staff to search for an applicant based on location and job type
+#Have access to the applicants resumes 
+@login_required
+def search_applicant(request):
+    profile_list = Profile.objects.all()
+    profiles = []
+    for profile in profile_list:
+        if profile.resume and profile.user != request.user:
+            profiles.append(profile)
+
+    rec1 = request.GET.get('r')
+    rec2 = request.GET.get('s')
+
+    if rec1 == None:
+        li1 = Profile.objects.all()
+    else:
+        li1 = Profile.objects.filter(location__icontains=rec1)
+
+    if rec2 == None:
+        li2 = Profile.objects.all()
+    else:
+        li2 = Profile.objects.filter(looking_for__icontains=rec2)
+
+    final = []
+    profiles_final = []
+
+    for i in li1:
+        if i in li2:
+            final.append(i)
+
+    for i in final:
+        if i in profiles:
+            profiles_final.append(i)
+
+    paginator = Paginator(profiles_final, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'search_applicant_page': "active",
+        'rec_navbar': 1,
+        'profiles': page_obj,
+    }
+    return render(request, 'staff/applicant_search.html', context)
+#--------------------------------------------------------------------------------
+                       #JOB APPLICANT SEARCH
+#Allows staff to see aplicants which are perfect matches to a particular job post
+#It matches the skills set for a job with what the applicant set on their profile
+#It filters out candidates based on job type
+@login_required
+def job_applicant_search(request, slug):
+    job = get_object_or_404(Job, slug=slug)
+    relevant_applicants = []
+    common = []
+    candidates = Profile.objects.filter(looking_for=job.job_type)
+    job_skills = []
+    skills = str(job.skills_req).split(",")
+    for skill in skills:
+        job_skills.append(skill.strip().lower())
+    for candidate in candidates:
+        user = candidate.user
+        skill_list = list(Skill.objects.filter(user=user))
+        skills = []
+        for i in skill_list:
+            skills.append(i.skill.lower())
+        common_skills = list(set(job_skills) & set(skills))
+        if (len(common_skills) != 0 and len(common_skills) >= len(job_skills)//2):
+            relevant_applicants.append(candidate)
+            common.append(len(common_skills))
+    objects = zip(relevant_applicants, common)
+    objects = sorted(objects, key=lambda t: t[1], reverse=True)
+    objects = objects[:100]
+    context = {
+        'rec_navbar': 1,
+        'job': job,
+        'objects': objects,
+        'job_skills': len(job_skills),
+        'relevant': len(relevant_applicants),
+
+    }
+    return render(request, 'staff/job_applicant_search.html', context)
+#-----------------------------------------------------------------------------------------
+                      #CANDIDATES LIST
+#Display candidates who have applied for a particular job
+
+
+@login_required
+def candidate_list(request, slug):
+    job = get_object_or_404(Job, slug=slug)
+    candidates = candidates.objects.filter(job=job).order_by('date_posted')
+    profiles = []
+    for candidate in candidates:
+        profile = Profile.objects.filter(user=candidate.candidate).first()
+        profiles.append(profile)
+    context = {
+        'rec_navbar': 1,
+        'profiles': profiles,
+        'job': job,
+    }
+    return render(request, 'staff/candidate_list.html', context)
+#----------------------------------------------------------------------------------------
+                      #SELECTED LIST
+#Contains candidates profiles who have been selected from the candidates list by the staff
+@login_required
+def selected_list(request, slug):
+    job = get_object_or_404(Job, slug=slug)
+    selected = Selected.objects.filter(job=job).order_by('date_posted')
+    profiles = []
+    for candidate in selected:
+        profile = Profile.objects.filter(user=candidate.candidate).first()
+        profiles.append(profile)
+    context = {
+        'rec_navbar': 1,
+        'profiles': profiles,
+        'job': job,
+    }
+    return render(request, 'staff/selected_list.html', context)
+#------------------------------------------------------------------------------------------------
+                           #SELECTED CANDIDATE
+#Used to select a candidate from the candidates list
+# Creates an object for the candidate in the selected list
+# Deletes the applicant  from the candidates list after adding it to the selected list               
+@login_required
+def select_candidate(request, can_id, job_id):
+    job = get_object_or_404(Job, slug=job_id)
+    profile = get_object_or_404(Profile, slug=can_id)
+    user = profile.user
+    selected, created = Selected.objects.get_or_create(job=job, candidate=user)
+    candidate = Candidates.objects.filter(job=job, candidate=user).first()
+    candidate.delete()
+    return HttpResponseRedirect('/hiring/job/{}/candidates'.format(job.slug))
+#-------------------------------------------------------------------------------------------------
+                         #REMOVE CANDIDATE
+#Used to reject a candidate who has applied to a particular job post
+#Delete the applicant from the candidate list
+@login_required
+def remove_candidate(request, can_id, job_id):
+    job = get_object_or_404(Job, slug=job_id)
+    profile = get_object_or_404(Profile, slug=can_id)
+    user = profile.user
+    candidate = Candidates.objects.filter(job=job, candidate=user).first()
+    candidate.delete()
+    return HttpResponseRedirect('/hiring/job/{}/candidates'.format(job.slug))
+#---------------------------------------------------------------------------------------------
+                   

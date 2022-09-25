@@ -1,0 +1,54 @@
+<!--Display the list of applicants the sstaff has selected for a particular post-->
+<!--Staff can view profile of the applicants-->
+{% extends 'base.html' %}
+{% block title %}Selected List {% endblock %}
+{% block body %}
+<br /><br />
+<div>
+    <h3 class="text-center">
+        <b>Seleted Candidates for {{job.title}}</b>
+    </h3>
+    <br />
+    {% if profiles %}
+    <div class="row">
+        {% for profile in profiles %}
+        <div class="col-md-4">
+            <div class="card card-signin my-2">
+                <span class="ml-3 mt-3">
+                    <a href="{% url 'profile-view' profile.slug %}">
+                        {% if profile.full_name %}
+                        <h4 class="text-dark">
+                            <b>{{profile.full_name}}</b>
+                        </h4>
+                        {% else %}
+                        <h4 class="text-dark">
+                            <b>{{profile.user.username}}</b>
+                        </h4>
+                        {% endif %}
+                    </a>
+                    <p style="font-size: 17px">
+                        {{profile.user.email}}<br />
+                    </p>
+                    {% if profile.resume %}
+                    <a href="{{profile.resume.url}}">Click here to view the Resume</a>
+                    {% else %}
+                    <p>Oops No Resume Available!</p>
+                    {% endif %}
+                </span>
+                <div class="card-footer">
+                    <a class="btn btn-success mr-2" href="{% url 'profile-view' profile.slug %}">Visit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center">
+        No candidate has been selected yet! Select some
+        <a href="{% url 'candidate-list' job.slug %}">candidate</a> first!
+    </p>
+    <br />
+    {% endif %}
+</div>
+{% endblock%}
