@@ -101,7 +101,7 @@ class RegisterStaff(CreateView):
         user = form.save()
         login(self.request, user)
         messages.success(self.request, 'Registration successful!')
-        return redirect('staff_jobs')
+        return redirect('add-job')
 
 
 class RegisterApplicant(CreateView):
@@ -113,14 +113,14 @@ class RegisterApplicant(CreateView):
         login(self.request, user)
         #print('\n\nLogin successful!\n\n')
         # messages.success(self.request, 'Registration successful!')
-        return redirect('applicant_applied')
+        return redirect('applied-jobs')
 
-def staff_jobs(request):
-    return render(request, 'staff/jobs.html')
+#def staff_jobs(request):
+    #return render(request, 'staff/jobs.html')
 
 
-def applicant_applied(request):
-    return render(request, 'applicant/applied.html')
+#def applied_jobs(request):
+    #return render(request, 'applied_jobs.html')
 #-------------------------------------------------------------------------------------
                         #APPLICANT VIEWS
 #------------------------------------------------------------------------------------------
@@ -301,7 +301,9 @@ def applied_jobs(request):
         else:
             statuses.append(2)
     zipped = zip(jobs, statuses)
-    return render(request, 'applicant/apply.html', {'zipped': zipped, 'navbar': 1})
+    # 'candidate_navbar': 1})
+    # 'candidate_navbar': 1})
+    return render(request, 'applicant/applied_jobs.html', {'zipped': zipped})
 #----------------------------------------------------------------------------------------------------------------------------
                      #INTELLIGENCE_SEARCH
 #showapplicant jobs which suits the skill set of the user and matches the job type the user is looking for .
@@ -453,16 +455,16 @@ def job_detail(request, slug):
 #Has a paginator to restrict the job posts to 20 per page
 @login_required
 def all_jobs(request):
-    jobs = Job.objects.filter(recruiter=request.user).order_by('-date_posted')
+    jobs = Job.objects.filter(staff=request.user).order_by('-date_posted')
     paginator = Paginator(jobs, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
         'manage_jobs_page': "active",
         'jobs': page_obj,
-        'rec_navbar': 1,
+        #'rec_navbar': 1,
     }
-    return render(request, 'staff/job_posts.html', context)
+    return render(request, 'staff/job_post.html', context)
 #---------------------------------------------------------------------------------------------
                         #APPLICANTS SEARCH
 #Allows staff to search for an applicant based on location and job type

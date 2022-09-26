@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #custom
     'phonenumber_field',  # used for  phone number handling
+    'crispy_forms',
     'job_seeker',
+
 
 ]
 
@@ -59,9 +61,7 @@ ROOT_URLCONF = 'jobs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            
-            os.path.join(BASE_DIR, 'templates')
+        'DIRS': [os.path.join(BASE_DIR, 'templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -151,7 +151,7 @@ LOGOUT_URL = 'logout'
 
 HOME = 'home'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 

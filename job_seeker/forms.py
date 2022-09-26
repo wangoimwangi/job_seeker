@@ -1,11 +1,12 @@
 from django import forms
-from django.forms import ModelForm
+#from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 
 from job_seeker.models import Staff, User
 from job_seeker.models import Profile, Skill
 from job_seeker.models import Job
+from job_seeker.models import Applicant
 #----------------------------------------------------------------------------------------------------
                          #REGISTRATION FORM!(USER)
 #---------------------------------------------------------------------------------------------------
@@ -55,7 +56,7 @@ class ApplicantRegistrationForm(UserCreationForm):
         user.user_type = User.APPLICANT
         user.save()
 
-        applicant = applicant.objects.create(user=user)
+        applicant = Applicant.objects.create(user=user)
         applicant.save()
         return user
 #----------------------------------------------------------------------------------------------------------

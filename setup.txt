@@ -5,16 +5,6 @@ Mariakoi9august
 staff
 maria_koi, faith_nzilani, maria
 Password: Mariakoi9august
--------------------------------------------------
-John_wafula        Joy_wangoi
-9AUGUSTkoi         KOI9August
-jwafula@gmail.com  jwangoi@gmail.com
-0714568790         0714768790
--------------------------------------------------
-applicant:Becky_kimani
-Password: MARIA9august
-becky@gmail.com
-0768580221
 --------------------------------------python manage.py runserver-----------------------
 start server= 
 stop server= ctrl+c
@@ -55,16 +45,13 @@ pip install django-phonenumber-field
 ctrl k+u comment all
 ----------------------------------------------------------
 
-
 #System users
 ----------------------------
 STAFF!!
 kimanthi
 maria9august
 ......................................
-APPLICANT
-koi
-mariakoi9august
----------------------------
-
--------------------------------------------------
+APPLICANT!!
+jane               peter
+MARIA9august       mariakoi9august
+--------------------------------------------

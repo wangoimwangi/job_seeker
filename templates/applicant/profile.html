@@ -3,6 +3,7 @@
 <!--Has a skills section which can be edited(add or delete a skill)---------------------->
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block title %} My profile {% endblock %}
 {% block body %}
 <br /><br />
@@ -30,7 +31,6 @@
                             {% endif %} {% if request.user == u %}
                             <hr class="my-4" />
                             <a class="btn btn-warning btn-block" href="{% url 'edit-profile' %}">Edit Profile</a><br />
-
                             <a class="btn btn-primary btn-block" href="{% url 'saved-jobs' %}">Saved Jobs</a><br />
                             <a class="btn btn-success btn-block" href="{% url 'applied-jobs' %}">Applied Jobs</a>
                             {% endif %}
@@ -83,4 +83,4 @@
         </div>
     </div>
 </div>
-{% endbock %}
+{% endblock %}

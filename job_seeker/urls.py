@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
                     #USER URLS
+    
     path('', views.home, name='home'),
     path('applicant/', views.applicant, name='applicant'),
     path('profile/', views.my_profile, name='my-profile'),
@@ -12,10 +13,9 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('register/staff/', views.RegisterStaff.as_view(), name='register-staff'),
     path('register/applicant/', views.RegisterApplicant.as_view(), name='register-applicant'),
-    path('staff/jobs/', views.staff_jobs, name='staff_jobs'),
-    path('applicant/applied/', views.applicant_applied, name='applicant_applied'),
+    
                           #APPLICANT URLS
-    path('job/', views.job_search_list, name='job_search_list'),
+    path('job/', views.job_search_list, name='job-search-list'),
     path('job/<slug>', views.job_detail, name='job-detail'),
     path('relevant_jobs/', views.intelligent_search, name='intelligent-search'),
     path('profile/edit/', views.edit_profile, name='edit-profile'),
@@ -27,6 +27,7 @@ urlpatterns = [
     path('applied_job_list/', views.applied_jobs, name='applied-jobs'),
     path('job/<slug>/remove/', views.remove_job, name='remove-job'),
                             #STAFF URLS
+    
     path('job/add', views.add_job, name='add-job'),
     path('job/<slug>/edit/', views.edit_job, name='edit-job-post'),
     path('job/<slug>', views.job_detail, name='add-job-detail'),
