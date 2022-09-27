@@ -5,8 +5,8 @@ Mariakoi9august
 staff
 maria_koi, faith_nzilani, maria
 Password: Mariakoi9august
---------------------------------------python manage.py runserver-----------------------
-start server= 
+-------------------------------------------------------------
+start server= python manage.py runserver
 stop server= ctrl+c
 ---------------------------------------------------------------
 Set up a virtual environment;python -m venv env

@@ -44,10 +44,15 @@ def home(request):
     return render(request, 'jobseeker/home.html', context)
 #APPLICANT
 def applicant(request):
-    return render(request, 'applicant/applicant.html')
+    context = {
+        'applicant': "active",
+    }
+    return render(request, 'applicant/applicant.html', context)
 #STAFF
 def staff(request):
     return render(request, 'staff/staff.html') #,context)
+
+
 
 #------------------------------------------------------------------------------------------
                   #LOGIN AND LOGOUT!
@@ -71,7 +76,8 @@ def user_login(request):
       return redirect('login')
     login(request, user)
     messages.success(request, 'Successfully logged in!')
-    return redirect('home')
+    #return redirect('home')
+    return redirect('applicant')
 
 #user = User.objects.get(pk=user.id)
 #print(f'\n\nUser Type: {user.user_type}\n\n')

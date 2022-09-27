@@ -5,12 +5,23 @@
 
 {% block body%}
 <section class="section-start p-5">
+<div class="homepage">
     <div class="container text-center">
-        <!--<img>-->
+        <style> 
+            body{
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.5)50%, rgba(0, 0, 0, 0.5)50%), url("../img/04.jpg");
+            background-repeat:  no-repeat;
+            background-position: center;
+            background-size: cover;
+            height: 140vh;
+            }
+        </style>
         <h1 class="mb-5">Welcome to Job Seeker</h1>
         <p class="mb-3"><h3>Get your Dream Job Today!</h3> <h4>Have you been struggling looking for a job search no more the job seeker got you.<br>Join us today and build your career now.</h4></p>
         <a role="button" class="btn btn-primary" href="{% url 'register' %}">JOIN US</a>
     </div>
+</div>
 </section>
 
 {% endblock body %}
