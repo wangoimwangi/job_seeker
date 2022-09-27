@@ -14,85 +14,43 @@
 }
 
 body{
-    background-color:coral;
+    background-color:rgba(185, 135, 8, 0.5);
     font-family: "Lato";
     font-size: 20px;
     margin: 0;
     padding: 0 0 4rem;
     position: relative;
 }
-
-.sidebar{
-    position:fixed;
-    left:-250px;
-    width:250px;
-    height:100px;
-    background:#042331;
-    transition: all .5s ease;
-
-}
-.sidebar header{
-    font-size:22px;
-    color:white;
-    text-align: center;
-    line-height:70px;
-    background:#063146;
-    user-select: none;
-}
-.sidebar ul a{
-    display:block;
+/* sidbarbar navigation menu */
+.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color:rgba(0, 0, 0, 0.247);
+    position: fixed;
     height: 100%;
-    width: 100%;
-    line-height: 65px;
-    font-size: 20px;
+    overflow: auto;
+}
+
+/* sidebar links */
+.sidebar a {
+    display: block;
+    color: #000;
+    padding: 16px;
+    text-decoration: none;
+}
+
+/* active/current link */
+.sidebar a.active {
+    /* background-color: #555;  */
     color: white;
-    padding-left: 40px;
-    box-sizing: border-box;
-    border-top: 1px solid rgba(255,255,255,.1);
-    border-bottom:1px solid black;
-    transition: .4s;
-}
-ul li:hover a{
-    padding-left: 50px;
 }
 
-.sidebar ul a i{
-    margin-right: 16px;
-
-}
-
-#check {
-    display: none;  
-}
-label #btn,label #cancel{
-    position:absolute;
-    cursor: pointer;
-    background: #042331; 
-    border-radius: 3px;  
-
-}
-label #btn{
-    left: 25px;
-    top: 25px;
-    font-size:35px;
+/* link on mouse-over */
+.sidebar a:hover:not(.active) {
+    /* background-color: #555; */
     color: white;
-    padding: 6px 12px;
-    transition: all .5s;
-
-}
-label #cancel{
-    z-index:1111;
-    left:195px;
-    top: 17px;
-    font-size: 30px;
-    color: #0a5275;
-    padding: 4px 9px;
-    transition: all .5s ease;
 }
 
-section{
-    background: url(#) no repeat;
-    background-size: cover;
-    height: 100vh;
-    
-}
+
+

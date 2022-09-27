@@ -288,7 +288,7 @@ def job_detail(request, slug):
 def saved_jobs(request):
     jobs = SavedJobs.objects.filter(
         user=request.user).order_by('-date_posted')
-    return render(request, 'applicant/saved_jobs.html', {'jobs': jobs, 'navbar': 1})
+    return render(request, 'applicant/saved_jobs.html', {'jobs': jobs})
 #---------------------------------------------------------------------------------------------------
                       #APPLIED JOBS
 #Display all the jobs the user has applied to
@@ -328,7 +328,7 @@ def intelligent_search(request):
         my_skills.append(i.skill.lower())
     if profile:
         jobs = Job.objects.filter(
-            job_type=profile.looking_for).order_by('-date_posted')
+            job_type=profile.job_type).order_by('-date_posted')
     else:
         jobs = Job.objects.all()
     for job in jobs:
@@ -349,7 +349,7 @@ def intelligent_search(request):
         'jobs': objects,
         'counter': len(relevant_jobs),
     }
-    return render(request, 'applicant/intelligent_search.html', context)
+    return render(request, 'applicant/intelligent_search.html',context)
 #----------------------------------------------------------------------------------------------------------------
                         #DELETE SKILL
 #Applicant can select a skill and delete it 
