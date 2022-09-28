@@ -1,15 +1,14 @@
 from django.urls import path, include
 from . import views
 
-
 urlpatterns = [
                     #USER URLS
     
     path('', views.home, name='home'),
     path('applicant/', views.applicant, name='applicant'),
     path('staff/', views.staff, name='staff'),
-
-
+    path('job/', views.job, name='job'),
+    
 
     path('profile/', views.my_profile, name='my-profile'),
     path('login/', views.user_login, name='login'),
@@ -19,6 +18,7 @@ urlpatterns = [
     path('register/applicant/', views.RegisterApplicant.as_view(), name='register-applicant'),
     
                           #APPLICANT URLS
+                          #slug is used to generate valid urls
     path('job/', views.job_search_list, name='job-search-list'),
     path('job/<slug>', views.job_detail, name='job-detail'),
     path('relevant_jobs/', views.intelligent_search, name='intelligent-search'),

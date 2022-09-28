@@ -10,7 +10,7 @@
     <h3 class="text-center">
         <b>Search Applicants</b>
     </h3>
-    <form class="form-signin mt-4" action="{% url 'search-candidates' %}" method="get">
+    <form class="form-signin mt-4" action="{% url 'search-applicant' %}" method="get">
         <div class="row">
             <div class="col-md-6">
                 <input name="s" type="text" class="form-control"
@@ -49,7 +49,7 @@
                     {% if profile.resume %}
                     <a href="{{ profile.resume.url }}">Click here to view Resume</a>
                     {% else %}
-                    <p>No resume available.</p>
+                    <p>No Resume Available.</p>
                     {% endif %}
                 </div>
             </div>
@@ -80,7 +80,7 @@
     </div>
 
     {% else %}
-    <p class="text-center">No Apllicants Available!</p>
+    <p class="text-center">No Applicants Available!</p>
     <br />
     {% endif %}
 </div>

@@ -50,8 +50,18 @@ def applicant(request):
     return render(request, 'applicant/applicant.html', context)
 #STAFF
 def staff(request):
-    return render(request, 'staff/staff.html') #,context)
+    context = {
+        'staff': "active",
+    }
+    return render(request, 'staff/staff.html',context)
+#Jobs
 
+
+def job(request):
+    context = {
+        'job': "active",
+    }
+    return render(request, 'staff/add_job.html', context)
 
 
 #------------------------------------------------------------------------------------------
@@ -62,7 +72,6 @@ def user_logout(request):
 def user_login(request):
     if not request.method == 'POST':
         login_form = AuthenticationForm()
-        print(User.STAFF)
         return render(request, 'jobseeker/login.html', context={'form': login_form})
     form = AuthenticationForm(data=request.POST)
     if not form.is_valid():
@@ -71,22 +80,18 @@ def user_login(request):
     username = form.cleaned_data['username']
     password = form.cleaned_data['password']
     user = authenticate(username=username, password=password)
-    if user is None:
-      messages.error(request, 'Invalid username or password!')
-      return redirect('login')
-    login(request, user)
-    messages.success(request, 'Successfully logged in!')
-    #return redirect('home')
-    return redirect('applicant')
 
-#user = User.objects.get(pk=user.id)
-#print(f'\n\nUser Type: {user.user_type}\n\n')
-#if user.user_type == User.STAFF:
-    #print('\n\n User is staff! \n\n')
-    #return redirect('staff_jobs')
-#elif user.user_type == User.APPLICANT:
-            #pass
-    #return redirect('my-profile')#'home'
+    user = User.objects.get(pk=user.id)
+
+    if user.user_type == User.APPLICANT:
+      login(request, user)
+      messages.success(request, 'Successfully logged in!')
+      return redirect('applicant')
+    
+    elif user.user_type == User.STAFF:
+        login(request, user)
+    messages.success(request, 'Successfully logged in!')
+    return redirect('staff')
 
 
 @login_required
@@ -107,7 +112,7 @@ class RegisterStaff(CreateView):
         user = form.save()
         login(self.request, user)
         messages.success(self.request, 'Registration successful!')
-        return redirect('add-job')
+        return redirect('staff')
 
 
 class RegisterApplicant(CreateView):
@@ -118,15 +123,15 @@ class RegisterApplicant(CreateView):
         user = form.save()
         login(self.request, user)
         #print('\n\nLogin successful!\n\n')
-        # messages.success(self.request, 'Registration successful!')
-        return redirect('applied-jobs')
+        messages.success(self.request, 'Registration successful!')
+        return redirect('applicant')
 
-#def staff_jobs(request):
-    #return render(request, 'staff/jobs.html')
+def staff(request):
+     return render(request, 'staff/staff.html')
 
 
-#def applied_jobs(request):
-    #return render(request, 'applied_jobs.html')
+def applicant(request):
+    return render(request, 'applicant/applicant.html')
 #-------------------------------------------------------------------------------------
                         #APPLICANT VIEWS
 #------------------------------------------------------------------------------------------
@@ -349,7 +354,7 @@ def intelligent_search(request):
         'jobs': objects,
         'counter': len(relevant_jobs),
     }
-    return render(request, 'applicant/intelligent_search.html',context)
+    return render(request, 'applicant/intelligent_search.html', context)
 #----------------------------------------------------------------------------------------------------------------
                         #DELETE SKILL
 #Applicant can select a skill and delete it 
@@ -362,7 +367,7 @@ def delete_skill(request, pk=None):
         id_list = request.POST.getlist('choices')
         for skill_id in id_list:
             Skill.objects.get(id=skill_id).delete()
-        return redirect('my_profile')
+        return redirect('my-profile')
 #-------------------------------------------------------------------------------------------
                             #SAVE JOB
 #Applicant is able to save a job of their choice and store it for future viewing
@@ -411,7 +416,7 @@ def add_job(request):
         form = NewJobForm(request.POST)
         if form.is_valid():
             data = form.save(commit=False)
-            data.recruiter = user
+            data.staff = user
             data.save()
             return redirect('job-list')
     else:
@@ -419,7 +424,6 @@ def add_job(request):
     context = {
         'add_job_page': "active",
         'form': form,
-        'rec_navbar': 1,
     }
     return render(request, 'staff/add_job.html', context)
 #-----------------------------------------------------------------------------
@@ -440,7 +444,6 @@ def edit_job(request, slug):
         form = NewJobForm(instance=job)
     context = {
         'form': form,
-        'rec_navbar': 1,
         'job': job,
     }
     return render(request, 'staff/edit_job.html', context)
@@ -452,7 +455,6 @@ def job_detail(request, slug):
     job = get_object_or_404(Job, slug=slug)
     context = {
         'job': job,
-        'rec_navbar': 1,
     }
     return render(request, 'staff/job_detail.html', context)
 #----------------------------------------------------------------------------------------
@@ -468,7 +470,6 @@ def all_jobs(request):
     context = {
         'manage_jobs_page': "active",
         'jobs': page_obj,
-        #'rec_navbar': 1,
     }
     return render(request, 'staff/job_post.html', context)
 #---------------------------------------------------------------------------------------------
@@ -494,7 +495,7 @@ def search_applicant(request):
     if rec2 == None:
         li2 = Profile.objects.all()
     else:
-        li2 = Profile.objects.filter(looking_for__icontains=rec2)
+        li2 = Profile.objects.filter(job_type__icontains=rec2)
 
     final = []
     profiles_final = []
@@ -512,7 +513,6 @@ def search_applicant(request):
     page_obj = paginator.get_page(page_number)
     context = {
         'search_applicant_page': "active",
-        'rec_navbar': 1,
         'profiles': page_obj,
     }
     return render(request, 'staff/applicant_search.html', context)
@@ -545,7 +545,6 @@ def job_applicant_search(request, slug):
     objects = sorted(objects, key=lambda t: t[1], reverse=True)
     objects = objects[:100]
     context = {
-        'rec_navbar': 1,
         'job': job,
         'objects': objects,
         'job_skills': len(job_skills),
@@ -567,7 +566,6 @@ def candidate_list(request, slug):
         profile = Profile.objects.filter(user=candidate.candidate).first()
         profiles.append(profile)
     context = {
-        'rec_navbar': 1,
         'profiles': profiles,
         'job': job,
     }
@@ -584,7 +582,6 @@ def selected_list(request, slug):
         profile = Profile.objects.filter(user=candidate.candidate).first()
         profiles.append(profile)
     context = {
-        'rec_navbar': 1,
         'profiles': profiles,
         'job': job,
     }
