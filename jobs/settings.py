@@ -41,7 +41,15 @@ INSTALLED_APPS = [
     #custom
     'phonenumber_field',  # used for  phone number handling
     'crispy_forms',
+    'django_filters',
     'job_seeker',
+    'django_cleanup.apps.CleanupConfig',
+
+    
+
+    
+
+
 
 
 ]

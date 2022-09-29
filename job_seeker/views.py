@@ -93,7 +93,7 @@ def user_login(request):
     messages.success(request, 'Successfully logged in!')
     return redirect('staff')
 
-
+#===============================================================================================
 @login_required
 def user_logout(request):
     logout(request)
@@ -251,6 +251,7 @@ def job_search_list(request):
 #Make a list which consist of the job similiar to the ones selected
 #slug is a way of generating a valid URL, generally using data already obtained.
 
+
 def job_detail(request, slug):
     job = get_object_or_404(Job, slug=slug)
     apply_button = 0
@@ -283,7 +284,7 @@ def job_detail(request, slug):
         if i not in relevant_jobs and i != job:
             relevant_jobs.append(i)
 
-    return render(request, 'applicant/job_detail.html', {'job': job, 'profile': profile, 'apply_button': apply_button, 'save_button': save_button, 'relevant_jobs': relevant_jobs, 'navbar': 1}) #'candidate_navbar': 1})
+    return render(request, 'applicant/job_detail.html', {'job': job, 'profile': profile, 'apply_button': apply_button, 'save_button': save_button, 'relevant_jobs': relevant_jobs})
 
 #---------------------------------------------------------------------------------------------------------------------------------
                        #SAVED JOBS
@@ -312,8 +313,6 @@ def applied_jobs(request):
         else:
             statuses.append(2)
     zipped = zip(jobs, statuses)
-    # 'candidate_navbar': 1})
-    # 'candidate_navbar': 1})
     return render(request, 'applicant/applied_jobs.html', {'zipped': zipped})
 #----------------------------------------------------------------------------------------------------------------------------
                      #INTELLIGENCE_SEARCH
