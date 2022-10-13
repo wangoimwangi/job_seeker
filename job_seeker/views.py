@@ -54,18 +54,8 @@ def staff(request):
         'staff': "active",
     }
     return render(request, 'staff/staff.html',context)
-#Jobs
-
-
-def job(request):
-    context = {
-        'job': "active",
-    }
-    return render(request, 'staff/add_job.html', context)
-
-
 #------------------------------------------------------------------------------------------
-                  #LOGIN AND LOGOUT!
+                  #LOGIN!
 def user_logout(request):
     return render(request, 'jobseeker/logout.html')
 
@@ -93,13 +83,14 @@ def user_login(request):
     messages.success(request, 'Successfully logged in!')
     return redirect('staff')
 
-#===============================================================================================
+#-------------------------------------------------------------------------------------------------
+                          #LOGOUT!
 @login_required
 def user_logout(request):
     logout(request)
     messages.success(request, 'Successfully logged out!')
     return redirect('home')
-#----------------------------------------------------------------------------------------------------
+#======================================================================================================
                     #REGISTRATION PART
 def register(request):
     return render(request, 'jobseeker/register.html')
@@ -134,7 +125,7 @@ def applicant(request):
     return render(request, 'applicant/applicant.html')
 #-------------------------------------------------------------------------------------
                         #APPLICANT VIEWS
-#------------------------------------------------------------------------------------------
+#===========================================================================================
                         #PROFILE!
 #Displays the user profile and skills and add newskills 
 @login_required
@@ -194,130 +185,31 @@ def profile_view(request, slug):
         'skills': user_skills,
     }
     return render(request, 'applicant/profile.html', context)
-#def candidate_details(request):
-    #return render(request, 'candidates/details.html')
-#-----------------------------------------------------------------------------------------------
-                        #JOB_SEARCH_LIST
-# Make a list which consists of jobs which applicant will seewhen he clicks the search button
-#No input display all jobs
-
-def job_search_list(request):
-    query = request.GET.get('p')
-    loc = request.GET.get('q')
-    object_list = []
-    if (query == None):
-        object_list = Job.objects.all()
-    else:
-        title_list = Job.objects.filter(
-            title__icontains=query).order_by('-date_posted')
-        skill_list = Job.objects.filter(
-            skills_req__icontains=query).order_by('-date_posted')
-        company_list = Job.objects.filter(
-            company__icontains=query).order_by('-date_posted')
-        job_type_list = Job.objects.filter(
-            job_type__icontains=query).order_by('-date_posted')
-        for i in title_list:
-            object_list.append(i)
-        for i in skill_list:
-            if i not in object_list:
-                object_list.append(i)
-        for i in company_list:
-            if i not in object_list:
-                object_list.append(i)
-        for i in job_type_list:
-            if i not in object_list:
-                object_list.append(i)
-    if (loc == None):
-        locat = Job.objects.all()
-    else:
-        locat = Job.objects.filter(
-            location__icontains=loc).order_by('-date_posted')
-    final_list = []
-    for i in object_list:
-        if i in locat:
-            final_list.append(i)
-            #apply a paginator to restrict each page of the search result in 20 job posts.
-    paginator = Paginator(final_list, 20)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {
-        'jobs': page_obj,
-        'query': query,
-    }
-    return render(request, 'applicant/job_search_list.html', context)
 #-------------------------------------------------------------------------------------------------------
-                         #JOB_DETAIL
-#It will display the job post in details and has a apply and save button.
-#Make a list which consist of the job similiar to the ones selected
+                    #POSTED JOBS
+def posted_jobs(request):
+    jobs = Job.objects.all()
+    return render(request, 'jobseeker/posted_jobs.html', {'jobs': jobs})
+#----------------------------------------------------------------------------------------------
+                   #JOB _DETAILS
+#show job details + relevant jobs to applicants
+#has an apply and save button.
 #slug is a way of generating a valid URL, generally using data already obtained.
+def job_details(request, job_id):
+    user = request.user
+    job = Job.objects.get(id=job_id)
+    # compare the skills in the job with those all the user
+    relevant_jobs = list()
 
+    context = {}
+    context['job'] = job
+    context['relevant_jobs'] = relevant_jobs
 
-def job_detail(request, slug):
-    job = get_object_or_404(Job, slug=slug)
-    apply_button = 0
-    save_button = 0
-    profile = Profile.objects.filter(user=request.user).first()
-    if AppliedJobs.objects.filter(user=request.user).filter(job=job).exists():
-        apply_button = 1
-    if SavedJobs.objects.filter(user=request.user).filter(job=job).exists():
-        save_button = 1
-    relevant_jobs = []
-    jobs1 = Job.objects.filter(
-        company__icontains=job.company).order_by('-date_posted')
-    jobs2 = Job.objects.filter(
-        job_type__icontains=job.job_type).order_by('-date_posted')
-    jobs3 = Job.objects.filter(
-        title__icontains=job.title).order_by('-date_posted')
-    for i in jobs1:
-        if len(relevant_jobs) > 5:
-            break
-        if i not in relevant_jobs and i != job:
-            relevant_jobs.append(i)
-    for i in jobs2:
-        if len(relevant_jobs) > 5:
-            break
-        if i not in relevant_jobs and i != job:
-            relevant_jobs.append(i)
-    for i in jobs3:
-        if len(relevant_jobs) > 5:
-            break
-        if i not in relevant_jobs and i != job:
-            relevant_jobs.append(i)
-
-    return render(request, 'applicant/job_detail.html', {'job': job, 'profile': profile, 'apply_button': apply_button, 'save_button': save_button, 'relevant_jobs': relevant_jobs})
-
-#---------------------------------------------------------------------------------------------------------------------------------
-                       #SAVED JOBS
-#Takes the saved jobs by the user and orders them in order of date posted.
-
-@login_required
-def saved_jobs(request):
-    jobs = SavedJobs.objects.filter(
-        user=request.user).order_by('-date_posted')
-    return render(request, 'applicant/saved_jobs.html', {'jobs': jobs})
-#---------------------------------------------------------------------------------------------------
-                      #APPLIED JOBS
-#Display all the jobs the user has applied to
-#Show the status of the application(selected,rejected or pending)
-
-@login_required
-def applied_jobs(request):
-    jobs = AppliedJobs.objects.filter(
-        user=request.user).order_by('-date_posted')
-    statuses = []
-    for job in jobs:
-        if Selected.objects.filter(job=job.job).filter(applicant=request.user).exists():
-            statuses.append(0)
-        elif Candidates.objects.filter(job=job.job).filter(applicant=request.user).exists():
-            statuses.append(1)
-        else:
-            statuses.append(2)
-    zipped = zip(jobs, statuses)
-    return render(request, 'applicant/applied_jobs.html', {'zipped': zipped})
+    return render(request, 'applicant/job_detail.html', context)
 #----------------------------------------------------------------------------------------------------------------------------
                      #INTELLIGENCE_SEARCH
 #showapplicant jobs which suits the skill set of the user and matches the job type the user is looking for .
-# The Higher the skill match percentage, higher the position it will occupy in the list.
+#The Higher the skill match percentage, higher the position it will occupy in the list.
 
 @login_required
 def intelligent_search(request):
@@ -368,7 +260,52 @@ def delete_skill(request, pk=None):
             Skill.objects.get(id=skill_id).delete()
         return redirect('my-profile')
 #-------------------------------------------------------------------------------------------
-                            #SAVE JOB
+                #JOBSEARCH LIST
+def job_search_list(request):
+    query = request.GET.get('p')
+    loc = request.GET.get('q')
+    object_list = []
+    if (query == None):
+        object_list = Job.objects.all()
+    else:
+        title_list = Job.objects.filter(
+            title__icontains=query).order_by('-date_posted')
+        skill_list = Job.objects.filter(
+            skills_req__icontains=query).order_by('-date_posted')
+        company_list = Job.objects.filter(
+            company__icontains=query).order_by('-date_posted')
+        job_type_list = Job.objects.filter(
+            job_type__icontains=query).order_by('-date_posted')
+        for i in title_list:
+            object_list.append(i)
+        for i in skill_list:
+            if i not in object_list:
+                object_list.append(i)
+        for i in company_list:
+            if i not in object_list:
+                object_list.append(i)
+        for i in job_type_list:
+            if i not in object_list:
+                object_list.append(i)
+    if (loc == None):
+        locat = Job.objects.all()
+    else:
+        locat = Job.objects.filter(
+            location__icontains=loc).order_by('-date_posted')
+    final_list = []
+    for i in object_list:
+        if i in locat:
+            final_list.append(i)
+    paginator = Paginator(final_list, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'jobs': page_obj,
+        'query': query,
+    }
+    return render(request, 'applicant/job_search_list.html', context)
+#------------------------------------------------------------------------------------------------------
+                        #SAVE JOB
 #Applicant is able to save a job of their choice and store it for future viewing
 #The saved job is added to the saved job model
 
@@ -379,6 +316,17 @@ def save_job(request, slug):
     saved, created = SavedJobs.objects.get_or_create(job=job, user=user)
     return HttpResponseRedirect('/job/{}'.format(job.slug))
 #---------------------------------------------------------------------------------
+                  #SAVED JOBS
+#Display all the jobs that the user has saved
+
+
+@login_required
+def saved_jobs(request):
+    jobs = SavedJobs.objects.filter(
+        user=request.user).order_by('-date_posted')
+    return render(request, 'applicant/saved_jobs.html', {'jobs': jobs,})
+
+#---------------------------------------------------------------------------
                           #APPLY JOB
 #Applicant is able to apply to a job
 #Adds the job to Appliedjobs model and applicants model of the staff
@@ -388,10 +336,28 @@ def apply_job(request, slug):
     user = request.user
     job = get_object_or_404(Job, slug=slug)
     applied, created = AppliedJobs.objects.get_or_create(job=job, user=user)
-    applicant, creation = Candidates.objects.get_or_create(
-        job=job, applicant=user)
+    applicant, creation = Candidates.objects.get_or_create(job=job, applicant=user)
     return HttpResponseRedirect('/job/{}'.format(job.slug))
 #------------------------------------------------------------------------------
+                  #APPLIED JOBS
+#Display all the jobs the user has applied to
+#Show the status of the application(selected,rejected or pending)
+
+@login_required
+def applied_jobs(request):
+    jobs = AppliedJobs.objects.filter(
+        user=request.user).order_by('-date_posted')
+    statuses = []
+    for job in jobs:
+        if Selected.objects.filter(job=job.job).filter(applicant=request.user).exists():
+            statuses.append(0)
+        elif Candidates.objects.filter(job=job.job).filter(applicant=request.user).exists():
+            statuses.append(1)
+        else:
+            statuses.append(2)
+    zipped = zip(jobs, statuses)
+    return render(request, 'applicant/applied_jobs.html', {'zipped': zipped})
+#---------------------------------------------------------------------------------------------------------
                      #DELETE JOB
 #Used to delete a job from the saved jobs list
 
@@ -402,16 +368,16 @@ def remove_job(request, slug):
     saved_job = SavedJobs.objects.filter(job=job, user=user).first()
     saved_job.delete()
     return HttpResponseRedirect('/job/{}'.format(job.slug))
-#------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------
                         #STAFF VIEWS!!
-#-----------------------------------------------------------------------------------------
+#=================================================================================================
                     #ADD JOBS
 #Used by the staff to add a new job post
 #Redirect to the job list page
 @login_required
 def add_job(request):
     user = request.user
-    if request.method == "POST":
+    if request.method == 'POST':
         form = NewJobForm(request.POST)
         if form.is_valid():
             data = form.save(commit=False)
@@ -420,11 +386,11 @@ def add_job(request):
             return redirect('job-list')
     else:
         form = NewJobForm()
-    context = {
-        'add_job_page': "active",
-        'form': form,
-    }
-    return render(request, 'staff/add_job.html', context)
+        context = {
+            'add_job_page': "active",
+            'form': form,
+        }
+        return render(request, 'staff/add_job.html', context)
 #-----------------------------------------------------------------------------
                   #EDIT JOB
 #Used to update job post
@@ -446,16 +412,6 @@ def edit_job(request, slug):
         'job': job,
     }
     return render(request, 'staff/edit_job.html', context)
-#---------------------------------------------------------------------------
-                    #JOB DETAILS
-#Display the details of the job
-@login_required
-def job_detail(request, slug):
-    job = get_object_or_404(Job, slug=slug)
-    context = {
-        'job': job,
-    }
-    return render(request, 'staff/job_detail.html', context)
 #----------------------------------------------------------------------------------------
                     #ALL JOBS
 #Display all jobs posted by the staff
@@ -555,7 +511,6 @@ def job_applicant_search(request, slug):
                       #CANDIDATES LIST
 #Display candidates who have applied for a particular job
 
-
 @login_required
 def candidate_list(request, slug):
     job = get_object_or_404(Job, slug=slug)
@@ -612,4 +567,4 @@ def remove_candidate(request, can_id, job_id):
     candidate.delete()
     return HttpResponseRedirect('/hiring/job/{}/candidates'.format(job.slug))
 #---------------------------------------------------------------------------------------------
-                   
+                                  #THE END!

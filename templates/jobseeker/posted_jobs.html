@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<div class="container">
+<div class="row row-cols-1 row-cols-md-3">
+{% for job in jobs %}
+<div class="col">
+    <div class="card">
+        <img src="{% static 'img/02.jpg' %}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h4 class="card-title">{{ job.title }}</h4>
+            <p class="text-center">
+             (Click the button below to view details)
+                <br />
+            <a href="{% url 'job-details' job_id=job.id %}" class="btn btn-primary">View more</a>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="text-danger text-center p-5">No jobs posted yet!</div>
+{% endfor %}
+</div>
+</div>
+
+{% endblock body %}

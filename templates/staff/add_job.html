@@ -1,9 +1,9 @@
 <!--Used by staff to add new job posts-->
 <!---Added hints to help the staff fill the form in a better way--->
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 {% block title %}Post Jobs{% endblock %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block body %}
 <div class="container">
     <div class="row">
@@ -19,6 +19,7 @@
                             <br />
                         </p>
                     </span>
+
                     <form class="form-signin" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <fieldset class="form-group">
@@ -29,6 +30,7 @@
                             <button class="btn btn-lg btn-success btn-block" type="submit">
                                 Post Job</button><br /><br />
                         </div>
+
                     </form>
                 </div>
             </div>

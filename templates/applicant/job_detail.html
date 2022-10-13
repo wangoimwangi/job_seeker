@@ -1,7 +1,6 @@
-<!--Display posted jobs and has a button fo an applican to apply-->
+<!--Display posted jobs and has a button to apply and save jobs-->
 <!--Has a save button which turns into remove button once we save the job and vice versa-->
-<!---Display the jobs together with its requirements-------------->
-<!---Dispaly jobs related to the one posted-------------->
+<!---Dispaly jobs related to the one posted-->
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Job details{% endblock %}
@@ -12,29 +11,19 @@
         <div class="col-md-12">
             <div class="card card-signin my-5">
                 <div class="card-body">
-                    <h3>
-                        <b>{{job.title}} ({{job.job_type}})</b>
-                    </h3>
-                    <p style="font-size: 18px">{{job.company}}, {{job.location}}</p>
+                    <h3>{{ job.title }} ({{ job.job_type }})</h3>
+                    <p style="font-size: 18px">{{ job.company }}, {{ job.location }}</p>
 
-                    {% if job.link %}
-                    <a class="btn btn-warning btn-lg" href="{% url 'apply-job' job.slug %}"><b>Apply Now</b></a>
-                    {%else %}
-                    <a class="btn btn-danger btn-lg" href="{% url 'edit-profile' %}"><b>Add Resume to apply!</b></a>
-                    {%endif%} {% else %}
-                    <a class="btn btn-success btn-lg" href="{% url 'applied-jobs' %}"><b>Applied!</b></a>
-                    {% endif %} {%endif%} {% if not save_button %}
-                    <a class="btn btn-primary btn-lg ml-2" href="{% url 'save-job' job.slug %}"><b>Save</b></a>
-                    {% else %}
-                    <a class="btn btn-danger btn-lg ml-2" href="{% url 'remove-job' job.slug %}"><b>Remove</b></a>
-                    {% endif %}
-                    <hr my-2 />
                     <span style="font-size: 18px"><b>Job Description</b></span>
-                    <p style="white-space: pre-wrap; font-size: 16px">
+                    <p style="font-size: 17px">
                         {{ job.description }}
                     </p>
                     <hr my-2 />
                     <p><b class="mr-2">Skills Required:</b>{{job.skills_req}}</p>
+
+                    <a role="button" class="btn btn-success" href="{% url 'apply-job' job.slug %}"><b>Apply</b></a><br>
+                    <a role="button" class="btn btn-primary" href="{% url 'save-job' job.slug %}"><b>Save</b></a><br>
+
                 </div>
             </div>
         </div>
@@ -46,7 +35,7 @@
         <div class="col-md-6">
             <div class="card card-signin my-2">
                 <span class="ml-3 mt-3">
-                    <a href="{% url 'job-detail' rel_job.slug %}">
+                    <a href="{% url 'job-details' rel_job.slug %}">
                         <h4 class="text-dark">
                             <b>{{rel_job.title}} ({{rel_job.job_type}})</b>
                         </h4>
@@ -56,7 +45,7 @@
                     </p>
                     <p style="font-size: 15px">
                         {{rel_job.description|truncatewords:30}} -
-                        <a href="{% url 'job-detail' rel_job.slug %}">Read More</a>
+                        <a href="{% url 'job-details' rel_job.slug %}">Read More</a>
                     </p>
                 </span>
                 <div class="card-footer">
@@ -64,6 +53,7 @@
                 </div>
             </div>
         </div>
+        <div class="text-danger text-center p-5">No Relevant Jobs Available!</div>
         {% endfor %}
     </div>
 </div>

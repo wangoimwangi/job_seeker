@@ -15,12 +15,7 @@
                         <b>{{job.title}} ({{job.job_type}})</b>
                     </h3>
                     <p style="font-size: 18px">{{job.company}}, {{job.location}} </p>
-                    {% if not job.link %}
-                    <a class="btn btn-info btn-lg mr-2" href="{% url 'candidate-list' job.slug %}"><b>Candidates List</b></a>
-                    <a class="btn btn-success btn-lg mr-2" href="{% url 'selected-list' job.slug %}"><b>Selected List</b></a>
-                    {% endif %}
-                    <a class="btn btn-warning btn-lg mr-2" href="{% url 'edit-job-post' job.slug %}"><b>Edit Job Post</b></a>
-                    <a class="btn btn-danger btn-lg" href="{% url 'job-applicant-search' job.slug %}"><b>Search Relevant Applicants</b></a>
+                    
                     <hr my-2 />
                     <span style="font-size: 18px"><b>Job Description</b></span>
                     <p style="white-space: pre-wrap; font-size: 16px">
@@ -28,6 +23,13 @@
                     </p>
                     <hr my-2 />
                     <p><b class="mr-2">Skills Required:</b>{{job.skills_req}}</p>
+
+                    {% if not job.link %}
+                    <a class="btn btn-info btn-lg mr-2" href="{% url 'candidate-list' job.slug %}"><b>Candidates List</b></a>
+                    <a class="btn btn-success btn-lg mr-2" href="{% url 'selected-list' job.slug %}"><b>Selected List</b></a>
+                    {% endif %}
+                    <a class="btn btn-warning btn-lg mr-2" href="{% url 'edit-job-post' job.slug %}"><b>Edit Job Post</b></a>
+                    <a class="btn btn-danger btn-lg" href="{% url 'job-applicant-search' job.slug %}"><b>Search Relevant Applicants</b></a>
                 </div>
             </div>
         </div>
