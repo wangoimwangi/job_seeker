@@ -54,11 +54,21 @@ def staff(request):
         'staff': "active",
     }
     return render(request, 'staff/staff.html',context)
+#CONTACT
+def contact(request):
+    context = {
+        'contact': "active",
+    }
+    return render(request, 'jobseeker/contact.html', context)
+#SERVICES
+def Services(request):
+    context = {
+        'services': "active",
+    }
+    return render(request, 'jobseeker/services.html', context)
+
 #------------------------------------------------------------------------------------------
                   #LOGIN!
-def user_logout(request):
-    return render(request, 'jobseeker/logout.html')
-
 def user_login(request):
     if not request.method == 'POST':
         login_form = AuthenticationForm()
@@ -191,7 +201,7 @@ def posted_jobs(request):
     jobs = Job.objects.all()
     return render(request, 'jobseeker/posted_jobs.html', {'jobs': jobs})
 #----------------------------------------------------------------------------------------------
-                   #JOB _DETAILS
+                   #JOB _DETAILS (APPLICANT)
 #show job details + relevant jobs to applicants
 #has an apply and save button.
 #slug is a way of generating a valid URL, generally using data already obtained.
@@ -206,7 +216,7 @@ def job_details(request, job_id):
     context['relevant_jobs'] = relevant_jobs
 
     return render(request, 'applicant/job_detail.html', context)
-#----------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------
                      #INTELLIGENCE_SEARCH
 #showapplicant jobs which suits the skill set of the user and matches the job type the user is looking for .
 #The Higher the skill match percentage, higher the position it will occupy in the list.
@@ -304,21 +314,20 @@ def job_search_list(request):
         'query': query,
     }
     return render(request, 'applicant/job_search_list.html', context)
+
 #------------------------------------------------------------------------------------------------------
                         #SAVE JOB
 #Applicant is able to save a job of their choice and store it for future viewing
 #The saved job is added to the saved job model
-
-@login_required
+# @login_required
 def save_job(request, slug):
-    user = request.user
-    job = get_object_or_404(Job, slug=slug)
-    saved, created = SavedJobs.objects.get_or_create(job=job, user=user)
-    return HttpResponseRedirect('/job/{}'.format(job.slug))
+     user = request.user
+     job = get_object_or_404(Job, slug=slug)
+     saved, created = SavedJobs.objects.get_or_create(job=job, user=user)
+     return HttpResponseRedirect('/job/{}'.format(job.slug))
 #---------------------------------------------------------------------------------
                   #SAVED JOBS
 #Display all the jobs that the user has saved
-
 
 @login_required
 def saved_jobs(request):
@@ -415,11 +424,11 @@ def edit_job(request, slug):
 #----------------------------------------------------------------------------------------
                     #ALL JOBS
 #Display all jobs posted by the staff
-#Has a paginator to restrict the job posts to 20 per page
+#Has a paginator to restrict the job posts to 10 per page
 @login_required
 def all_jobs(request):
     jobs = Job.objects.filter(staff=request.user).order_by('-date_posted')
-    paginator = Paginator(jobs, 20)
+    paginator = Paginator(jobs, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {

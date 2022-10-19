@@ -6,7 +6,7 @@
 
 .homepage{
     width: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.5)50%, rgba(0, 0, 0, 0.5)50%), url("../img/04.jpg");
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5)50%, rgba(0, 0, 0, 0.5)50%), url("../img/15.jpg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -14,7 +14,8 @@
 }
 
 body{
-    background-color:rgba(185, 135, 8, 0.5);
+    /* background-color:rgba(185, 135, 8, 0.5); */
+    background-color: rgba(14, 92, 116, 0.534);
     font-family: "Lato";
     font-size: 20px;
     margin: 0;
@@ -51,4 +52,16 @@ body{
     /* background-color: #555; */
     color: white;
 }
+ 
+/* staff page  styles */
+.banner{
+    display:flex;
+    margin-top: 80px;
+}
+.left-column,.right-column{
+    flex-basis: 50%;
 
+}
+.right-column img{
+    width:100%;
+}

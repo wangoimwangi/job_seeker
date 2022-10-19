@@ -1,13 +1,13 @@
 superuser
-Admin
+admin
 Mariakoi9august
 --------------------------------------------------------
 staff
 maria_koi, faith_nzilani, maria
 Password: Mariakoi9august
 -------------------------------------------------------------
-start server= python manage.py runserver
-stop server= ctrl+c
+start server= 
+stop server= ctrl+c python manage.py runserver
 ---------------------------------------------------------------
 Set up a virtual environment;python -m venv env
 Activate the virtual environment;

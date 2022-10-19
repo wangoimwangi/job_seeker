@@ -4,6 +4,8 @@ from . import views
 urlpatterns = [
                     #USER URLS
     path('', views.home, name='home'),
+    path('contact/', views.contact, name='contact'),
+    path('services/', views.Services, name='services'),
     path('applicant/', views.applicant, name='applicant'),
     path('staff/', views.staff, name='staff'),
     #path('job/', views.job, name='job'),
@@ -34,7 +36,7 @@ urlpatterns = [
 
     path('job/add', views.add_job, name='add-job'),
     path('job/<slug>/edit/', views.edit_job, name='edit-job-post'),
-    # path('job/<slug>', views.job_detail, name='add-job-detail'),
+    # path('jobs/<int:job_id>/', views.jobs_details, name='staff-job-detail'),
     path('jobs/', views.all_jobs, name='job-list'),
     path('applicant/search/', views.search_applicant, name='search-applicant'),
     path('job/<slug>/search/', views.job_applicant_search, name='job-applicant-search'),
