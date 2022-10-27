@@ -21,13 +21,31 @@
                     <hr my-2 />
                     <p><b class="mr-2">Skills Required:</b>{{job.skills_req}}</p>
 
+                    {% if user.user_type == 'applicant' %}
                     <a role="button" class="btn btn-success" href="{% url 'apply-job' job.slug %}"><b>Apply</b></a><br>
                     <a role="button" class="btn btn-primary" href="{% url 'save-job' job.slug %}"><b>Save</b></a><br>
-
+                    {% else %}
+                    <a role="button" class="btn btn-primary" href="#"><b>Edit</b></a>
+                    {% endif %}
                 </div>
             </div>
+
+            {% if user.user_type == 'staff' %}
+            <h2>Applicants</h2>
+            <ul class="list-group">
+                {% for applicant in applicants %}
+                <li class="list-group-item">
+                    {{ applicant.user.first_name }} {{ applicant.user.last_name }}
+                </li>
+                {% empty %}
+                <li class="list-group-item text-danger">No applicants yet!</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
         </div>
     </div>
+
+    {% if user.user_type == 'applicant' %}
     <hr my-1 />
     <h3 class="text-center">Similar Jobs</h3>
     <div class="row">
@@ -53,8 +71,10 @@
                 </div>
             </div>
         </div>
+        {% empty %}
         <div class="text-danger text-center p-5">No Relevant Jobs Available!</div>
         {% endfor %}
     </div>
+    {% endif %}
 </div>
 {% endblock body %}

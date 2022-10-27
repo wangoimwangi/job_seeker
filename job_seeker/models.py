@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.urls import reverse
 from django.db.models.deletion import CASCADE, SET_NULL
@@ -104,6 +105,16 @@ class SavedJobs(models.Model):
 
     def __str__(self):
         return self.job.title
+
+
+class Application(models.Model):
+    job = models.ForeignKey(Job, on_delete=CASCADE)
+    applicant = models.ForeignKey(Applicant, on_delete=CASCADE)
+    date_applied = models.DateField()
+    # cover_letter = models make it a file
+    approved = models.BooleanField(default=False)
+    approved_by = models.ForeignKey(Staff, blank=True, null=True, on_delete=SET_NULL)
+    date_approved = models.DateField()
 
 
 class AppliedJobs(models.Model):

@@ -199,7 +199,15 @@ def profile_view(request, slug):
                     #POSTED JOBS
 def posted_jobs(request):
     jobs = Job.objects.all()
-    return render(request, 'jobseeker/posted_jobs.html', {'jobs': jobs})
+
+    context = {
+        'jobs': jobs
+    }
+
+    if request.user.user_type == 'staff':
+        context['applicants'] = list()
+
+    return render(request, 'jobseeker/posted_jobs.html', context)
 #----------------------------------------------------------------------------------------------
                    #JOB _DETAILS (APPLICANT)
 #show job details + relevant jobs to applicants
@@ -332,7 +340,7 @@ def save_job(request, slug):
 @login_required
 def saved_jobs(request):
     jobs = SavedJobs.objects.filter(
-        user=request.user).order_by('-date_posted')
+    user=request.user).order_by('-date_posted')
     return render(request, 'applicant/saved_jobs.html', {'jobs': jobs,})
 
 #---------------------------------------------------------------------------
@@ -341,12 +349,16 @@ def saved_jobs(request):
 #Adds the job to Appliedjobs model and applicants model of the staff
 
 @login_required
-def apply_job(request, slug):
-    user = request.user
-    job = get_object_or_404(Job, slug=slug)
-    applied, created = AppliedJobs.objects.get_or_create(job=job, user=user)
-    applicant, creation = Candidates.objects.get_or_create(job=job, applicant=user)
-    return HttpResponseRedirect('/job/{}'.format(job.slug))
+def apply_job(request, job_id, applicant_id):
+    # get cover letter from the form
+    # generate current date from datetime
+    # create an Application Application.objects.create(job_id=job_id, applicant_id=applicant_id, cover_letter=from_form, date_applied=generated)
+    pass
+    # user = request.user
+    # job = get_object_or_404(Job, slug=slug)
+    # applied, created = AppliedJobs.objects.get_or_create(job=job, user=user)
+    # applicant, creation = Candidates.objects.get_or_create(job=job, applicant=user)
+    # return HttpResponseRedirect('/job/{}'.format(job.slug))
 #------------------------------------------------------------------------------
                   #APPLIED JOBS
 #Display all the jobs the user has applied to

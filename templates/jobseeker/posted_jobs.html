@@ -5,14 +5,14 @@
 <div class="row row-cols-1 row-cols-md-3">
 {% for job in jobs %}
 <div class="col">
-    <div class="card">
+    <div class="card text-center">
         <img src="{% static 'img/01.jpg' %}" class="card-img-top" alt="...">
         <div class="card-body">
             <h4 class="card-title">{{ job.title }}</h4>
-            <p class="text-center">
-             (Click the button below to view details)
-                <br />
             <a href="{% url 'job-details' job_id=job.id %}" class="btn btn-primary">View more</a>
+            {% if user.user_type == 'staff' %}
+            <p class="text-muted text-center">Number of applicants here</p>
+            {% endif %}
         </div>
     </div>
 </div>
