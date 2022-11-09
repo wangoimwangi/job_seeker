@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} Job Seeker | Apply {% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block body%}
+
+<div class="container">
+    <h4>Apply for {{ job.title }}</h4>
+    <p class="text-muted m-0">Deadline: {{ job.deadline }}</p>
+
+    <form action="{{ request.path }}" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary mt-3">Apply</button>
+    </form>
+</div>
+
+{% endblock body%}

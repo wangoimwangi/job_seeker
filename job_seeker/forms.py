@@ -6,7 +6,7 @@ from django.db import transaction
 from job_seeker.models import Staff, User
 from job_seeker.models import Profile, Skill
 from job_seeker.models import Job
-from job_seeker.models import Applicant
+from job_seeker.models import Applicant, Application
 #----------------------------------------------------------------------------------------------------
                          #REGISTRATION FORM!(USER)
 #---------------------------------------------------------------------------------------------------
@@ -95,3 +95,8 @@ class JobUpdateForm(forms.ModelForm):
                       'link': 'If you want candidates to apply on your company website rather than on our website, please provide the link where candidates can apply. Otherwise, please leave it blank or candidates would not be able to apply directly!',
         }
 #------------------------------------------------------------------------------------------------------------
+
+class JobApplicationForm(forms.ModelForm):
+    class Meta:
+        model = Application
+        fields = ['cover_letter']

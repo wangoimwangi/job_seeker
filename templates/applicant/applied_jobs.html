@@ -14,7 +14,7 @@
         <div class="col-md-6">
             <div class="card card-signin my-2">
                 <span class="ml-3 mt-3">
-                    <a href="{% url 'job-detail' job.job.slug %}">
+                    <a href="{% url 'job-details' job.id %}">
                         <h4 class="text-dark">
                             <b>{{job.job.title}} ({{job.job.job_type}})</b>
                         </h4>
@@ -24,7 +24,7 @@
                     </p>
                     <p style="font-size: 15px">
                         {{job.job.description|truncatewords:30}} -
-                        <a href="{% url 'job-detail' job.job.slug %}">Read More</a>
+                        <a href="{% url 'job-details' job.id%}">Read More</a>
                     </p>
                 </span>
                 <div class="card-footer">

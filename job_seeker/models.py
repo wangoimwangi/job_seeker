@@ -69,6 +69,7 @@ class Job(models.Model):
     link = models.URLField(null=True, blank=True)
     slug = AutoSlugField(populate_from='title', unique=True, null=True)
     date_posted = models.DateTimeField(default=timezone.now)
+    deadline = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -110,11 +111,11 @@ class SavedJobs(models.Model):
 class Application(models.Model):
     job = models.ForeignKey(Job, on_delete=CASCADE)
     applicant = models.ForeignKey(Applicant, on_delete=CASCADE)
-    date_applied = models.DateField()
-    # cover_letter = models make it a file
+    date_applied = models.DateTimeField()
+    cover_letter = models.FileField(upload_to='applications/', null=True, blank=True)
     approved = models.BooleanField(default=False)
     approved_by = models.ForeignKey(Staff, blank=True, null=True, on_delete=SET_NULL)
-    date_approved = models.DateField()
+    date_approved = models.DateTimeField()
 
 
 class AppliedJobs(models.Model):

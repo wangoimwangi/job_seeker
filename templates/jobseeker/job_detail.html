@@ -22,16 +22,20 @@
                     <p><b class="mr-2">Skills Required:</b>{{job.skills_req}}</p>
 
                     {% if user.user_type == 'applicant' %}
-                    <a role="button" class="btn btn-success" href="{% url 'apply-job' job.slug %}"><b>Apply</b></a><br>
-                    <a role="button" class="btn btn-primary" href="{% url 'save-job' job.slug %}"><b>Save</b></a><br>
+                    <a role="button" class="btn btn-success" href="{% url 'apply-job' job.id %}"><b>Apply</b></a>
+                    <a role="button" class="btn btn-primary ms-2" href="#"><b>Save</b></a>
+                    <!-- <a class="btn btn-danger btn-lg ml-2" href="{% url 'remove-job' job.slug %}"><b>Remove</b></a> -->
                     {% else %}
-                    <a role="button" class="btn btn-primary" href="#"><b>Edit</b></a>
+                    <a role="button" class="btn btn-primary" href="{% url 'edit-job-post' job.slug %}"><b>Edit</b></a>
+                    <!-- <a class="btn btn-info btn-lg mr-2" href="{% url 'candidate-list' job.slug %}"><b>Candidates List</b></a> -->
+                    <a class="btn btn-success btn-lg mr-2" href="{% url 'selected-list' job.slug %}"><b>Selected List</b></a>
                     {% endif %}
                 </div>
             </div>
 
             {% if user.user_type == 'staff' %}
             <h2>Applicants</h2>
+            <a class="btn btn-info btn-lg mr-2" href="{% url 'candidate-list' job.slug %}"><b>Candidates List</b></a>
             <ul class="list-group">
                 {% for applicant in applicants %}
                 <li class="list-group-item">

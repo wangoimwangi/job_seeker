@@ -1,9 +1,3 @@
-#from ast import Return
-#from multiprocessing import context
-#from jobs. jobs.job_seeker.models import Applicant
-# from django.contrib.auth.forms import UserCreationForm
-# from django.forms import inlineformset_factory
-#------------------------------------------------------------------------
 #USER IMPORTS
 from django.views.generic import CreateView
 from django.shortcuts import render, redirect
@@ -13,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 #--------------------------------------------------------------
 #APPLICANT IMPORTS
+import datetime as DT
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from job_seeker.models import Job, Candidates, Selected
@@ -223,7 +218,7 @@ def job_details(request, job_id):
     context['job'] = job
     context['relevant_jobs'] = relevant_jobs
 
-    return render(request, 'applicant/job_detail.html', context)
+    return render(request, 'jobseeker/job_detail.html', context)
 #----------------------------------------------------------------------------------------------
                      #INTELLIGENCE_SEARCH
 #showapplicant jobs which suits the skill set of the user and matches the job type the user is looking for .
@@ -323,42 +318,58 @@ def job_search_list(request):
     }
     return render(request, 'applicant/job_search_list.html', context)
 
-#------------------------------------------------------------------------------------------------------
-                        #SAVE JOB
-#Applicant is able to save a job of their choice and store it for future viewing
-#The saved job is added to the saved job model
-# @login_required
-def save_job(request, slug):
-     user = request.user
-     job = get_object_or_404(Job, slug=slug)
-     saved, created = SavedJobs.objects.get_or_create(job=job, user=user)
-     return HttpResponseRedirect('/job/{}'.format(job.slug))
 #---------------------------------------------------------------------------------
                   #SAVED JOBS
 #Display all the jobs that the user has saved
-
 @login_required
 def saved_jobs(request):
     jobs = SavedJobs.objects.filter(
     user=request.user).order_by('-date_posted')
     return render(request, 'applicant/saved_jobs.html', {'jobs': jobs,})
+#-------------------------------------------------------------------------------------
+    #SAVE JOB
+#Applicant is able to save a job of their choice and store it for future viewing
+#The saved job is added to the saved job model
+@login_required
+def save_job(request, slug):
+       user = request.user
+       job = get_object_or_404(Job, slug=slug)
+       saved, created = SavedJobs.objects.get_or_create(job=job, user=user)
+       return HttpResponseRedirect('/job/{}'.format(job.slug))
+        
 
 #---------------------------------------------------------------------------
                           #APPLY JOB
 #Applicant is able to apply to a job
 #Adds the job to Appliedjobs model and applicants model of the staff
-
 @login_required
-def apply_job(request, job_id, applicant_id):
+def apply_job(request, job_id):
+    if not request.method == 'POST':
+        form = JobApplicationForm()
+        job = Job.objects.get(id=job_id)
+        context = {
+            'form': form,
+            'job': job
+        }
+        return render(request, 'applicant/apply.html', context)
+
+    form = JobApplicationForm(request.POST)
+    if not form.is_valid():
+        # msg
+        return redirect(request.META.get('HTTP_REFERER'))
     # get cover letter from the form
+    cover_letter = form.cleaned_data['cover_letter']
     # generate current date from datetime
-    # create an Application Application.objects.create(job_id=job_id, applicant_id=applicant_id, cover_letter=from_form, date_applied=generated)
-    pass
-    # user = request.user
-    # job = get_object_or_404(Job, slug=slug)
-    # applied, created = AppliedJobs.objects.get_or_create(job=job, user=user)
-    # applicant, creation = Candidates.objects.get_or_create(job=job, applicant=user)
-    # return HttpResponseRedirect('/job/{}'.format(job.slug))
+    time_submitted = DT.datetime.now()
+    # create an Application
+    application = Application.objects.create(
+        job_id=job_id,
+        applicant_id=request.user.id,
+        date_applied=time_submitted,
+        cover_letter=cover_letter
+    )
+    application.save()
+    return redirect('job-details')
 #------------------------------------------------------------------------------
                   #APPLIED JOBS
 #Display all the jobs the user has applied to
