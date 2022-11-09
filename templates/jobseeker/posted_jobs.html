@@ -10,6 +10,13 @@
         <div class="card-body">
             <h4 class="card-title">{{ job.title }}</h4>
             <a href="{% url 'job-details' job_id=job.id %}" class="btn btn-primary">View more</a>
+
+            {% if user.user_type == 'applicant' %}
+            {% if job.id in already_applied %}
+            <small class="d-block text-success mt-2">Already applied</small>
+            {% endif %}
+            {% endif %}
+
             {% if user.user_type == 'staff' %}
             <p class="text-muted text-center">Number of applicants here</p>
             {% endif %}

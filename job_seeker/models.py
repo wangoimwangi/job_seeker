@@ -5,6 +5,7 @@ from django.db.models.deletion import CASCADE, SET_NULL
 from django.contrib.auth.models import AbstractUser
 from autoslug import AutoSlugField
 from django.utils import timezone
+from django.db.models import UniqueConstraint
 #from django.core.validators import MaxValueValidator, MinValueValidator
 #from phone_number_field.modelfields import PhoneNumberField
 # Create your models here.
@@ -31,8 +32,12 @@ class User(AbstractUser):
         """Return the url to access a particular user"""
         return reverse('user-details', args=[str(self.id)])
 
-    def __str__(self):
+    @property
+    def full_name(self):
         return f'{self.first_name} {self.last_name}'
+
+    def __str__(self):
+        return self.full_name
 
     def save(self, *args, **kwargs):
       super().save(*args, **kwargs)
@@ -42,7 +47,7 @@ class Applicant(models.Model):
     user = models.OneToOneField(User, on_delete=CASCADE, primary_key=True, related_name='applicant')
     #To be able to view the name of the applicant in the table
     def __str__(self):
-        return self.user
+        return self.user.full_name
     
 class Staff(models.Model):
     user = models.OneToOneField(User, on_delete=CASCADE, primary_key=True, related_name='staff')
@@ -115,7 +120,12 @@ class Application(models.Model):
     cover_letter = models.FileField(upload_to='applications/', null=True, blank=True)
     approved = models.BooleanField(default=False)
     approved_by = models.ForeignKey(Staff, blank=True, null=True, on_delete=SET_NULL)
-    date_approved = models.DateTimeField()
+    date_approved = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['job', 'applicant'], name='unique_applicant_job_match')
+        ]
 
 
 class AppliedJobs(models.Model):

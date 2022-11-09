@@ -194,12 +194,19 @@ def profile_view(request, slug):
                     #POSTED JOBS
 def posted_jobs(request):
     jobs = Job.objects.all()
+    already_applied = []    # list of IDs of the job current applicant has applied to
+
+    for application in request.user.applicant.application_set.all():
+        already_applied.append(application.job.id)
 
     context = {
         'jobs': jobs
     }
 
-    if request.user.user_type == 'staff':
+    if request.user.user_type == User.APPLICANT:
+        context['already_applied'] = already_applied
+
+    if request.user.user_type == User.STAFF:
         context['applicants'] = list()
 
     return render(request, 'jobseeker/posted_jobs.html', context)
@@ -211,12 +218,21 @@ def posted_jobs(request):
 def job_details(request, job_id):
     user = request.user
     job = Job.objects.get(id=job_id)
+    already_applied = False
     # compare the skills in the job with those all the user
     relevant_jobs = list()
+
+    if user.user_type == User.APPLICANT:
+        for application in user.applicant.application_set.all():
+            if application.job.id == job.id:
+                already_applied = True
 
     context = {}
     context['job'] = job
     context['relevant_jobs'] = relevant_jobs
+
+    if user.user_type == User.APPLICANT:
+        context['already_applied'] = already_applied
 
     return render(request, 'jobseeker/job_detail.html', context)
 #----------------------------------------------------------------------------------------------
@@ -369,7 +385,7 @@ def apply_job(request, job_id):
         cover_letter=cover_letter
     )
     application.save()
-    return redirect('job-details')
+    return redirect('posted-jobs')
 #------------------------------------------------------------------------------
                   #APPLIED JOBS
 #Display all the jobs the user has applied to
