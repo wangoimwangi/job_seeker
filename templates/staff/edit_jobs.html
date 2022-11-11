@@ -1,14 +1,12 @@
-<!--Used for editing existing job post-->
-<!--There is a Save button  which saves the changes made to the post-->
-
+<!--Staff can Edit Jobs and save changes-->
 {% extends 'base.html' %}
 {% block title %}Edit Jobs{% endblock %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block body %}
 
-<br />
 <div class="container">
-    {% if request.user == job.staff %}
+    {% if user.user_type == 'staff' %}
     <div class="row">
         <div class="col-sm-10 col-md-10 col-lg-8 mx-auto">
             <div class="card card-signin my-5">

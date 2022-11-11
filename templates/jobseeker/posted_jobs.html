@@ -9,6 +9,7 @@
         <img src="{% static 'img/01.jpg' %}" class="card-img-top" alt="...">
         <div class="card-body">
             <h4 class="card-title">{{ job.title }}</h4>
+            
             <a href="{% url 'job-details' job_id=job.id %}" class="btn btn-primary">View more</a>
 
             {% if user.user_type == 'applicant' %}

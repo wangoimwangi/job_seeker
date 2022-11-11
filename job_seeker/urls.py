@@ -8,7 +8,6 @@ urlpatterns = [
     path('services/', views.Services, name='services'),
     path('applicant/', views.applicant, name='applicant'),
     path('staff/', views.staff, name='staff'),
-    #path('job/', views.job, name='job'),
     path('profile/', views.my_profile, name='my-profile'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
@@ -19,12 +18,11 @@ urlpatterns = [
                           #APPLICANT URLS
 
     #slug is used to generate valid urls
-    path('job/', views.job_search_list, name='job-search-list'),
     path('jobs/', views.posted_jobs, name='posted-jobs'),
     path('jobs/<int:job_id>/', views.job_details, name='job-details'),
-    path('relevant_jobs/', views.intelligent_search, name='intelligent-search'),
+    # path('relevant_jobs/', views.intelligent_search, name='intelligent-search'),
     path('profile/edit/', views.edit_profile, name='edit-profile'),
-    path('profile/<slug>', views.profile_view, name='profile-view'),
+    # path('profile/<slug>', views.profile_view, name='profile-view'),
     path('delete_skills/', views.delete_skill, name='skill-delete'),
     path('job/<slug>/save/', views.save_job, name='save-job'),
     path('job/<int:job_id>/apply/', views.apply_job, name='apply-job'),
@@ -36,7 +34,6 @@ urlpatterns = [
 
     path('job/add', views.add_job, name='add-job'),
     path('job/<slug>/edit/', views.edit_job, name='edit-job-post'),
-    # path('jobs/<int:job_id>/', views.jobs_details, name='staff-job-detail'),
     path('jobs/', views.all_jobs, name='job-list'),
     path('applicant/search/', views.search_applicant, name='search-applicant'),
     path('job/<slug>/search/', views.job_applicant_search, name='job-applicant-search'),

@@ -23,8 +23,8 @@
                         {{job.job.company}}<br />{{job.job.location}}
                     </p>
                     <p style="font-size: 15px">
-                        {{job.job.description|truncatewords:30}} -
-                        <a href="{% url 'job-details' job.id%}">Read More</a>
+                        {{job.job.description|truncatewords:25}} -
+                        <a href="{% url 'job-details' job.id %}">Read More</a>
                     </p>
                 </span>
                 <div class="card-footer">
@@ -33,10 +33,10 @@
                         <b class="text-success text-uppercase ml-2">Selected</b></span>
                     {% elif status == 1%}
                     <span style="font-size: 16px">Application Status:
-                        <b class="text-primary text-uppercase ml-2">In Process</b></span>
+                        <b class="text-danger text-uppercase ml-2">Rejected</b></span>
                     {% else %}
                     <span style="font-size: 16px">Application Status:
-                        <b class="text-danger text-uppercase ml-2">Rejected</b></span>
+                        <b class="text-primary text-uppercase ml-2">In Process</b></span>
                     {% endif %}
                 </div>
             </div>
