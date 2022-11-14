@@ -23,11 +23,13 @@ class StaffRegistrationForm(UserCreationForm):
 
     @transaction.atomic
     def save(self):
-        user = super().save(commit=False) # saves username, password [UserCreationForm fields]
-        user.contact = self.cleaned_data['contact']
-        user.location = self.cleaned_data['location']
+        user = super().save(commit=False)   # saves username & password
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
         user.email = self.cleaned_data['email']
         user.user_type = User.STAFF
+        user.contact = self.cleaned_data['contact']
+        user.location = self.cleaned_data['location']
         user.save()
 
         staff = Staff.objects.create(user=user)
@@ -48,12 +50,13 @@ class ApplicantRegistrationForm(UserCreationForm):
 
     @transaction.atomic
     def save(self):
-        # saves username, password [UserCreationForm fields]
-        user = super().save(commit=False)
-        user.contact = self.cleaned_data['contact']
-        user.location = self.cleaned_data['location']
+        user = super().save(commit=False)   # saves username & password
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
         user.email = self.cleaned_data['email']
         user.user_type = User.APPLICANT
+        user.contact = self.cleaned_data['contact']
+        user.location = self.cleaned_data['location']
         user.save()
 
         applicant = Applicant.objects.create(user=user)

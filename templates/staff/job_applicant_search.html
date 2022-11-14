@@ -1,6 +1,8 @@
 <!--Display the most relevant applicant s for a particular job post-->
 <!--Visible When staff clicks the Get Relevant Apllicants button from the job detals page-->
 <!--Applicants are rannked based on the match % of the applicant skills with the skills of the job-->
+
+
 {% extends 'base.html' %}
 {% block title %}Edit Jobs{% endblock %}
 {% load static %}
@@ -31,8 +33,8 @@
                     </a>
                     <p style="font-size: 17px">
                         {{profile.user.email}}<br />
-                        {% if profile.location %} {{profile.location}} <!--{% else %}
-                        {{profile.country.name}}--> {% endif %}
+                        {% if profile.location %} {{profile.location}}
+                        {% endif %}
                     </p>
                 </span>
                 <div class="card-footer">
@@ -47,7 +49,7 @@
     {% else %}
     <p class="text-center">
         No relevant applicant found for this job! Please check if your
-        <a href="{% url 'add-job-detail' job.slug %}">job post</a> is complete.
+        <a href="{% url 'add-job'%}">job post</a> is complete.
     </p>
     <br />
     {% endif %}

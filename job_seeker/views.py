@@ -23,6 +23,7 @@ from django.contrib.auth.models import User
 #-----------------------------------------------------------------------------------------
 from .models import *
 from .forms import *
+from .decorators import *
 #-------------------------------------------------------------------------------
                               #USERS VIEWS
 #-------------------------------------------------------------------------------
@@ -113,7 +114,6 @@ class RegisterApplicant(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        #print('\n\nLogin successful!\n\n')
         messages.success(self.request, 'Registration successful!')
         return redirect('applicant')
 
@@ -211,7 +211,43 @@ def job_details(request, job_id):
     if user.user_type == User.APPLICANT:
         context['already_applied'] = already_applied
 
+    if user.user_type == User.STAFF:
+        context['applications'] = Application.objects.filter(job_id=job_id)      
+
     return render(request, 'jobseeker/job_detail.html', context)
+
+
+@staff_required
+def application_details(request, application_id):
+    application = Application.objects.get(id=application_id)
+
+    if request.method == 'POST':
+        action = request.POST['action']
+
+        if action == 'decline':
+            application.approved = False
+            application.approved_by = request.user.staff
+            application.date_approved = DT.datetime.now()
+            application.save()
+            # notify user
+            
+        if action == 'approve':
+            # update the db
+            application.approved = True
+            application.approved_by = request.user.staff
+            application.date_approved = DT.datetime.now()
+            application.save()
+            # notify user
+            
+        return redirect('job-details', application.job.id)
+
+    else:
+        context = {}
+        context['application'] = application
+        return render(request, 'staff/application-details.html', context)
+
+
+
 #----------------------------------------------------------------------------------------------------------------
                         #DELETE SKILL
 #A CSRF cookie used is a random secret value, which other sites will not have access to
@@ -291,16 +327,6 @@ def applied_jobs(request):
     zipped = zip(jobs, statuses)
     return render(request, 'applicant/applied_jobs.html', {'zipped': zipped})
 #---------------------------------------------------------------------------------------------------------
-                     #DELETE JOB
-#Used to delete a job from the saved jobs list
-@login_required
-def remove_job(request, slug):
-    user = request.user
-    job = get_object_or_404(Job, slug=slug)
-    saved_job = SavedJobs.objects.filter(job=job, user=user).first()
-    saved_job.delete()
-    return HttpResponseRedirect('/job/{}'.format(job.slug))
-#---------------------------------------------------------------------------------------
                         #STAFF VIEWS!!
 #=================================================================================================
                     #ADD JOBS
@@ -403,141 +429,9 @@ def search_applicant(request):
         'profiles': page_obj,
     }
     return render(request, 'staff/applicant_search.html', context)
-#--------------------------------------------------------------------------------
-                       #JOB APPLICANT SEARCH
-#Allows staff to see aplicants which are perfect matches to a particular job post
-#It matches the skills set for a job with what the applicant set on their profile
-#It filters out candidates based on job type
-@login_required
-def job_applicant_search(request, slug):
-    job = get_object_or_404(Job, slug=slug)
-    relevant_applicants = []
-    common = []
-    candidates = Profile.objects.filter(looking_for=job.job_type)
-    job_skills = []
-    skills = str(job.skills_req).split(",")
-    for skill in skills:
-        job_skills.append(skill.strip().lower())
-    for candidate in candidates:
-        user = candidate.user
-        skill_list = list(Skill.objects.filter(user=user))
-        skills = []
-        for i in skill_list:
-            skills.append(i.skill.lower())
-        common_skills = list(set(job_skills) & set(skills))
-        if (len(common_skills) != 0 and len(common_skills) >= len(job_skills)//2):
-            relevant_applicants.append(candidate)
-            common.append(len(common_skills))
-    objects = zip(relevant_applicants, common)
-    objects = sorted(objects, key=lambda t: t[1], reverse=True)
-    objects = objects[:100]
-    context = {
-        'job': job,
-        'objects': objects,
-        'job_skills': len(job_skills),
-        'relevant': len(relevant_applicants),
+#-----------------------------------------------------------------------------------
 
-    }
-    return render(request, 'staff/job_applicant_search.html', context)
-#-----------------------------------------------------------------------------------------
-                      #CANDIDATES LIST
-#Display candidates who have applied for a particular job
+                       
+                      
 
-@login_required
-def candidate_list(request, slug):
-    job = get_object_or_404(Job, slug=slug)
-    
-    candidates = Candidates.objects.filter(job=job).order_by('date_posted')
-    profiles = []
-    for candidate in candidates:
-        profile = Profile.objects.filter(user=candidate.candidate).first()
-        profiles.append(profile)
-    context = {
-        'profiles': profiles,
-        'job': job,
-    }
-    return render(request, 'staff/candidate_list.html', context)
-#----------------------------------------------------------------------------------------
-                      #SELECTED LIST
-#Contains candidates profiles who have been selected from the candidates list by the staff
-@login_required
-def selected_list(request, slug):
-    job = get_object_or_404(Job, slug=slug)
-    selected = Selected.objects.filter(job=job).order_by('date_posted')
-    profiles = []
-    for candidate in selected:
-        profile = Profile.objects.filter(user=candidate.candidate).first()
-        profiles.append(profile)
-    context = {
-        'profiles': profiles,
-        'job': job,
-    }
-    return render(request, 'staff/selected_list.html', context)
-#------------------------------------------------------------------------------------------------
-                           #SELECTED CANDIDATE
-#Used to select a candidate from the candidates list
-# Creates an object for the candidate in the selected list
-# Deletes the applicant  from the candidates list after adding it to the selected list               
-@login_required
-def select_candidate(request, can_id, job_id):
-    job = get_object_or_404(Job, slug=job_id)
-    profile = get_object_or_404(Profile, slug=can_id)
-    user = profile.user
-    selected, created = Selected.objects.get_or_create(job=job, candidate=user)
-    candidate = Candidates.objects.filter(job=job, candidate=user).first()
-    candidate.delete()
-    return HttpResponseRedirect('/hiring/job/{}/candidates'.format(job.slug))
-#-------------------------------------------------------------------------------------------------
-                         #REMOVE CANDIDATE
-#Used to reject a candidate who has applied to a particular job post
-#Delete the applicant from the candidate list
-@login_required
-def remove_candidate(request, can_id, job_id):
-    job = get_object_or_404(Job, slug=job_id)
-    profile = get_object_or_404(Profile, slug=can_id)
-    user = profile.user
-    candidate = Candidates.objects.filter(job=job, candidate=user).first()
-    candidate.delete()
-    return HttpResponseRedirect('/hiring/job/{}/candidates'.format(job.slug))
-#---------------------------------------------------------------------------------------------
-                                  #THE END!
-    #INTELLIGENCE_SEARCH
-#showapplicant jobs which suits the skill set of the user and matches the job type the user is looking for .
-#The Higher the skill match percentage, higher the position it will occupy in the list.
-
-# @login_required
-# def intelligent_search(request):
-#     relevant_jobs = []
-#     common = []
-#     job_skills = []
-#     User.user_type == User
-#     # user = request.user
-#     profile = Profile.objects.filter(User.user_type == User).first()
-#     my_skill_query = Skill.objects.filter(User.user_type == User)
-#     my_skills = []
-#     for i in my_skill_query:
-#         my_skills.append(i.skill.lower())
-#     if profile:
-#         jobs = Job.objects.filter(
-#             job_type=profile.job_type).order_by('-date_posted')
-#     else:
-#         jobs = Job.objects.all()
-#     for job in jobs:
-#         skills = []
-#         sk = str(job.skills_req).split(",")
-#         for i in sk:
-#             skills.append(i.strip().lower())
-#         common_skills = list(set(my_skills) & set(skills))
-#         if (len(common_skills) != 0 and len(common_skills) >= len(skills)//2):
-#             relevant_jobs.append(job)
-#             common.append(len(common_skills))
-#             job_skills.append(len(skills))
-#     objects = zip(relevant_jobs, common, job_skills)
-#     objects = sorted(objects, key=lambda t: t[1]/t[2], reverse=True)
-#     objects = objects[:100]
-#     context = {
-#         'intel_page': "active",
-#         'jobs': objects,
-#         'counter': len(relevant_jobs),
-#     }
-#     return render(request, 'applicant/intelligent_search.html', context)
+                                 
