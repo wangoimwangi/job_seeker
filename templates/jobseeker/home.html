@@ -9,9 +9,9 @@
             <div>
                 <h2>Get your <span class="text-warning">Dream Job Today!</span></h2>
                 <p class="lead my-4">
-                    Have you been struggling looking for a job,<br>search no more the Job Seeker got you.<br>Join us
+                    Have you been struggling looking for a job,<br>search no more the Job Seeker got you.<br><span class="text-danger">Join us
                     today and build your career now.
-                </p>
+                    </p></span>
                 <a role="button" class="btn btn-primary btn-lg" href="{% url 'register' %}">JOIN US</a>
             </div>
             <img class="img-fluid w-50 d-none d-sm-block" src="{% static 'img/4565.jpg' %}" alt="">
@@ -82,15 +82,48 @@
 
 </section>
 
+<section class="section-content section-contact bg-light" id="sectionContact">
+    <div class="container container-small">
+        <h4 class="section-title">
+            <span class="text-info">Get in Touch with us</span>
+        </h4>
+
+        <div class="row row-cols-1 row-cols-md-2 g-5">
+            <div class="col col-md-5">
+                <p class="footer-text mb-4">
+                    Please get in touch and our expert support team will answer all
+                    your questions.
+                </p>
+                <div class="footer-address">
+                    <p class="align-items-center gap-md">
+                        <i class="fa-solid fa-location-dot text-primary"></i>
+                        Nairobi, Kenya
+                    </p>
+                    <p class="align-items-center gap-md">
+                        <i class="fa-solid fa-phone text-primary"></i>
+                        +254 789 987 001
+                    </p>
+                    <p class="align-items-center gap-md">
+                        <i class="fa-solid fa-envelope text-primary"></i>
+                        contact@JobSeeker.com
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
 <!--Footer-->
-<footer class="p-5 bg-dark text-white text-center position-relative">
+<footer class="p-1 bg-dark text-white text-center position-relative">
     <div class="container">
-        <p class="lead">Copyright&copy;2022 JobSeeker</p>
-        <a href="#" class="position-absolute bottom-0 end-0 p-5">
+        <p class="py-4 m-0">
+            &copy; 2022 JobSeeker.com - All rights reserved.
+        </p>
+        <a href="#" class="position-absolute bottom-0 end-0 p-3">
             <i class="bi bi-arrow-up-circle h1"></i>
         </a>
     </div>
-
 </footer>
-
 {% endblock body %}
