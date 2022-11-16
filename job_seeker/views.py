@@ -246,8 +246,6 @@ def application_details(request, application_id):
         context['application'] = application
         return render(request, 'staff/application-details.html', context)
 
-
-
 #----------------------------------------------------------------------------------------------------------------
                         #DELETE SKILL
 #A CSRF cookie used is a random secret value, which other sites will not have access to
@@ -259,7 +257,7 @@ def delete_skill(request, pk=None):
         for skill_id in id_list:
             Skill.objects.get(id=skill_id).delete()
         return redirect('my-profile')
-#---------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------
                   #SAVED JOBS
 #Display all the jobs that the user has saved
 @login_required
@@ -280,7 +278,6 @@ def save_job(request, slug):
 #---------------------------------------------------------------------------
                           #APPLY JOB
 #Applicant is able to apply to a job
-#Adds the job to Appliedjobs model and applicants model of the staff
 @login_required
 def apply_job(request, job_id):
     if not request.method == 'POST':

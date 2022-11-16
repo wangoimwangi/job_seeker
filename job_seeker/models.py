@@ -25,7 +25,7 @@ class User(AbstractUser):
 
     user_types = [
         (STAFF, 'staff'),
-        (STAFF, 'applicant')
+        (APPLICANT, 'applicant')
     ]
     
     contact = models.CharField(max_length=100)

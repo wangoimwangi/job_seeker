@@ -6,7 +6,6 @@
     <h2>Login</h2><br><br>
     <form action="{% url 'login' %}" method="POST" novalidate>
         {% csrf_token %}
-
         {% for field in form %}
         <div class="form-field mb-3">
             {{ field.label_tag }}
@@ -15,8 +14,9 @@
         {% endfor %}
         <button type="submit" class="btn btn-primary">Login</button>
         <br>
-        <!-- <span>Are you a system admin?</span><br> -->
-        <!-- <a href="{% url 'admin:index' %}?next={% url 'home' %}">Admin Login</a> -->
+        <span>Are you a system admin?</span><br>
+        <a href="{% url 'admin:index' %}?next={% url 'home' %}">Admin Login</a>
+        <br>
         <span>Don't have an Account yet?</span><br>
         <a href="{% url 'register' %}">Create Account</a>
         <br><br>
