@@ -171,6 +171,19 @@ def edit_profile(request):
     }
     return render(request, 'applicant/edit_profile.html', context)
 #-------------------------------------------------------------------------------------------------------
+                                  #PROFILE VIEW
+@login_required
+def profile_view(request, slug):
+    p = Profile.objects.filter(slug=slug).first()
+    you = p.user
+    user_skills = Skill.objects.filter(user=you)
+    context = {
+        'u': you,
+        'profile': p,
+        'skills': user_skills,
+    }
+    return render(request, 'applicant/profile.html', context)
+#------------------------------------------------------------------------------------------------
                     #POSTED JOBS
 def posted_jobs(request):
     jobs = Job.objects.all()
@@ -427,6 +440,8 @@ def search_applicant(request):
     }
     return render(request, 'staff/applicant_search.html', context)
 #-----------------------------------------------------------------------------------
+
+
 
                        
                       

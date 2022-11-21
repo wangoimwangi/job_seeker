@@ -27,8 +27,6 @@ urlpatterns = [
     path('saved_job_list/', views.saved_jobs, name='saved-jobs'),
     path('applied_job_list/', views.applied_jobs, name='applied-jobs'),
 
-
-
     #========================================================================================================
                             #STAFF URLS
     path('job/add', views.add_job, name='add-job'),
@@ -36,6 +34,8 @@ urlpatterns = [
     path('jobs/', views.all_jobs, name='job-list'),
     path('applicant/search/', views.search_applicant, name='search-applicant'),
     path('applications/<int:application_id>/details/', views.application_details, name='applicant-details'),
+    path('profile/<slug>', views.profile_view, name='profile-view'),
+   
 
 
 #==============================================================================================================

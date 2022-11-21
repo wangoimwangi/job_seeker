@@ -31,7 +31,7 @@
                             {% endif %} {% if request.user == u %}
                             <hr class="my-4" />
                             <a class="btn btn-warning btn-block" href="{% url 'edit-profile' %}">Edit Profile</a><br />
-                            <a class="btn btn-primary btn-block" href="{% url 'saved-jobs' %}">Saved Jobs</a><br />
+                            <a class="btn btn-primary btn-block" href="{% url 'saved-jobs' %}">Bookmarked Jobs</a><br />
                             <a class="btn btn-success btn-block" href="{% url 'applied-jobs' %}">Applied Jobs</a>
                             {% endif %}
                         </div>
