@@ -34,7 +34,9 @@ urlpatterns = [
     path('jobs/', views.all_jobs, name='job-list'),
     path('applicant/search/', views.search_applicant, name='search-applicant'),
     path('applications/<int:application_id>/details/', views.application_details, name='applicant-details'),
+    
     path('profile/<slug>', views.profile_view, name='profile-view'),
+   
    
 
 

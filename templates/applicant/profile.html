@@ -67,8 +67,7 @@
                     <form class="form-signin" action="{% url 'skill-delete' %}" method="POST">
                         {% csrf_token %} {% for skill in skills %}
                         <div>
-                            <input class="mr-2" type="checkbox" value="{{ skill.id }}" name="choices" />{{ skill.skill
-                            }}
+                            <input class="mr-2" type="checkbox" value="{{ skill.id }}" name="choices" /> {{ skill.skill}}
                         </div>
                         {% endfor %}
                         <br />
