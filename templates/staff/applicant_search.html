@@ -10,35 +10,35 @@
     <h3 class="text-center">
         <b>Search Applicants</b>
     </h3>
-    <form class="form-signin mt-4" action="{% url 'search-applicant' %}" method="get">
+    <form class="form-signin mt-2" action="{% url 'search-applicant' %}" method="get">
         <div class="row">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <input name="r" type="text" class="form-control" placeholder="Enter Location of Choice" /><br />
                 </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <input name="s" type="text" class="form-control"
                     placeholder="For Job Type (Full Time, Intern etc.)" /><br />
             </div>
         </div>
         <div class="form-group">
-            <button class="btn btn-lg btn-primary btn-block" type="submit">
-                Apply Filter
+            <button class="btn btn-md btn-primary btn-block" type="submit">
+                Search
             </button>
         </div>
     </form>
     {% if profiles %}
     <div class="row">
         {% for profile in profiles %}
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card card-signin my-2">
-                <span class="ml-3 mt-3">
+                <span class="ml-2 mt-2">
                     <a href="{% url 'profile-view' profile.slug %}">
                         {% if profile.full_name %}
-                        <h4 class="text-dark">
+                        <h5 class="text-success">
                             <b>{{profile.full_name}}</b>
-                        </h4>
+                        </h5>
                         {% else %}
                         <h4 class="text-dark">
                             <b>{{profile.user.username}}</b>

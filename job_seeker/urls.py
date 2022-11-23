@@ -4,6 +4,8 @@ from . import views
 urlpatterns = [
 
                     #USER URLS
+    # path('test/', views.test, name='test'),
+
     path('', views.home, name='home'),
     path('contact/', views.contact, name='contact'),
     path('services/', views.Services, name='services'),
@@ -36,6 +38,11 @@ urlpatterns = [
     path('applications/<int:application_id>/details/', views.application_details, name='applicant-details'),
     path('profile/<slug>', views.profile_view, name='profile-view'),
     path('job/<slug>/search/', views.job_candidate_search, name='job-candidate-search'),
+
+                               #REPORTS
+    path('applicants/', views.applied_any_month, name='applied-any-month'),
+    path('applicants/<int:month>', views.applied_any_month, name='applied-any-month'),
+
    
 
 

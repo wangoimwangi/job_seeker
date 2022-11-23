@@ -11,7 +11,9 @@ from django.contrib.auth import get_user_model
 from .filters import ApplicationFilter
 #--------------------------------------------------------------
 #APPLICANT IMPORTS
+import pytz
 import datetime as DT
+import calendar as CAL
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 #---------------------------------------------------------------------------
@@ -29,8 +31,35 @@ from .decorators import *
 #-------------------------------------------------------------------------------
                               #USERS VIEWS
 #-------------------------------------------------------------------------------
+
+
+utc = pytz.UTC
+
+
 #HOME
 def home(request):
+    # month = 11
+    # results = list()
+    # context = set()
+    # count = 0
+    # today = DT.datetime.now()
+    # curr_month_start = today.replace(day=1)
+    # x_month_start = curr_month_start.replace(month=month)
+    # x_month_range = CAL.monthrange(today.year, month)
+    # x_month_end = DT.datetime(today.year, month, x_month_range[1])
+    # x_month_end = x_month_end.replace(tzinfo=utc)
+    # x_month_start = x_month_start.replace(tzinfo=utc)
+    # # compare each application's application date to start month and end month
+    # applications = Application.objects.all()
+    # for x in applications:
+    #     # if start_month <= x <= end_month:
+    #     print(x_month_start, '<=', x.date_applied, '<=', x_month_end)
+    #     if x_month_start <= x.date_applied <= x_month_end:
+    #         results.append(x)
+    #         count += 1
+    
+    # print('applied_last_month: ', count)
+
     context = {
         'home': "active",
     }
@@ -41,6 +70,13 @@ def applicant(request):
         'applicant': "active",
     }
     return render(request, 'applicant/applicant.html', context)
+
+# #TEST
+# def test(request):
+#     context = {
+#         'applicant': "active",
+#     }
+#     return render(request, 'staff/test.html', context)
 #STAFF
 def staff(request):
     context = {
@@ -474,9 +510,72 @@ def job_candidate_search(request, slug):
 
     }
     return render(request, 'staff/job_applicant_search.html', context)
+#-----------------------------------------------------------------------------------------
+                               #REPORTS
+def Applied_last_month(request):
+    results = list()
+    context = set()
+    count = 0
+    today = DT.datetime.now()
+    curr_month_start = today.replace(day=1)
+    # Check the start and end date of last month
+    prev_month_end = curr_month_start - DT.timedelta(days=1)
+    prev_month_start = prev_month_end.replace(day=1)
+    # compare each application's application date to start month and end month
+    applications = Application.objects.all()
+    for x in applications:
+        # if start_month <= x <= end_month:
+        if prev_month_start <= x.date_applied <= prev_month_end:
+            results.append(x)
+            count += 1
+    #   save the application
+    context['count'] = count
+    return render(request, 'whichever-page-it-is', context)
 
 
+'''
+    Applied last month
+    {{ count }}
+'''
 
-                      
 
-                                 
+# def applied_any_month(request, month):
+#     today = DT.datetime.now()
+#     curr_month_start = today.replace(day=1)
+#     x_month_start = curr_month_start.replace(month=month)
+#     x_month_range = CAL.monthrange(today.year, month)
+#     x_month_end = DT.datetime(today.year, month, x_month_range)
+#     pass
+#----------------------------------------------------------------------------------------------------------------
+def applied_any_month(request, month=None):
+    # month = 11
+    results = []
+    context = {}
+    count = 0
+    today = DT.datetime.now()
+
+    # in case no month is passed, display for current
+    if not month:
+        month = today.month
+
+    curr_month_start = today.replace(day=1)
+    x_month_start = curr_month_start.replace(month=month)
+    x_month_range = CAL.monthrange(today.year, month)
+    x_month_end = DT.datetime(today.year, month, x_month_range[1])
+    x_month_end = x_month_end.replace(tzinfo=utc)
+    x_month_start = x_month_start.replace(tzinfo=utc)
+    # compare each application's application date to start month and end month
+    applications = Application.objects.all()
+    for x in applications:
+        # if start_month <= x <= end_month:
+        print(x_month_start, '<=', x.date_applied, '<=', x_month_end)
+        if x_month_start <= x.date_applied <= x_month_end:
+            results.append(x)
+            count += 1
+    print('applied_last_month: ', count)
+
+    #   save the application
+    context['count'] = count
+    context['selected_month'] = month
+    return render(request, 'staff/all_months.html', context)
+#-----------------------------------------------------------------------------------------------------------
