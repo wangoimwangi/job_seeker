@@ -30,6 +30,10 @@
                     <a role="button" class="btn btn-primary ms-2" href="#"><b>Bookmark</b></a>
                     {% else %}
                     <a role="button" class="btn btn-primary" href="{% url 'edit-job-post' job.slug %}"><b>Edit</b></a>
+                    <br>
+                    <br>
+                    <a role="button" class="btn btn-success" href="{% url 'job-candidate-search' job.slug %}"><b>Relevant Applicants</b></a>
+
                     {% endif %}
                 </div>
             </div>

@@ -103,3 +103,4 @@ class JobApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ['cover_letter']
+    

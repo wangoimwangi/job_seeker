@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
+from .filters import ApplicationFilter
 #--------------------------------------------------------------
 #APPLICANT IMPORTS
 import datetime as DT
@@ -24,6 +25,7 @@ from django.contrib.auth.models import User
 from .models import *
 from .forms import *
 from .decorators import *
+# from .filters import *
 #-------------------------------------------------------------------------------
                               #USERS VIEWS
 #-------------------------------------------------------------------------------
@@ -440,10 +442,41 @@ def search_applicant(request):
     }
     return render(request, 'staff/applicant_search.html', context)
 #-----------------------------------------------------------------------------------
+#RELEVANT APPLICANT
+@login_required
+def job_candidate_search(request, slug):
+    job = get_object_or_404(Job, slug=slug)
+    relevant_candidates = []
+    common = []
+    applicants = Profile.objects.filter(job_type=job.job_type)
+    job_skills = []
+    skills = str(job.skills_req).split(",")
+    for skill in skills:
+        job_skills.append(skill.strip().lower())
+    for applicant in applicants:
+        user = applicant.user
+        skill_list = list(Skill.objects.filter(user=user))
+        skills = []
+        for i in skill_list:
+            skills.append(i.skill.lower())
+        common_skills = list(set(job_skills) & set(skills))
+        if (len(common_skills) != 0 and len(common_skills) >= len(job_skills)//2):
+            relevant_candidates.append(applicant)
+            common.append(len(common_skills))
+    objects = zip(relevant_candidates, common)
+    objects = sorted(objects, key=lambda t: t[1], reverse=True)
+    objects = objects[:100]
+    context = {
+        'job': job,
+        'objects': objects,
+        'job_skills': len(job_skills),
+        'relevant': len(relevant_candidates),
+
+    }
+    return render(request, 'staff/job_applicant_search.html', context)
 
 
 
-                       
                       
 
                                  
