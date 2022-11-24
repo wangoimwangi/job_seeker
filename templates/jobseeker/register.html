@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %} Register {% endblock %}
-
 {% block body %}
+
 <div class="container center">
     <br><br><br>
 <h2>Welcome to Job seeker!!</h2>
@@ -12,5 +12,6 @@
 <br><br>
 <a href="{% url 'register-staff' %}" class="btn btn-primary">Staff</a>
 <a href="{% url 'register-applicant' %}" class="btn btn-primary">Applicant</a>
+
 
 {% endblock body %}

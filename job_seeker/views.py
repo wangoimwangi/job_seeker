@@ -27,39 +27,11 @@ from django.contrib.auth.models import User
 from .models import *
 from .forms import *
 from .decorators import *
-# from .filters import *
 #-------------------------------------------------------------------------------
-                              #USERS VIEWS
-#-------------------------------------------------------------------------------
-
-
 utc = pytz.UTC
-
-
+                                 #USERS VIEWS
 #HOME
 def home(request):
-    # month = 11
-    # results = list()
-    # context = set()
-    # count = 0
-    # today = DT.datetime.now()
-    # curr_month_start = today.replace(day=1)
-    # x_month_start = curr_month_start.replace(month=month)
-    # x_month_range = CAL.monthrange(today.year, month)
-    # x_month_end = DT.datetime(today.year, month, x_month_range[1])
-    # x_month_end = x_month_end.replace(tzinfo=utc)
-    # x_month_start = x_month_start.replace(tzinfo=utc)
-    # # compare each application's application date to start month and end month
-    # applications = Application.objects.all()
-    # for x in applications:
-    #     # if start_month <= x <= end_month:
-    #     print(x_month_start, '<=', x.date_applied, '<=', x_month_end)
-    #     if x_month_start <= x.date_applied <= x_month_end:
-    #         results.append(x)
-    #         count += 1
-    
-    # print('applied_last_month: ', count)
-
     context = {
         'home': "active",
     }
@@ -71,12 +43,6 @@ def applicant(request):
     }
     return render(request, 'applicant/applicant.html', context)
 
-# #TEST
-# def test(request):
-#     context = {
-#         'applicant': "active",
-#     }
-#     return render(request, 'staff/test.html', context)
 #STAFF
 def staff(request):
     context = {
