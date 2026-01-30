@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+{% block title %}JobSeeker | Find Your Next Career Opportunity{% endblock %}
+{% load static %}
+{% block body %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                <span>Trusted by 1,000+ professionals in Kenya</span>
+            </div>
+            <h1 class="hero-title">
+                Where talent meets <span class="text-highlight">opportunity</span>
+            </h1>
+            <p class="hero-description">
+                Connect with top employers, discover roles that match your skills,
+                and take the next step in your career journey.
+            </p>
+            <div class="hero-actions">
+                <a href="{% url 'register' %}" class="btn btn-primary-custom">
+                    Create free account
+                </a>
+                <a href="{% url 'posted-jobs' %}" class="btn btn-secondary-custom">
+                    <i class="bi bi-search"></i>
+                    Browse jobs
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-value">500+</span>
+                    <span class="stat-label">Open positions</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">50+</span>
+                    <span class="stat-label">Companies hiring</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">89%</span>
+                    <span class="stat-label">Success rate</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-card-stack">
+                <div class="job-preview-card">
+                    <div class="job-preview-header">
+                        <div class="company-logo-placeholder">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <div class="job-preview-info">
+                            <span class="job-title-preview">Software Engineer</span>
+                            <span class="company-name-preview">TechCorp Kenya</span>
+                        </div>
+                        <span class="job-tag">New</span>
+                    </div>
+                    <div class="job-preview-meta">
+                        <span><i class="bi bi-geo-alt"></i> Nairobi</span>
+                        <span><i class="bi bi-clock"></i> Full-time</span>
+                    </div>
+                </div>
+                <div class="job-preview-card card-offset-1">
+                    <div class="job-preview-header">
+                        <div class="company-logo-placeholder logo-alt">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <div class="job-preview-info">
+                            <span class="job-title-preview">Data Analyst</span>
+                            <span class="company-name-preview">Finance Plus</span>
+                        </div>
+                    </div>
+                    <div class="job-preview-meta">
+                        <span><i class="bi bi-geo-alt"></i> Westlands</span>
+                        <span><i class="bi bi-clock"></i> Remote</span>
+                    </div>
+                </div>
+                <div class="job-preview-card card-offset-2">
+                    <div class="job-preview-header">
+                        <div class="company-logo-placeholder logo-alt-2">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="job-preview-info">
+                            <span class="job-title-preview">Project Manager</span>
+                            <span class="company-name-preview">Innovate Ltd</span>
+                        </div>
+                    </div>
+                    <div class="job-preview-meta">
+                        <span><i class="bi bi-geo-alt"></i> Mombasa</span>
+                        <span><i class="bi bi-clock"></i> Hybrid</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trust Bar -->
+<section class="trust-bar">
+    <div class="container">
+        <p class="trust-label">Trusted by leading companies</p>
+        <div class="trust-logos">
+            <div class="trust-logo">Safaricom</div>
+            <div class="trust-logo">Equity Bank</div>
+            <div class="trust-logo">KCB Group</div>
+            <div class="trust-logo">NCBA</div>
+            <div class="trust-logo">Twiga Foods</div>
+        </div>
+    </div>
+</section>
+
+<!-- For Job Seekers & Employers Section -->
+<section class="dual-cta">
+    <div class="container">
+        <div class="dual-cta-grid">
+            <!-- Job Seekers -->
+            <div class="cta-card-wrapper">
+                <div class="cta-card cta-seekers">
+                    <div class="cta-icon">
+                        <i class="bi bi-person-workspace"></i>
+                    </div>
+                    <h2>For Job Seekers</h2>
+                    <p>Build your profile, get matched with relevant opportunities, and apply with confidence.</p>
+                    <ul class="cta-features">
+                        <li><i class="bi bi-check2"></i> Create a professional profile</li>
+                        <li><i class="bi bi-check2"></i> Get job recommendations</li>
+                        <li><i class="bi bi-check2"></i> Track your applications</li>
+                        <li><i class="bi bi-check2"></i> Direct employer contact</li>
+                    </ul>
+                    <a href="{% url 'register' %}" class="btn btn-cta-primary">
+                        Start your job search
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <!-- Employers -->
+            <div class="cta-card-wrapper">
+                <div class="cta-card cta-employers">
+                    <div class="cta-icon icon-employer">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <h2>For Employers</h2>
+                    <p>Post jobs, review candidates, and hire the right talent for your team.</p>
+                    <ul class="cta-features">
+                        <li><i class="bi bi-check2"></i> Post unlimited jobs</li>
+                        <li><i class="bi bi-check2"></i> Access qualified candidates</li>
+                        <li><i class="bi bi-check2"></i> Manage applications easily</li>
+                        <li><i class="bi bi-check2"></i> Build your employer brand</li>
+                    </ul>
+                    <a href="{% url 'register' %}" class="btn btn-cta-secondary">
+                        Post a job
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="process-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>How it works</h2>
+            <p>Get started in three simple steps</p>
+        </div>
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Create your profile</h3>
+                    <p>Sign up and build a profile that showcases your skills, experience, and career goals.</p>
+                </div>
+            </div>
+            <div class="process-connector"></div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Discover opportunities</h3>
+                    <p>Browse jobs that match your skills or let our recommendations find them for you.</p>
+                </div>
+            </div>
+            <div class="process-connector"></div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Apply and connect</h3>
+                    <p>Submit applications with one click and communicate directly with employers.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials / Social Proof -->
+<section class="testimonials">
+    <div class="container">
+        <div class="section-header">
+            <h2>What people are saying</h2>
+            <p>Real stories from real professionals</p>
+        </div>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p>"I found my current role within two weeks of signing up. The process was straightforward and the job recommendations were actually relevant to my experience."</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SK</div>
+                    <div class="author-info">
+                        <span class="author-name">Sarah Kamau</span>
+                        <span class="author-role">Software Developer at TechCorp</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p>"As an employer, I appreciate how easy it is to post jobs and review candidates. We've hired three team members through this platform already."</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JM</div>
+                    <div class="author-info">
+                        <span class="author-name">James Mwangi</span>
+                        <span class="author-role">HR Manager at Finance Plus</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p>"After months of searching elsewhere, I finally landed interviews through JobSeeker. The platform connected me with companies I wouldn't have found on my own."</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AN</div>
+                    <div class="author-info">
+                        <span class="author-name">Alice Njeri</span>
+                        <span class="author-role">Project Manager at Innovate Ltd</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-content">
+                <span class="about-label">About Neotech</span>
+                <h2>Building connections that matter</h2>
+                <p>Founded in 2000 in Westlands, Nairobi, we started as a small technology company with a simple mission: connect talented professionals with meaningful career opportunities.</p>
+                <p>Today, we serve thousands of job seekers and hundreds of employers across Kenya, helping people find not just jobs, but careers that align with their skills and aspirations.</p>
+                <div class="about-stats">
+                    <div class="about-stat">
+                        <span class="about-stat-value">24+</span>
+                        <span class="about-stat-label">Years in business</span>
+                    </div>
+                    <div class="about-stat">
+                        <span class="about-stat-value">10K+</span>
+                        <span class="about-stat-label">Successful placements</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-values">
+                <div class="value-card">
+                    <i class="bi bi-shield-check"></i>
+                    <h4>Integrity</h4>
+                    <p>We operate with transparency and honesty in everything we do.</p>
+                </div>
+                <div class="value-card">
+                    <i class="bi bi-lightning"></i>
+                    <h4>Innovation</h4>
+                    <p>Continuously improving our platform to serve you better.</p>
+                </div>
+                <div class="value-card">
+                    <i class="bi bi-people"></i>
+                    <h4>Community</h4>
+                    <p>Building a network that supports career growth for everyone.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info-block">
+                <h2>Get in touch</h2>
+                <p>Have questions? We're here to help you navigate your career journey.</p>
+                <div class="contact-details">
+                    <div class="contact-detail">
+                        <i class="bi bi-geo-alt"></i>
+                        <div>
+                            <span class="detail-label">Office</span>
+                            <span class="detail-value">Westlands, Nairobi, Kenya</span>
+                        </div>
+                    </div>
+                    <div class="contact-detail">
+                        <i class="bi bi-telephone"></i>
+                        <div>
+                            <span class="detail-label">Phone</span>
+                            <span class="detail-value">+254 789 987 001</span>
+                        </div>
+                    </div>
+                    <div class="contact-detail">
+                        <i class="bi bi-envelope"></i>
+                        <div>
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value">hello@jobseeker.co.ke</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-cta-block">
+                <div class="ready-card">
+                    <h3>Ready to get started?</h3>
+                    <p>Join thousands of professionals who've found their next opportunity through JobSeeker.</p>
+                    <a href="{% url 'register' %}" class="btn btn-primary-custom btn-lg">
+                        Create your free account
+                    </a>
+                    <span class="no-credit">No credit card required</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-main">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <img src="{% static 'img/logo.jpg' %}" width="36" height="36" alt="JobSeeker" />
+                    <span>JobSeeker</span>
+                </div>
+                <p>Connecting talent with opportunity since 2000.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-group">
+                <div class="footer-column">
+                    <h4>For Job Seekers</h4>
+                    <ul>
+                        <li><a href="{% url 'posted-jobs' %}">Browse Jobs</a></li>
+                        <li><a href="{% url 'register' %}">Create Account</a></li>
+                        <li><a href="#">Career Resources</a></li>
+                        <li><a href="#">Resume Tips</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>For Employers</h4>
+                    <ul>
+                        <li><a href="{% url 'register' %}">Post a Job</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Recruitment Solutions</a></li>
+                        <li><a href="#">Employer Resources</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-legal">
+                <span>&copy; 2026 JobSeeker. All rights reserved.</span>
+                <div class="legal-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <i class="bi bi-chevron-up"></i>
+</button>
+
+{% endblock body %}

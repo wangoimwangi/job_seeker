@@ -1,13 +1,206 @@
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-{% block body %}
-<div class="sidebar" style="width:20%">
-    <header><h4>Job Seeker</h4></header>
-    <a class="active" a href="{% url 'home' %}"><i class="fas fa-home"></i>Home</a>
-    <a class="active" a href="{% url 'my-profile' %}"><i class="fas fa-user"></i>My Profile</a>
-    <a class="active" a href="{% url 'posted-jobs' %}"><i class="fas fa-stream"></i>Jobs</a>
+<style>
+.applicant-sidebar {
+    position: fixed;
+    left: 0;
+    top: 70px;
+    height: calc(100vh - 70px);
+    width: 280px;
+    background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+    padding: 30px 0;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+}
+
+.sidebar-brand {
+    padding: 0 25px 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 25px;
+}
+
+.sidebar-brand h4 {
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-brand i {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav-item {
+    margin: 5px 15px;
+}
+
+.sidebar-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 15px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.sidebar-nav-link i {
+    font-size: 1.3rem;
+    width: 24px;
+    text-align: center;
+}
+
+.sidebar-nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateX(5px);
+}
+
+.sidebar-nav-link.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.main-content-wrapper {
+    margin-left: 280px;
+    min-height: calc(100vh - 70px);
+    background: #f8fafc;
+    padding: 30px;
+}
+
+.sidebar-toggle-btn {
+    display: none;
+    position: fixed;
+    top: 85px;
+    left: 20px;
+    z-index: 1000;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+@media (max-width: 992px) {
+    .applicant-sidebar {
+        transform: translateX(-100%);
+    }
     
+    .applicant-sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .main-content-wrapper {
+        margin-left: 0;
+    }
+    
+    .sidebar-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+</style>
+
+<button class="sidebar-toggle-btn" onclick="toggleSidebar()">
+    <i class="bi bi-list"></i>
+</button>
+
+<div class="applicant-sidebar" id="applicantSidebar">
+    <div class="sidebar-brand">
+        <h4>
+            <i class="bi bi-person-circle"></i>
+            Applicant Portal
+        </h4>
+    </div>
+    
+    <ul class="sidebar-nav">
+        <li class="sidebar-nav-item">
+            <a href="{% url 'applicant' %}" class="sidebar-nav-link">
+                <i class="bi bi-house-door-fill"></i>
+                <span>Home</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a href="{% url 'my-profile' %}" class="sidebar-nav-link">
+                <i class="bi bi-person-fill"></i>
+                <span>My Profile</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a href="{% url 'posted-jobs' %}" class="sidebar-nav-link">
+                <i class="bi bi-briefcase-fill"></i>
+                <span>Browse Jobs</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a href="{% url 'applied-jobs' %}" class="sidebar-nav-link">
+                <i class="bi bi-send-fill"></i>
+                <span>Applied Jobs</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a href="{% url 'saved-jobs' %}" class="sidebar-nav-link">
+                <i class="bi bi-bookmark-fill"></i>
+                <span>Saved Jobs</span>
+            </a>
+        </li>
+    </ul>
 </div>
-<section>
-</section>
-{% endblock %}
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.getElementById('applicantSidebar');
+    sidebar.classList.toggle('active');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('applicantSidebar');
+    const toggleBtn = document.querySelector('.sidebar-toggle-btn');
+    
+    if (window.innerWidth <= 992 && 
+        !sidebar.contains(event.target) && 
+        !toggleBtn.contains(event.target) &&
+        sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+    }
+});
+
+// Set active link based on current page
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll('.sidebar-nav-link');
+    
+    links.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>

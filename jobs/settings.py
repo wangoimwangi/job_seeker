@@ -41,11 +41,15 @@ INSTALLED_APPS = [
     #custom
     'phonenumber_field',  # used for  phone number handling
     'crispy_forms',
+    'crispy_bootstrap4',
     'django_filters',
     'job_seeker',
     'django_cleanup.apps.CleanupConfig',
+    
 
 ]
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

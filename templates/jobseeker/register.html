@@ -1,17 +1,296 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %} Register {% endblock %}
+{% block title %} Register | TalentHub {% endblock %}
 {% block body %}
 
-<div class="container center">
-    <br><br><br>
-<h2>Welcome to Job seeker!!</h2>
-<h4>We are glad to have you are here</h4>
-<br>
-<h5>Which best describes you today?</h5>
-<br><br>
-<a href="{% url 'register-staff' %}" class="btn btn-primary">Staff</a>
-<a href="{% url 'register-applicant' %}" class="btn btn-primary">Applicant</a>
+<section class="register-type-section">
+    <div class="container">
+        <div class="register-type-container">
+            <div class="register-type-header">
+                <div class="welcome-badge">
+                    <i class="bi bi-stars"></i>
+                    <span>Register</span>
+                </div>
+                <h1 class="register-type-title">Welcome to TalentHub!</h1>
+                <p class="register-type-subtitle">
+                    We're excited to have you here. Choose your account type to get started
+                </p>
+            </div>
 
+            <div class="account-type-grid">
+                <!-- Job Seeker Card -->
+                <a href="{% url 'register-applicant' %}" class="account-type-card">
+                    <div class="account-type-icon job-seeker-icon">
+                        <i class="bi bi-person-workspace"></i>
+                    </div>
+                    <h3 class="account-type-title">I'm a Job Seeker</h3>
+                    <p class="account-type-description">
+                        Looking for opportunities? Create a profile, browse jobs, and apply to positions that match your skills.
+                    </p>
+                    <ul class="account-type-features">
+                        <li><i class="bi bi-check-circle-fill"></i> Browse job listings</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Apply to multiple positions</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Track your applications</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Get job recommendations</li>
+                    </ul>
+                    <div class="account-type-action">
+                        <span>Continue as Job Seeker</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </a>
+
+                <!-- Employer Card -->
+                <a href="{% url 'register-staff' %}" class="account-type-card">
+                    <div class="account-type-icon employer-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <h3 class="account-type-title">I'm an Employer</h3>
+                    <p class="account-type-description">
+                        Hiring talent? Post jobs, review applications, and connect with qualified candidates.
+                    </p>
+                    <ul class="account-type-features">
+                        <li><i class="bi bi-check-circle-fill"></i> Post and manage jobs</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Review applications</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Manage candidates</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Build your company brand</li>
+                    </ul>
+                    <div class="account-type-action">
+                        <span>Continue as Employer</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+
+            <div class="register-type-footer">
+                <p>Already have an account? <a href="{% url 'login' %}" class="login-link">Log in here</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.register-type-section {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 100px 0 80px;
+    position: relative;
+}
+
+.register-type-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></svg>');
+    opacity: 0.3;
+}
+
+.register-type-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.register-type-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.welcome-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 20px;
+    border-radius: 50px;
+    color: white;
+    font-weight: 500;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+}
+
+.welcome-badge i {
+    font-size: 1.2rem;
+}
+
+.register-type-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 16px;
+}
+
+.register-type-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.account-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.account-type-card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.account-type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.account-type-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.account-type-card:hover::before {
+    transform: scaleX(1);
+}
+
+.account-type-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin-bottom: 24px;
+}
+
+.job-seeker-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.employer-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.account-type-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 12px;
+}
+
+.account-type-description {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.account-type-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+}
+
+.account-type-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    color: #334155;
+}
+
+.account-type-features i {
+    color: #10b981;
+    font-size: 1.1rem;
+}
+
+.account-type-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: #f8fafc;
+    border-radius: 12px;
+    font-weight: 600;
+    color: #6366f1;
+    transition: all 0.3s ease;
+}
+
+.account-type-card:hover .account-type-action {
+    background: #6366f1;
+    color: white;
+}
+
+.account-type-card:hover .account-type-action i {
+    transform: translateX(5px);
+}
+
+.account-type-action i {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.register-type-footer {
+    text-align: center;
+    padding-top: 40px;
+    color: white;
+}
+
+.register-type-footer p {
+    font-size: 1.1rem;
+}
+
+.login-link {
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid white;
+    transition: all 0.3s ease;
+}
+
+.login-link:hover {
+    color: #ffd900;
+    border-bottom-color: #ffd900;
+}
+
+@media (max-width: 992px) {
+    .account-type-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .register-type-title {
+        font-size: 2.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .register-type-title {
+        font-size: 1.75rem;
+    }
+    
+    .account-type-card {
+        padding: 30px 24px;
+    }
+}
+</style>
 
 {% endblock body %}

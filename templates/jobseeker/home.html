@@ -1,109 +1,106 @@
 <!--This is the official home page-->
 {% extends 'base.html' %}
-{% block title %} Job Seeker | Home {% endblock %}
+{% block title %} Talent Hub | Where Talent Meets Opportunity {% endblock %}
 {% load static %}
 {% block body%}
-<section class="bg-light text-dark p-5 p-lg-2 pt-lg-5 text-center text-sm-start">
+
+<!-- Hero Section with Modern Design -->
+<section class="hero-section">
+    <div class="hero-overlay"></div>
     <div class="container">
-        <div class="d-sm-flex align-items-center justify-content-between">
-            <div>
-                <h2>Get your <span class="text-warning">Dream Job Today!</span></h2>
-                <p class="lead my-4">
-                    Have you been struggling looking for a job,<br>search no more the Job Seeker got you.<br><span class="text-danger">Join us
-                    today and build your career now.
-                    </p></span>
-                <a role="button" class="btn btn-primary btn-lg" href="{% url 'register' %}">JOIN US</a>
-            </div>
-            <img class="img-fluid w-50 d-none d-sm-block" src="{% static 'img/4565.jpg' %}" alt="z">
-        </div>
-    </div>
-</section>
-
-<!--Boxes-->
-<section class="p-5">
-    <div class="container">
-        <div class="row text-center g-4">
-            <div class="col-md">
-                <div class="card bg-dark text-light">
-                    <div class="card-body text-center">
-                        <div class="h2 mb-3">
-                            <i class="bi bi-people"></i>
-                        </div>
-                        <h3 class="card-tittle mb-3">
-                            Neotech Company
-                        </h3>
-                        <p class="card-text">
-                        Neotech Company is a technology company based in Westlands,Nairobi.
-                        It started in the year 2000 as a small business which later expanded to one of the best technology company in Kenya.
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md">
-                <div class="card bg-secondary text-light">
-                    <div class="card-body text-center">
-                        <div class="h2 mb-3">
-                            <i class="bi bi-person-square"></i>
-                        </div>
-                        <h3 class="card-tittle mb-3">
-                            Jobs
-                        </h3>
-                        <p class="card-text">
-                            Some of the jobs vacancies available at NeotechCompany include:Software Development,IT Support,Database Analyst,Project Manager among others.
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="col-md">
-                <div class="card bg-dark text-light">
-                    <div class="card-body text-center">
-                        <div class="h2 mb-3">
-                          <i class="bi bi-laptop"></i>
-                            
-                        </div>
-                        <h3 class="card-tittle mb-3">
-                            Mission and Vision
-                        </h3>
-                        <p class="card-text">
-                           The Mission of Neotech is to serve their customers with integrity while
-                           the vision is to build a space where people can discover new things.
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</section>
-
-<section class="section-content section-contact bg-light" id="sectionContact">
-    <div class="container container-small">
-        <h4 class="section-title">
-            <span class="text-info">Get in Touch with us</span>
-        </h4>
-
-        <div class="row row-cols-1 row-cols-md-2 g-5">
-            <div class="col col-md-5">
-                <p class="footer-text mb-4">
-                    Please get in touch and our expert support team will answer all
-                    your questions.
+        <div class="row align-items-center min-vh-80">
+            <div class="col-lg-6 hero-content">
+                <h1 class="hero-title mb-4 animate-fadeInUp">
+                    Land Your  <span class="text-gradient">Dream Job</span> Today
+                </h1>
+                <p class="hero-subtitle mb-4 animate-fadeInUp">
+                    Join thousands of professionals who found their perfect career match. 
+                    Your next opportunity is just a click away.
                 </p>
-                <div class="footer-address">
-                    <p class="align-items-center gap-md">
-                        <i class="fa-solid fa-location-dot text-primary"></i>
-                        Nairobi, Kenya
+                <div class="hero-buttons animate-fadeInUp">
+                    <a role="button" class="btn btn-hero-primary btn-lg me-3" href="{% url 'register' %}">
+                        <i class="bi bi-person-plus me-2"></i>Get Started
+                    </a>
+                    <a role="button" class="btn btn-hero-secondary btn-lg" href="{% url 'posted-jobs' %}">
+                        <i class="bi bi-search me-2"></i>Browse Jobs
+                    </a>
+                </div>
+                <div class="hero-stats mt-5">
+                    <div class="row text-center text-lg-start">
+                        <div class="col-4">
+                            <h3 class="stat-number">500+</h3>
+                            <p class="stat-label">Active Jobs</p>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="stat-number">1000+</h3>
+                            <p class="stat-label">Happy Users</p>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="stat-number">50+</h3>
+                            <p class="stat-label">Companies</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="hero-image-wrapper animate-fadeInRight">
+                    <img class="img-fluid hero-image" src="{% static 'img/4565.jpg' %}" alt="Job Search">
+                    <div class="floating-card card-1">
+                        <i class="bi bi-briefcase-fill"></i>
+                        <span>New Job Alert!</span>
+                    </div>
+                    <div class="floating-card card-2">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Application Sent</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Why Choose Us?</h2>
+            <p class="section-subtitle">Discover what makes us the best platform for job seekers</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper bg-gradient-blue">
+                        <i class="bi bi-people feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">About Talent Hub</h3>
+                    <p class="feature-text">
+                        Our intuitive platform makes finding your perfect job effortless. Search, filter, and apply to opportunities in just a few clicks
                     </p>
-                    <p class="align-items-center gap-md">
-                        <i class="fa-solid fa-phone text-primary"></i>
-                        +254 789 987 001
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper bg-gradient-purple">
+                        <i class="bi bi-briefcase feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Diverse Opportunities</h3>
+                    <p class="feature-text">
+                        Explore exciting positions including Software Development, IT Support, 
+                        Database Analysis, Project Management, and many more career opportunities 
+                        tailored to your skills.
                     </p>
-                    <p class="align-items-center gap-md">
-                        <i class="fa-solid fa-envelope text-primary"></i>
-                        contact@JobSeeker.com
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper bg-gradient-orange">
+                        <i class="bi bi-target feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Trusted Platform</h3>
+                    <p class="feature-text">
+                        We connect talented professionals with verified employers, ensuring a secure and reliable job search experience for everyone.
                     </p>
                 </div>
             </div>
@@ -111,17 +108,166 @@
     </div>
 </section>
 
-
-
-<!--Footer-->
-<footer class="p-1 bg-dark text-white text-center position-relative">
+<!-- How It Works Section -->
+<section class="how-it-works-section py-5">
     <div class="container">
-        <p class="py-4 m-0">
-            &copy; 2022 JobSeeker.com - All rights reserved.
-        </p>
-        <a href="#" class="position-absolute bottom-0 end-0 p-3">
-            <i class="bi bi-arrow-up-circle h1"></i>
-        </a>
+        <div class="text-center mb-5">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Get hired in 3 simple steps</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon-wrapper">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </div>
+                    <h4>Create Account</h4>
+                    <p>Sign up and build your professional profile in minutes</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon-wrapper">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h4>Find Jobs</h4>
+                    <p>Browse through hundreds of opportunities matching your skills</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon-wrapper">
+                        <i class="bi bi-send-fill"></i>
+                    </div>
+                    <h4>Apply & Get Hired</h4>
+                    <p>Submit applications and land your dream job</p>
+                </div>
+            </div>
+        </div>
     </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="section-title mb-4">Get in Touch</h2>
+                <p class="lead mb-4">
+                    Have questions? Our expert support team is here to help you 
+                    navigate your career journey.
+                </p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div>
+                            <h5>Location</h5>
+                            <p>Nairobi, Kenya</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="bi bi-telephone-fill"></i>
+                        </div>
+                        <div>
+                            <h5>Phone</h5>
+                            <p>+254 000 000 001</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
+                        <div>
+                            <h5>Email</h5>
+                            <p>contact@TalentHub.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="cta-card">
+                    <h3 class="mb-3">Ready to Start Your Journey?</h3>
+                    <p class="mb-4">Join thousands of professionals who found their dream jobs through our platform.</p>
+                    <a href="{% url 'register' %}" class="btn btn-cta btn-lg">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Start Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="modern-footer">
+    <div class="container">
+        <div class="row py-5">
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <div class="footer-brand mb-3">
+                    <div class="footer-logo-icon">
+                        <i class="bi bi-diagram-3-fill"></i>
+                    </div>
+                    <h4 class="d-inline-block">Talent Hub</h4>
+                </div>
+                <p class="footer-description">
+                    Connecting talented professionals with amazing opportunities. 
+                    Your career journey starts here.
+                </p>
+                <div class="social-links mt-3">
+                    <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h5 class="footer-title">Company</h5>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h5 class="footer-title">Resources</h5>
+                <ul class="footer-links">
+                    <li><a href="{% url 'posted-jobs' %}">Browse Jobs</a></li>
+                    <li><a href="{% url 'services' %}">Services</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    <li><a href="#">Help Center</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <h5 class="footer-title">Newsletter</h5>
+                <p class="footer-newsletter-text">Subscribe to get the latest job opportunities</p>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" class="form-control">
+                    <button class="btn btn-newsletter"><i class="bi bi-send-fill"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom py-3">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                    <p class="mb-0">&copy; 2026 TalentHub.com - All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="footer-bottom-link">Privacy Policy</a>
+                    <span class="mx-2">|</span>
+                    <a href="#" class="footer-bottom-link">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="bi bi-arrow-up-circle-fill"></i>
+    </a>
 </footer>
+
 {% endblock body %}

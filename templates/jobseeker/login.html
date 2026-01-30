@@ -1,26 +1,505 @@
 {% extends 'base.html' %} 
-{% block title %} Login {% endblock %}
+{% load static %}
+{% block title %} Sign In | TalentHub {% endblock %}
 
 {% block body %}
-<div class="container text-center">
-    <h2>Login</h2><br><br>
-    <form action="{% url 'login' %}" method="POST" novalidate>
-        {% csrf_token %}
-        {% for field in form %}
-        <div class="form-field mb-3">
-            {{ field.label_tag }}
-            {{ field }}
+<section class="login-section">
+    <div class="container">
+        <div class="login-wrapper">
+            <!-- Left Side - Branding -->
+            <div class="login-branding">
+                <div class="branding-content">
+                    <div class="brand-logo-large">
+                        <i class="bi bi-diagram-3-fill"></i>
+                    </div>
+                    <h2>Welcome Back to TalentHub</h2>
+                    <p class="branding-tagline">
+                        Where exceptional talent meets extraordinary opportunities
+                    </p>
+                    
+                    <div class="login-features">
+                        <div class="feature-item">
+                            <i class="bi bi-lightning-charge-fill"></i>
+                            <span>Instant job matching</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span>Career growth tracking</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="bi bi-shield-check"></i>
+                            <span>Secure & trusted platform</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Login Form -->
+            <div class="login-form-container">
+                <div class="login-form-header">
+                    <h1>Sign In</h1>
+                    <p>Enter your credentials to access your account</p>
+                </div>
+
+                <form action="{% url 'login' %}" method="POST" class="modern-login-form" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                    <div class="form-errors">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div>
+                            <strong>Login failed</strong>
+                            <p>Please check your credentials and try again.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                    <div class="form-group-modern">
+                        <label for="{{ field.id_for_label }}" class="form-label-modern">
+                            {{ field.label }}
+                        </label>
+                        <div class="input-with-icon">
+                            {% if 'username' in field.name or 'email' in field.name %}
+                            <i class="bi bi-person-fill"></i>
+                            {% elif 'password' in field.name %}
+                            <i class="bi bi-lock-fill"></i>
+                            {% endif %}
+                            {{ field }}
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-login-modern">
+                        <span>Sign In</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="login-divider">
+                    <span>or</span>
+                </div>
+
+                <div class="login-footer">
+                    <div class="admin-link">
+                        <i class="bi bi-shield-lock"></i>
+                        <a href="{% url 'admin:index' %}?next={% url 'home' %}">Admin Login</a>
+                    </div>
+                    
+                    <p class="signup-prompt">
+                        Don't have an account? 
+                        <a href="{% url 'register' %}" class="signup-link">Create one now</a>
+                    </p>
+                    
+                    <a href="{% url 'home' %}" class="back-home-link">
+                        <i class="bi bi-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
         </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Login</button>
-        <br>
-        <span>Are you a system admin?</span><br>
-        <a href="{% url 'admin:index' %}?next={% url 'home' %}">Admin Login</a>
-        <br>
-        <span>Don't have an Account yet?</span><br>
-        <a href="{% url 'register' %}">Create Account</a>
-        <br><br>
-        <a class="btn btn-secondary" href="{% url 'home' %}">Go back Home</a>
-    </form>
-</div>
+    </div>
+</section>
+
+<style>
+.login-section {
+    min-height: 100vh;
+    background: #f8fafc;
+    padding: 40px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.login-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 700px;
+}
+
+/* Left Side - Branding */
+.login-branding {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 60px 50px;
+    color: white;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.login-branding::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></svg>');
+    opacity: 0.3;
+}
+
+.branding-content {
+    position: relative;
+    z-index: 2;
+}
+
+.brand-logo-large {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    margin-bottom: 32px;
+    backdrop-filter: blur(10px);
+}
+
+.login-branding h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    line-height: 1.2;
+}
+
+.branding-tagline {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    opacity: 0.95;
+    margin-bottom: 48px;
+}
+
+.login-features {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 1.05rem;
+}
+
+.feature-item i {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* Right Side - Form */
+.login-form-container {
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form-header {
+    margin-bottom: 40px;
+}
+
+.login-form-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.login-form-header p {
+    color: #64748b;
+    font-size: 1rem;
+}
+
+.modern-login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-group-modern {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label-modern {
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1.1rem;
+}
+
+.modern-login-form input[type="text"],
+.modern-login-form input[type="email"],
+.modern-login-form input[type="password"] {
+    width: 100%;
+    padding: 14px 16px 14px 48px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    color: #1e293b;
+    font-family: inherit;
+}
+
+.modern-login-form input:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -8px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.remember-me input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.forgot-password {
+    color: #6366f1;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #4f46e5;
+}
+
+.form-errors {
+    background: #fef2f2;
+    border: 2px solid #fecaca;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    color: #991b1b;
+}
+
+.form-errors i {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.btn-login-modern {
+    width: 100%;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    margin-top: 8px;
+}
+
+.btn-login-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+.btn-login-modern i {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.btn-login-modern:hover i {
+    transform: translateX(4px);
+}
+
+.login-divider {
+    text-align: center;
+    position: relative;
+    margin: 32px 0;
+}
+
+.login-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.login-divider span {
+    background: white;
+    padding: 0 16px;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 1;
+}
+
+.login-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+}
+
+.admin-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #64748b;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.admin-link:hover {
+    background: #f1f5f9;
+}
+
+.admin-link a {
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.admin-link:hover a {
+    color: #1e293b;
+}
+
+.signup-prompt {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.signup-link {
+    color: #6366f1;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.signup-link:hover {
+    color: #4f46e5;
+    text-decoration: underline;
+}
+
+.back-home-link {
+    color: #64748b;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.back-home-link:hover {
+    color: #1e293b;
+    gap: 12px;
+}
+
+@media (max-width: 992px) {
+    .login-wrapper {
+        grid-template-columns: 1fr;
+    }
+    
+    .login-branding {
+        padding: 40px 30px;
+    }
+    
+    .login-branding h2 {
+        font-size: 2rem;
+    }
+    
+    .login-form-container {
+        padding: 40px 30px;
+    }
+}
+
+@media (max-width: 576px) {
+    .login-section {
+        padding: 20px 10px;
+    }
+    
+    .login-wrapper {
+        border-radius: 16px;
+    }
+    
+    .login-branding {
+        padding: 30px 20px;
+    }
+    
+    .login-form-container {
+        padding: 30px 20px;
+    }
+    
+    .login-form-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .form-options {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+}
+</style>
+
 {% endblock body %}

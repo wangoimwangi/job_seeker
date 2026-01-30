@@ -1,16 +1,199 @@
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-{% block body %}
-<div class="sidebar" style="width:20%">
-    <header><h4>Job Seeker</h4></header>
-    <a class="active" a href="{% url 'home' %}"><i class="fas fa-home"></i>Home</a>
-    <a class="active" a href="{% url 'add-job' %}"><i class="fas fa-sliders-h"></i>Add Job Post</a>
-    <a class="active" a href="{% url 'job-list' %}"><i class="fas fa-stream"></i>Manage Jobs</a>
-    <!-- <a class="active" a href="{% url 'search-applicant' %}"><i class="fas fa-question-circle"></i>Search Applicant</a> -->
-    <a class="active" a href="{% url 'applied-any-month' %}"><i class="fas fa-question-circle"></i>Report</a>
-
+<div class="staff-sidebar">
+    <div class="staff-sidebar-header">
+        <div class="staff-brand-icon">
+            <i class="bi bi-diagram-3-fill"></i>
+        </div>
+        <h3>TalentHub</h3>
+        <p class="staff-sidebar-subtitle">Employer Portal</p>
+    </div>
     
+    <nav class="staff-nav">
+        <a href="{% url 'staff' %}" class="staff-nav-link">
+            <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="{% url 'add-job' %}" class="staff-nav-link">
+            <i class="bi bi-plus-circle"></i>
+            <span>Post New Job</span>
+        </a>
+        <a href="{% url 'job-list' %}" class="staff-nav-link">
+            <i class="bi bi-list-task"></i>
+            <span>Manage Jobs</span>
+        </a>
+        <a href="{% url 'applied-any-month' %}" class="staff-nav-link">
+            <i class="bi bi-bar-chart"></i>
+            <span>Reports</span>
+        </a>
+        <a href="{% url 'my-profile' %}" class="staff-nav-link">
+            <i class="bi bi-person-circle"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+    
+    <div class="staff-sidebar-footer">
+        <a href="{% url 'logout' %}" class="staff-logout-link">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Logout</span>
+        </a>
+    </div>
 </div>
-<section>
-</section>
-{% endblock %}
+
+<button class="staff-mobile-toggle" onclick="toggleStaffSidebar()">
+    <i class="bi bi-list"></i>
+</button>
+
+<style>
+.staff-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 280px;
+    height: 100vh;
+    background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+    padding: 30px 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.staff-sidebar-header {
+    padding: 0 25px 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 30px;
+}
+
+.staff-brand-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.staff-sidebar-header h3 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.staff-sidebar-subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin: 5px 0 0;
+}
+
+.staff-nav {
+    flex: 1;
+    padding: 0 15px;
+}
+
+.staff-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 15px;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.staff-nav-link:hover, .staff-nav-link.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateX(5px);
+}
+
+.staff-nav-link i {
+    font-size: 1.3rem;
+    width: 24px;
+}
+
+.staff-sidebar-footer {
+    padding: 20px 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.staff-logout-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 15px;
+    color: #fca5a5;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.staff-logout-link:hover {
+    background: rgba(252, 165, 165, 0.1);
+    color: #ef4444;
+}
+
+.staff-logout-link i {
+    font-size: 1.3rem;
+}
+
+.staff-mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+}
+
+.main-content-wrapper {
+    margin-left: 280px;
+    padding: 40px;
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+@media (max-width: 992px) {
+    .staff-sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .staff-sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .staff-mobile-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .main-content-wrapper {
+        margin-left: 0;
+        padding: 90px 20px 40px;
+    }
+}
+</style>
+
+<script>
+function toggleStaffSidebar() {
+    document.querySelector('.staff-sidebar').classList.toggle('active');
+}
+</script>
