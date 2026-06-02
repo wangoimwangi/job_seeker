@@ -1,50 +1,70 @@
-
-{% block title %}{% endblock %}
-{% load crispy_forms_tags %}
-{% load static %}
+{% extends 'base.html' %}
+{% block title %}Reports — TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
 {% block body %}
-{% include 'staff/applicant_search.html' %}
-<div>
-    <h3 class="text-center">
-        <b>General Reports</b>
-    </h3>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-5">
-                <div class="card card-signin my-2">
-                    <div class="card-body">
-                        <h5><span class="text-warning">Number of Applications per month</span></h5>
-                        <select name="month" class="datefield month" id="selectMonth">
-                            <option value="1" {% if selected_month == 1 %}selected{% endif %}>Jan</option>
-                            <option value="2" {% if selected_month == 2 %}selected{% endif %}>Feb</option>
-                            <option value="3" {% if selected_month == 3 %}selected{% endif %}>Mar</option>
-                            <option value="4" {% if selected_month == 4 %}selected{% endif %}>Apr</option>
-                            <option value="5" {% if selected_month == 5 %}selected{% endif %}>May</option>
-                            <option value="6" {% if selected_month == 6 %}selected{% endif %}>Jun</option>
-                            <option value="7" {% if selected_month == 7 %}selected{% endif %}>Jul</option>
-                            <option value="8" {% if selected_month == 8 %}selected{% endif %}>Aug</option>
-                            <option value="9" {% if selected_month == 9 %}selected{% endif %}>Sep</option>
-                            <option value="10" {% if selected_month == 10 %}selected{% endif %}>Oct</option>
-                            <option value="11" {% if selected_month == 11 %}selected{% endif %}>Nov</option>
-                            <option value="12" {% if selected_month == 12 %}selected{% endif %}>Dec</option>
-                        </select>
-                        <p style="font-size: 17px">{{count}}</p>
-                    </div>
-                </div>
-            </div>
+
+{% include 'staff/side_bar_staff.html' %}
+
+<div class="sidebar-main">
+
+  <div class="page-header">
+    <h1 class="page-title">Application Reports</h1>
+  </div>
+
+  <div style="max-width:560px;">
+
+    <div class="th-card mb-4">
+      <div class="th-card-header"><i class="fa-solid fa-chart-bar me-2 text-primary-th"></i>Applications Per Month</div>
+      <div class="th-card-body">
+        <p style="font-size:.9rem;color:var(--text-light);margin-bottom:20px;">
+          Select a month to see how many applications were received this year.
+        </p>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:24px;">
+          <select id="monthSelect" class="th-form-control" style="width:180px;">
+            {% for num, name in months %}
+            <option value="{{ num }}" {% if selected_month == num %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+          </select>
+          <div style="font-size:2rem;font-weight:800;color:var(--primary);">{{ count }}</div>
+          <span style="font-size:.9rem;color:var(--text-light);">application{{ count|pluralize }}</span>
         </div>
+
+        <!-- Month bar chart (visual representation) -->
+        <div style="display:flex;gap:3px;align-items:flex-end;height:48px;margin-top:8px;">
+          {% for num, name in months %}
+          <div style="flex:1;background:{% if selected_month == num %}var(--primary){% else %}var(--primary-lt){% endif %};border-radius:3px 3px 0 0;min-height:4px;height:{% if selected_month == num %}48px{% else %}20px{% endif %};transition:height .3s;" title="{{ name }}"></div>
+          {% endfor %}
+        </div>
+        <div style="display:flex;gap:3px;margin-top:4px;">
+          {% for num, name in months %}
+          <div style="flex:1;text-align:center;font-size:.6rem;color:var(--text-light);">{{ name|slice:":1" }}</div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
+
+    <div class="th-card">
+      <div class="th-card-header"><i class="fa-solid fa-circle-info me-2 text-primary-th"></i>Quick Stats</div>
+      <div class="th-card-body">
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <a href="{% url 'search-applicant' %}" class="btn-outline-th" style="font-size:.85rem;">
+            <i class="fa-solid fa-users me-1"></i>Browse All Applicants
+          </a>
+          <a href="{% url 'job-list' %}" class="btn-outline-th" style="font-size:.85rem;">
+            <i class="fa-solid fa-briefcase me-1"></i>Manage Jobs
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>
 
 <script>
-    const selectMonth = document.getElementById('selectMonth')
-    selectMonth.addEventListener('change', () => {
-        const month = Number(selectMonth.value)
-        const url = `/applicants/${month}`
-        window.location.href = url
-    })
-
+document.getElementById('monthSelect').addEventListener('change', function() {
+  window.location.href = '/staff/reports/' + this.value + '/';
+});
 </script>
 
-{% endblock body %}
-
+{% endblock %}

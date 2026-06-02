@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Page Not Found — TalentHub{% endblock %}
+{% block body %}
+
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px;">
+  <div style="text-align:center;max-width:480px;">
+
+    <div style="font-size:6rem;font-weight:900;color:var(--primary);line-height:1;margin-bottom:8px;">404</div>
+    <div style="font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:12px;">Page Not Found</div>
+    <p style="color:var(--text-light);margin-bottom:32px;line-height:1.6;">
+      The page you're looking for doesn't exist or may have been moved.
+    </p>
+
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="{% url 'home' %}" class="btn-primary-th">
+        <i class="fa-solid fa-house me-2"></i>Go Home
+      </a>
+      <a href="javascript:history.back()" class="btn-outline-th">
+        <i class="fa-solid fa-arrow-left me-2"></i>Go Back
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

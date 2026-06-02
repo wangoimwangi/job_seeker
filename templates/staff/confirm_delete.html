@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Delete Job — TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
+{% block body %}
+
+{% include 'staff/side_bar_staff.html' %}
+
+<div class="sidebar-main">
+  <div style="max-width:520px;margin:60px auto;">
+
+    <div class="th-card" style="text-align:center;">
+      <div class="th-card-body" style="padding:48px 32px;">
+
+        <div style="width:72px;height:72px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem;color:#dc2626;">
+          <i class="fa-solid fa-trash"></i>
+        </div>
+
+        <h2 style="font-size:1.4rem;font-weight:700;color:var(--text-dark);margin-bottom:10px;">Delete Job Posting?</h2>
+        <p style="color:var(--text-light);margin-bottom:6px;">You are about to permanently delete:</p>
+        <p style="font-weight:700;color:var(--text-dark);font-size:1.05rem;margin-bottom:6px;">{{ job.title }}</p>
+        <p style="font-size:.85rem;color:var(--text-light);margin-bottom:28px;">
+          {{ job.company }} · {{ job.location }}<br>
+          {% with count=job.applicant_count %}
+          {% if count %}This will also remove <strong>{{ count }} application{{ count|pluralize }}</strong>.{% endif %}
+          {% endwith %}
+        </p>
+
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px 16px;margin-bottom:28px;text-align:left;">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <i class="fa-solid fa-triangle-exclamation" style="color:#dc2626;margin-top:2px;flex-shrink:0;"></i>
+            <span style="font-size:.85rem;color:#991b1b;">This action cannot be undone. All associated applications will be permanently deleted.</span>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;justify-content:center;">
+          <a href="{% url 'job-list' %}" class="btn-outline-th" style="padding:11px 24px;border-radius:8px;">
+            Cancel
+          </a>
+          <form method="POST" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn-danger-th" style="padding:12px 24px;border-radius:8px;">
+              <i class="fa-solid fa-trash me-2"></i>Yes, Delete
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

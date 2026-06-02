@@ -1,92 +1,133 @@
-<!--Used to search for applicants based on the location and job type-->
-<!--Display applicants whose profile match the location and job type-->
-<!--It filters out candidates based on these and then display the list of the filtered candidates-->
 {% extends 'base.html' %}
-{% block title %}Applicants List{% endblock %}
-{% load static %}
+{% block title %}Search Applicants — TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
 {% block body %}
-<br />
-<div>
-    <h3 class="text-center">
-        <b>Search Applicants</b>
-    </h3>
-    <form class="form-signin mt-2" action="{% url 'search-applicant' %}" method="get">
-        <div class="row">
-            <div class="row">
-                <div class="col-md-4">
-                    <input name="r" type="text" class="form-control" placeholder="Enter Location of Choice" /><br />
-                </div>
 
-            <div class="col-md-4">
-                <input name="s" type="text" class="form-control"
-                    placeholder="For Job Type (Full Time, Intern etc.)" /><br />
-            </div>
-        </div>
-        <div class="form-group">
-            <button class="btn btn-md btn-primary btn-block" type="submit">
-                Search
-            </button>
-        </div>
-    </form>
-    {% if profiles %}
-    <div class="row">
-        {% for profile in profiles %}
-        <div class="col-md-3">
-            <div class="card card-signin my-2">
-                <span class="ml-2 mt-2">
-                    <a href="{% url 'profile-view' profile.slug %}">
-                        {% if profile.full_name %}
-                        <h5 class="text-success">
-                            <b>{{profile.full_name}}</b>
-                        </h5>
-                        {% else %}
-                        <h4 class="text-dark">
-                            <b>{{profile.user.username}}</b>
-                        </h4>
-                        {% endif %}
-                    </a>
-                    <p style="font-size: 17px">
-                        {{profile.user.email}}<br />{% if profile.location %}
-                        {{profile.location}} <!--{% else %} {{profile.country.name}}--> {% endif %}
-                    </p>
-                </span>
-                <div class="card-footer">
-                    {% if profile.resume %}
-                    <a href="{{ profile.resume.url }}">Click here to view Resume</a>
-                    {% else %}
-                    <p>No Resume Available.</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+{% include 'staff/side_bar_staff.html' %}
+
+<div class="sidebar-main">
+
+  <div class="page-header">
+    <h1 class="page-title">Search Applicants</h1>
+  </div>
+
+  <!-- Filters -->
+  <form method="GET" class="filter-bar mb-4" style="flex-wrap:wrap;gap:10px;">
+    <div class="filter-group" style="flex:1;min-width:160px;">
+      <input type="text" name="r" value="{{ location_q }}" class="th-form-control" placeholder="Filter by location…">
+    </div>
+    <div class="filter-group" style="min-width:180px;">
+      <select name="s" class="th-form-control">
+        <option value="">All Job Types</option>
+        {% for jt in job_types %}
+        <option value="{{ jt }}" {% if job_type_q == jt %}selected{% endif %}>{{ jt }}</option>
         {% endfor %}
+      </select>
     </div>
-    <br />
-    <div class="pagination">
-        <span class="step-links">
-            {% if profiles.has_previous %}
-            <a class="btn btn-info"
-                href="?page=1{% if request.GET.r %}&p={{ request.GET.r }}{% endif %}{% if request.GET.s %}&q={{ request.GET.s }}{% endif %}">&laquo;
-                First</a>
-            <a class="btn btn-danger"
-                href="?page={{ profiles.previous_page_number }}{% if request.GET.r %}&p={{ request.GET.r }}{% endif %}{% if request.GET.s %}&q={{ request.GET.s }}{% endif %}">Prev</a>
-            {% endif %}
-            <span class="current">
-                Page {{ profiles.number }} of {{ profiles.paginator.num_pages }}.
-            </span>
-            {% if profiles.has_next %}
-            <a class="btn btn-success"
-                href="?page={{ profiles.next_page_number }}{% if request.GET.r %}&p={{ request.GET.r }}{% endif %}{% if request.GET.s %}&q={{ request.GET.s }}{% endif %}">Next</a>
-            <a class="btn btn-primary"
-                href="?page={{ profiles.paginator.num_pages }}{% if request.GET.r %}&p={{ request.GET.r }}{% endif %}{% if request.GET.s %}&q={{ request.GET.s }}{% endif %}">Last
-                &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
-
-    {% else %}
-    <p class="text-center">No Applicants Available!</p>
-    <br />
+    <button type="submit" class="btn-primary-th">Search</button>
+    {% if location_q or job_type_q %}
+    <a href="{% url 'search-applicant' %}" class="btn-outline-th">Clear</a>
     {% endif %}
+  </form>
+
+  <!-- Reports panel -->
+  <div class="th-card mb-4">
+    <div class="th-card-header"><i class="fa-solid fa-chart-bar me-2 text-primary-th"></i>Applications Report</div>
+    <div class="th-card-body">
+      <form method="GET" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        {% if location_q %}<input type="hidden" name="r" value="{{ location_q }}">{% endif %}
+        {% if job_type_q %}<input type="hidden" name="s" value="{{ job_type_q }}">{% endif %}
+        <label class="th-form-label" style="margin:0;">Applications in month:</label>
+        <select name="month" class="th-form-control" style="width:160px;" onchange="this.form.submit()">
+          <option value="">— Select month —</option>
+          {% for num, name in months %}
+          <option value="{{ num }}" {% if selected_month == num %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+        {% if selected_month %}
+        <div style="font-size:1.3rem;font-weight:700;color:var(--primary);">{{ app_count }}</div>
+        <span style="font-size:.88rem;color:var(--text-light);">application{{ app_count|pluralize }}</span>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <!-- Results -->
+  {% if profiles %}
+  <div style="margin-bottom:12px;font-size:.85rem;color:var(--text-light);">
+    Showing {{ profiles.start_index }}–{{ profiles.end_index }} of {{ profiles.paginator.count }} applicant{{ profiles.paginator.count|pluralize }}
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+    {% for profile in profiles %}
+    <div class="th-card" style="margin:0;">
+      <div class="th-card-body" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <div style="width:44px;height:44px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;color:#fff;flex-shrink:0;">
+            {{ profile.user.initials }}
+          </div>
+          <div style="min-width:0;">
+            <div style="font-weight:700;color:var(--text-dark);font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+              {{ profile.full_name|default:profile.user.username }}
+            </div>
+            <div style="font-size:.78rem;color:var(--text-light);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ profile.user.email }}</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+          {% if profile.location %}
+          <div style="font-size:.82rem;color:var(--text-light);">
+            <i class="fa-solid fa-location-dot me-1"></i>{{ profile.location }}
+          </div>
+          {% endif %}
+          {% if profile.job_type %}
+          <div style="font-size:.82rem;">
+            <span class="badge-status badge-active">{{ profile.job_type }}</span>
+          </div>
+          {% endif %}
+        </div>
+        <div style="display:flex;gap:8px;">
+          <a href="{{ profile.resume.url }}" target="_blank" class="btn-outline-th" style="font-size:.78rem;padding:4px 12px;flex:1;text-align:center;">
+            <i class="fa-solid fa-file-pdf me-1"></i>Resume
+          </a>
+          <a href="{% url 'profile-view' profile.slug %}" class="btn-primary-th" style="font-size:.78rem;padding:5px 12px;flex:1;text-align:center;">
+            View Profile
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if profiles.has_other_pages %}
+  <div class="d-flex justify-content-center gap-2 mt-4">
+    {% if profiles.has_previous %}
+    <a href="?r={{ location_q }}&s={{ job_type_q }}&page={{ profiles.previous_page_number }}" class="btn-outline-th">
+      <i class="fa-solid fa-chevron-left"></i> Previous
+    </a>
+    {% endif %}
+    <span style="display:flex;align-items:center;font-size:.88rem;color:var(--text-light);">
+      Page {{ profiles.number }} of {{ profiles.paginator.num_pages }}
+    </span>
+    {% if profiles.has_next %}
+    <a href="?r={{ location_q }}&s={{ job_type_q }}&page={{ profiles.next_page_number }}" class="btn-outline-th">
+      Next <i class="fa-solid fa-chevron-right"></i>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="empty-state" style="padding:60px 20px;">
+    <div class="empty-state-icon"><i class="fa-solid fa-users"></i></div>
+    <h3>No applicants found</h3>
+    <p>{% if location_q or job_type_q %}Try adjusting your filters.{% else %}No applicants have uploaded resumes yet.{% endif %}</p>
+    {% if location_q or job_type_q %}
+    <a href="{% url 'search-applicant' %}" class="btn-outline-th">Clear Filters</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
 </div>
-{% endblock%}
+
+{% endblock %}

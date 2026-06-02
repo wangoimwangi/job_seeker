@@ -1,89 +1,157 @@
-<!--Display posted jobs and has a button to apply and save jobs-->
-<!--Has a save button which turns into remove button once we save the job and vice versa-->
-<!---Dispaly jobs related to the one posted-->
 {% extends 'base.html' %}
-{% load static %}
-{% block title %}Job details{% endblock %}
+{% block title %}{{ job.title }} — TalentHub{% endblock %}
 {% block body %}
 
-<br /><br />
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-signin my-5">
-                <div class="card-body">
-                    <h3>{{ job.title }} ({{ job.job_type }})</h3>
-                    <p style="font-size: 18px">{{ job.company }}, {{ job.location }}</p>
+<div class="container" style="max-width:1100px;padding-top:28px;padding-bottom:40px;">
 
-                    <span style="font-size: 18px"><b>Job Description</b></span>
-                    <p style="font-size: 17px">
-                        {{ job.description }}
-                    </p>
-                    <hr my-2 />
-                    <p><b class="mr-2">Skills Required:</b>{{job.skills_req}}</p>
+  <div class="th-breadcrumb">
+    <a href="{% url 'posted-jobs' %}">Jobs</a>
+    <i class="fa-solid fa-chevron-right"></i>
+    <span>{{ job.title }}</span>
+  </div>
 
-                    {% if user.user_type == 'applicant' %}
-                    {% if already_applied == True %}
-                    <a role="button" class="btn btn-success">Application submitted!</a>
-                    {% else %}
-                    <a role="button" class="btn btn-success" href="{% url 'apply-job' job.id %}"><b>Apply</b></a>
-                    {% endif %}
-                    <a role="button" class="btn btn-primary ms-2" href="#"><b>Bookmark</b></a>
-                    {% else %}
-                    <a role="button" class="btn btn-primary" href="{% url 'edit-job-post' job.slug %}"><b>Edit</b></a>
-                    <br>
-                    <br>
-                    <a role="button" class="btn btn-success" href="{% url 'job-candidate-search' job.slug %}"><b>Relevant Applicants</b></a>
+  <div class="job-detail-grid">
 
-                    {% endif %}
-                </div>
+    <div>
+      <div class="job-detail-main">
+
+        <div class="job-detail-header">
+          <div class="job-detail-avatar av-blue">{{ job.company|first|upper|default:"N" }}</div>
+          <div>
+            <h1 class="job-detail-title">{{ job.title }}</h1>
+            <div style="font-size:.95rem;color:var(--text-med);font-weight:500;">{{ job.company|default:"Neotech" }}</div>
+            <div class="job-meta mt-1">
+              <span><i class="fa-solid fa-location-dot"></i> {{ job.location }}</span>
+              <span><i class="fa-regular fa-clock"></i> {{ job.job_type }}</span>
+              {% if job.salary %}<span><i class="fa-solid fa-money-bill"></i> {{ job.salary }}</span>{% endif %}
             </div>
-
-            {% if user.user_type == 'staff' %}
-            <h2>Applicants</h2>
-            <div class="list-group">
-                {% for x in applications %}
-                <a href="{% url 'applicant-details' x.id %}" class="list-group-item">
-                    {{ x.applicant }}
-                </a>
-                {% empty %}
-                <li class="list-group-item text-danger">No applicants yet!</li>
-                {% endfor %}
-            </div>
-            {% endif %}
+          </div>
         </div>
+
+        {% if user.is_authenticated and user.user_type == 'applicant' %}
+          {% if already_applied %}
+          <div class="th-alert th-alert-success mb-4">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>You have already applied for this position.</span>
+          </div>
+          {% elif job.link %}
+          <a href="{{ job.link }}" target="_blank" class="btn-success-th mb-4">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Apply on Company Website
+          </a>
+          {% else %}
+          <a href="{% url 'apply-job' job.id %}" class="btn-success-th mb-4">
+            <i class="fa-solid fa-paper-plane"></i> Apply Now
+          </a>
+          {% endif %}
+        {% elif not user.is_authenticated %}
+        <a href="{% url 'login' %}" class="btn-success-th mb-4">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Apply
+        </a>
+        {% endif %}
+
+        <hr class="divider">
+
+        <div class="mb-4">
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:12px;">About This Role</h3>
+          <div style="font-size:.92rem;line-height:1.8;color:var(--text-med);">{{ job.description|linebreaks }}</div>
+        </div>
+
+        {% if skills_list %}
+        <div class="mb-4">
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:12px;">Skills Required</h3>
+          <div class="job-skills">
+            {% for skill in skills_list %}
+            <span class="skill-tag">{{ skill }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if user.is_authenticated and user.user_type == 'staff' and applications %}
+        <hr class="divider">
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:16px;">Applications ({{ applications|length }})</h3>
+        <div class="th-table-wrapper">
+          <table class="th-table">
+            <thead><tr><th>Applicant</th><th>Applied</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              {% for app in applications %}
+              <tr>
+                <td>
+                  <div class="td-user">
+                    <div class="td-avatar">{{ app.applicant.user.initials }}</div>
+                    <div>
+                      <div style="font-weight:600;font-size:.88rem;">{{ app.applicant.user.full_name }}</div>
+                      <div style="font-size:.78rem;color:var(--text-light);">{{ app.applicant.user.email }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size:.82rem;color:var(--text-light);">{{ app.date_applied|date:"M j, Y" }}</td>
+                <td><span class="badge-status badge-{{ app.status }}">{{ app.get_status_display }}</span></td>
+                <td><a href="{% url 'applicant-details' app.id %}" class="btn-outline-th" style="font-size:.78rem;padding:4px 12px;">View</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+
+      </div>
+
+      {% if similar_jobs %}
+      <div class="mt-4">
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:12px;">Similar Positions</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          {% for sjob in similar_jobs %}
+          <div class="job-card" style="padding:14px 16px;">
+            <div class="job-company-avatar av-teal" style="width:40px;height:40px;font-size:.9rem;">{{ sjob.company|first|upper|default:"N" }}</div>
+            <div class="job-body">
+              <a href="{% url 'job-details' sjob.id %}" class="job-title" style="font-size:.9rem;">{{ sjob.title }}</a>
+              <div class="job-meta"><span><i class="fa-solid fa-location-dot"></i> {{ sjob.location }}</span><span>{{ sjob.job_type }}</span></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
     </div>
 
-    {% if user.user_type == 'applicant' %}
-    <hr my-1 />
-    <h3 class="text-center">Similar Jobs</h3>
-    <div class="row">
-        {% for rel_job in relevant_jobs %}
-        <div class="col-md-6">
-            <div class="card card-signin my-2">
-                <span class="ml-3 mt-3">
-                    <a href="{% url 'job-details' rel_job.slug %}">
-                        <h4 class="text-dark">
-                            <b>{{rel_job.title}} ({{rel_job.job_type}})</b>
-                        </h4>
-                    </a>
-                    <p style="font-size: 17px">
-                        {{rel_job.company}}<br />{{rel_job.location}}
-                    </p>
-                    <p style="font-size: 15px">
-                        {{rel_job.description|truncatewords:30}} -
-                        <a href="{% url 'job-details' rel_job.slug %}">Read More</a>
-                    </p>
-                </span>
-                <div class="card-footer">
-                    <span style="font-size: 14px">Posted on {{rel_job.date_posted|date:"F d, Y"}}</span>
-                </div>
-            </div>
+    <!-- Sidebar -->
+    <div>
+      <div class="job-detail-sidebar-card">
+        <h3 style="font-size:.95rem;font-weight:700;margin-bottom:16px;">Job Summary</h3>
+        <div class="job-summary-row"><i class="fa-regular fa-clock"></i><div><span class="label">Job Type</span><span class="value">{{ job.job_type }}</span></div></div>
+        <div class="job-summary-row"><i class="fa-solid fa-location-dot"></i><div><span class="label">Location</span><span class="value">{{ job.location }}</span></div></div>
+        <div class="job-summary-row"><i class="fa-regular fa-calendar"></i><div><span class="label">Posted</span><span class="value">{{ job.date_posted|date:"M j, Y" }}</span></div></div>
+        {% if job.deadline %}<div class="job-summary-row"><i class="fa-solid fa-calendar-xmark"></i><div><span class="label">Deadline</span><span class="value">{{ job.deadline|date:"M j, Y" }}</span></div></div>{% endif %}
+        {% if job.salary %}<div class="job-summary-row"><i class="fa-solid fa-money-bill-wave"></i><div><span class="label">Salary</span><span class="value">{{ job.salary }}</span></div></div>{% endif %}
+
+        {% if user.is_authenticated and user.user_type == 'applicant' %}
+        <div class="mt-4">
+          {% if already_applied %}
+          <span class="badge-status badge-shortlisted" style="display:flex;width:100%;justify-content:center;padding:10px;"><i class="fa-solid fa-check me-1"></i>Already Applied</span>
+          {% elif job.link %}
+          <a href="{{ job.link }}" target="_blank" class="btn-success-th w-100 justify-content-center" style="display:flex;">Apply Externally</a>
+          {% else %}
+          <a href="{% url 'apply-job' job.id %}" class="btn-success-th w-100 justify-content-center" style="display:flex;"><i class="fa-solid fa-paper-plane me-2"></i>Apply Now</a>
+          {% endif %}
+          <form action="{% url 'save-job' job.slug %}?next={{ request.path }}" method="post" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="save-btn w-100 justify-content-center" style="display:flex;{% if is_saved %}border-color:var(--primary);color:var(--primary);background:var(--primary-lt);{% endif %}">
+              <i class="fa-{% if is_saved %}solid{% else %}regular{% endif %} fa-bookmark me-1"></i>{% if is_saved %}Saved{% else %}Save Job{% endif %}
+            </button>
+          </form>
         </div>
-        {% empty %}
-        <div class="text-danger text-center p-5">No Relevant Jobs Available!</div>
-        {% endfor %}
+        {% elif not user.is_authenticated %}
+        <a href="{% url 'login' %}?next={{ request.path }}" class="btn-success-th mt-3 w-100 justify-content-center" style="display:flex;">Sign In to Apply</a>
+        {% endif %}
+
+        {% if user.is_authenticated and user.user_type == 'staff' %}
+        <a href="{% url 'edit-job-post' job.slug %}" class="btn-outline-th mt-3 w-100 justify-content-center" style="display:flex;"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Job</a>
+        {% endif %}
+      </div>
     </div>
-    {% endif %}
+
+  </div>
 </div>
-{% endblock body %}
+
+{% endblock %}

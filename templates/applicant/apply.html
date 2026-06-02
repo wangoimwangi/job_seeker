@@ -1,268 +1,116 @@
 {% extends 'base.html' %}
-{% block title %}Apply for Job | TalentHub{% endblock %}
-{% load static %}
-{% load crispy_forms_tags %}
-{% block body%}
+{% block title %}Apply — {{ job.title }} — TalentHub{% endblock %}
+{% load widget_tweaks %}
+{% block navbar %}{% endblock %}
+{% block body %}
 
 {% include 'applicant/side_bar_applicant.html' %}
 
-<div class="main-content-wrapper">
-    <div class="apply-container">
-        <div class="apply-header">
-            <div class="apply-header-icon">
-                <i class="bi bi-send-check"></i>
-            </div>
-            <div>
-                <h1 class="apply-title">Apply for {{ job.title }}</h1>
-                <div class="job-meta-info">
-                    <span class="meta-info-item">
-                        <i class="bi bi-building"></i>
-                        {{ job.company }}
-                    </span>
-                    <span class="meta-info-item">
-                        <i class="bi bi-geo-alt"></i>
-                        {{ job.location }}
-                    </span>
-                    <span class="meta-info-item">
-                        <i class="bi bi-calendar-event"></i>
-                        Deadline: {{ job.deadline|date:"M d, Y"|default:"Not specified" }}
-                    </span>
-                </div>
-            </div>
-        </div>
+<div class="sidebar-main">
+  <div style="max-width:760px;">
 
-        <div class="apply-form-card">
-            <div class="form-header">
-                <h3><i class="bi bi-file-earmark-text me-2"></i>Application Details</h3>
-                <p>Fill out the form below to submit your application</p>
-            </div>
-            
-            <form action="{{ request.path }}" method="post" class="modern-apply-form">
-                {% csrf_token %}
-                <div class="form-content">
-                    {{ form|crispy }}
-                </div>
-                
-                <div class="form-actions-apply">
-                    <a href="{% url 'job-details' job.id %}" class="btn-cancel-apply">
-                        <i class="bi bi-x-circle me-2"></i>Cancel
-                    </a>
-                    <button type="submit" class="btn-submit-apply">
-                        <i class="bi bi-send me-2"></i>Submit Application
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <div class="application-tips">
-            <div class="tip-icon-large">📝</div>
-            <h4>Application Tips</h4>
-            <ul>
-                <li>Make sure your resume is up to date</li>
-                <li>Write a compelling cover letter tailored to this position</li>
-                <li>Double-check all information before submitting</li>
-                <li>Highlight relevant skills and experiences</li>
-            </ul>
-        </div>
+    <div class="th-breadcrumb">
+      <a href="{% url 'posted-jobs' %}">Jobs</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="{% url 'job-details' job.id %}">{{ job.title }}</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>Apply</span>
     </div>
+
+    <div class="th-card">
+      <div class="th-card-header">
+        <i class="fa-solid fa-paper-plane me-2 text-primary-th"></i>Apply for Position
+      </div>
+      <div class="th-card-body">
+
+        <!-- Job summary -->
+        <div style="background:var(--bg);border-radius:8px;padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+          <div class="job-company-avatar av-blue" style="width:48px;height:48px;">{{ job.company|first|upper|default:"N" }}</div>
+          <div>
+            <div style="font-size:1rem;font-weight:700;color:var(--text-dark);">{{ job.title }}</div>
+            <div style="font-size:.85rem;color:var(--text-light);">{{ job.company|default:"Neotech" }} · {{ job.location }} · {{ job.job_type }}</div>
+          </div>
+        </div>
+
+        <!-- Your Profile Summary -->
+        <div class="th-fieldset-title">Your Profile</div>
+        <div style="background:var(--bg);border-radius:8px;padding:16px;margin-bottom:24px;">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <div style="font-size:.78rem;color:var(--text-light);">Full Name</div>
+              <div style="font-size:.9rem;font-weight:600;color:var(--text-dark);">{{ request.user.full_name }}</div>
+            </div>
+            <div class="col-md-6">
+              <div style="font-size:.78rem;color:var(--text-light);">Email</div>
+              <div style="font-size:.9rem;font-weight:600;color:var(--text-dark);">{{ request.user.email }}</div>
+            </div>
+            {% if profile %}
+            <div class="col-md-6">
+              <div style="font-size:.78rem;color:var(--text-light);">Location</div>
+              <div style="font-size:.9rem;font-weight:600;color:var(--text-dark);">{{ profile.location|default:"Not set" }}</div>
+            </div>
+            <div class="col-md-6">
+              <div style="font-size:.78rem;color:var(--text-light);">Resume</div>
+              {% if profile.resume %}
+              <a href="{{ profile.resume.url }}" target="_blank" style="font-size:.9rem;color:var(--primary);font-weight:600;">
+                <i class="fa-solid fa-file-pdf me-1"></i>View Resume
+              </a>
+              {% else %}
+              <div style="font-size:.9rem;color:var(--danger);">
+                <i class="fa-solid fa-triangle-exclamation me-1"></i>No resume uploaded
+              </div>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+          {% if not profile or not profile.resume %}
+          <div class="mt-3 th-alert th-alert-warning">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Your profile is incomplete. <a href="{% url 'edit-profile' %}">Complete it</a> to strengthen your application.</span>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Cover Letter Upload -->
+        <div class="th-fieldset-title">Cover Letter (Optional)</div>
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="th-form-group">
+            <label class="th-form-label">Upload Cover Letter</label>
+            {% render_field form.cover_letter class="th-form-control" %}
+            <p class="th-help-text">PDF, DOC or DOCX · Max 5 MB · Optional but recommended</p>
+            {% if form.cover_letter.errors %}
+            <div class="th-error-msg">{{ form.cover_letter.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="btn-success-th" style="padding:12px 28px;font-size:.95rem;border-radius:8px;">
+              <i class="fa-solid fa-paper-plane me-2"></i>Submit Application
+            </button>
+            <a href="{% url 'job-details' job.id %}" class="btn-outline-th" style="padding:11px 24px;border-radius:8px;">
+              Cancel
+            </a>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="th-card mt-3">
+      <div class="th-card-header"><i class="fa-solid fa-lightbulb me-2 text-primary-th"></i>Application Tips</div>
+      <div class="th-card-body">
+        <ul style="margin:0;padding-left:20px;font-size:.88rem;color:var(--text-med);line-height:2;">
+          <li>Tailor your cover letter to the specific role and highlight relevant skills</li>
+          <li>Make sure your resume is up to date and in PDF format</li>
+          <li>Apply early — positions fill up fast at Neotech</li>
+          <li>Check your email regularly for responses</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<style>
-.apply-container {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.apply-header {
-    display: flex;
-    align-items: start;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.apply-header-icon {
-    width: 70px;
-    height: 70px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 2rem;
-    flex-shrink: 0;
-}
-
-.apply-title {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: #1e293b;
-    margin-bottom: 12px;
-}
-
-.job-meta-info {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.meta-info-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #64748b;
-    font-weight: 500;
-}
-
-.meta-info-item i {
-    color: #6366f1;
-}
-
-.apply-form-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    padding: 35px;
-    margin-bottom: 25px;
-}
-
-.form-header {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #f1f5f9;
-}
-
-.form-header h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-}
-
-.form-header h3 i {
-    color: #6366f1;
-}
-
-.form-header p {
-    color: #64748b;
-    margin: 0;
-}
-
-.modern-apply-form .form-control {
-    padding: 12px 16px;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.modern-apply-form .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    outline: none;
-}
-
-.modern-apply-form textarea.form-control {
-    min-height: 150px;
-    resize: vertical;
-}
-
-.modern-apply-form label {
-    font-weight: 600;
-    color: #475569;
-    margin-bottom: 8px;
-}
-
-.form-content {
-    margin-bottom: 25px;
-}
-
-.form-actions-apply {
-    display: flex;
-    gap: 15px;
-    padding-top: 20px;
-    border-top: 1px solid #f1f5f9;
-}
-
-.btn-cancel-apply, .btn-submit-apply {
-    flex: 1;
-    padding: 14px 30px;
-    border-radius: 12px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.btn-cancel-apply {
-    background: #f8fafc;
-    color: #64748b;
-    border: 2px solid #e2e8f0;
-}
-
-.btn-cancel-apply:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-    border-color: #cbd5e1;
-}
-
-.btn-submit-apply {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-}
-
-.btn-submit-apply:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.application-tips {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    padding: 30px;
-    text-align: center;
-}
-
-.tip-icon-large {
-    font-size: 3rem;
-    margin-bottom: 15px;
-}
-
-.application-tips h4 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 20px;
-}
-
-.application-tips ul {
-    text-align: left;
-    max-width: 500px;
-    margin: 0 auto;
-    color: #475569;
-    line-height: 1.8;
-}
-
-.application-tips li {
-    margin-bottom: 10px;
-}
-
-@media (max-width: 768px) {
-    .apply-header {
-        flex-direction: column;
-    }
-    
-    .form-actions-apply {
-        flex-direction: column;
-    }
-}
-</style>
-
-{% endblock body%}
+{% endblock %}

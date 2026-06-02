@@ -1,29 +1,39 @@
 from django import forms
-from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 
-from job_seeker.models import Staff, User
-from job_seeker.models import Profile, Skill
-from job_seeker.models import Job
-from job_seeker.models import Applicant, Application
-#----------------------------------------------------------------------------------------------------
-                         #REGISTRATION FORM!(USER)
-#---------------------------------------------------------------------------------------------------
+from .models import Staff, User, Profile, Skill, Job, Applicant, Application
+
+
 class StaffRegistrationForm(UserCreationForm):
-    """Staff registration form"""
-    first_name = forms.CharField(required=True)  
-    last_name = forms.CharField(required=True)
-    email = forms.EmailField(required=True)
-    contact = forms.CharField(required=True)
-    location = forms.CharField(required=True)
+    first_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'First name'})
+    )
+    last_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Last name'})
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'placeholder': 'Work email address'})
+    )
+    contact = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': '+254 700 000 000'})
+    )
+    location = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'City, Country'})
+    )
 
     class Meta(UserCreationForm.Meta):
-      model = User
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'contact', 'location', 'password1', 'password2']
 
     @transaction.atomic
-    def save(self):
-        user = super().save(commit=False)   # saves username & password
+    def save(self, commit=True):
+        user = super().save(commit=False)
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
         user.email = self.cleaned_data['email']
@@ -31,26 +41,39 @@ class StaffRegistrationForm(UserCreationForm):
         user.contact = self.cleaned_data['contact']
         user.location = self.cleaned_data['location']
         user.save()
-
-        staff = Staff.objects.create(user=user)
-        staff.save()
+        Staff.objects.create(user=user)
         return user
 
 
 class ApplicantRegistrationForm(UserCreationForm):
-    """Applicant registration form"""
-    first_name = forms.CharField(required=True)
-    last_name = forms.CharField(required=True)
-    email = forms.EmailField(required=True)
-    contact = forms.CharField(required=True)
-    location = forms.CharField(required=True)
+    first_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'First name'})
+    )
+    last_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Last name'})
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'placeholder': 'Your email address'})
+    )
+    contact = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': '+254 700 000 000'})
+    )
+    location = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'City, Country'})
+    )
 
     class Meta(UserCreationForm.Meta):
-      model = User
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'contact', 'location', 'password1', 'password2']
 
     @transaction.atomic
-    def save(self):
-        user = super().save(commit=False)   # saves username & password
+    def save(self, commit=True):
+        user = super().save(commit=False)
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
         user.email = self.cleaned_data['email']
@@ -58,49 +81,59 @@ class ApplicantRegistrationForm(UserCreationForm):
         user.contact = self.cleaned_data['contact']
         user.location = self.cleaned_data['location']
         user.save()
-
-        applicant = Applicant.objects.create(user=user)
-        applicant.save()
+        Applicant.objects.create(user=user)
         return user
-#----------------------------------------------------------------------------------------------------------
-                             #APPLICANT FORMS!
-#----------------------------------------------------------------------------------------------------------------
-                    #PROFILE UPDATE FORM
+
+
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['full_name','location',
-                  'resume', 'grad_year', 'job_type']
-#------------------------------------------------------------------------------------------------------------
-                    #NEWSKILLS FORM
+        fields = ['full_name', 'location', 'resume', 'grad_year', 'job_type']
+        widgets = {
+            'full_name': forms.TextInput(attrs={'placeholder': 'Your full name'}),
+            'location': forms.TextInput(attrs={'placeholder': 'City, Country'}),
+            'grad_year': forms.NumberInput(attrs={'placeholder': 'e.g. 2024', 'min': 1990, 'max': 2030}),
+        }
+
+
 class NewSkillForm(forms.ModelForm):
     class Meta:
         model = Skill
         fields = ['skill']
-#---------------------------------------------------------------------------------------------------------
-                #STAFF FORMS!
-#-----------------------------------------------------------------------------------------
-                 #NEWJOBFORM
+        widgets = {
+            'skill': forms.TextInput(attrs={'placeholder': 'e.g. Python, Django, React'})
+        }
+
+
 class NewJobForm(forms.ModelForm):
     class Meta:
         model = Job
-        fields = ['title', 'company', 'location','description', 'skills_req', 'job_type', 'link']
-        help_texts = {'skills_req': 'Enter all the skills required each separated by commas.','link': 'If you want candidates to apply on your company website rather than on our website, please provide the link where candidates can apply. Otherwise, please leave it blank or candidates would not be able to apply directly!',
+        fields = ['title', 'company', 'location', 'description', 'skills_req', 'job_type', 'salary', 'deadline', 'link']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'e.g. Senior Software Engineer'}),
+            'company': forms.TextInput(attrs={'placeholder': 'Company name'}),
+            'location': forms.TextInput(attrs={'placeholder': 'e.g. Nairobi, Kenya'}),
+            'description': forms.Textarea(attrs={
+                'rows': 8,
+                'placeholder': 'Describe the role, responsibilities, and what you are looking for...'
+            }),
+            'skills_req': forms.TextInput(attrs={
+                'placeholder': 'e.g. Python, Django, PostgreSQL, REST APIs'
+            }),
+            'salary': forms.TextInput(attrs={'placeholder': 'e.g. KES 80,000 - 120,000/month'}),
+            'deadline': forms.DateInput(attrs={'type': 'date'}),
+            'link': forms.URLInput(attrs={'placeholder': 'https://company.com/careers/job'}),
         }
-#-----------------------------------------------------------------------------------------------
-                     #JOBUPDATEFORM
-class JobUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Job
-        fields = ['title', 'company', 'location',
-                  'description', 'skills_req', 'job_type', 'link']
-        help_texts = {'skills_req': 'Enter all the skills required each separated by commas.',
-                      'link': 'If you want candidates to apply on your company website rather than on our website, please provide the link where candidates can apply. Otherwise, please leave it blank or candidates would not be able to apply directly!',
+        help_texts = {
+            'skills_req': 'Enter skills separated by commas.',
+            'link': 'Optional: external application link. Leave blank to accept applications here.',
         }
-#------------------------------------------------------------------------------------------------------------
+
 
 class JobApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ['cover_letter']
-    
+        widgets = {
+            'cover_letter': forms.FileInput(attrs={'accept': '.pdf,.doc,.docx'})
+        }

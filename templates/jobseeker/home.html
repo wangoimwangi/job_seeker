@@ -1,273 +1,237 @@
-<!--This is the official home page-->
 {% extends 'base.html' %}
-{% block title %} Talent Hub | Where Talent Meets Opportunity {% endblock %}
+{% block title %}TalentHub — Find Your Next Opportunity at Neotech{% endblock %}
 {% load static %}
-{% block body%}
+{% block body %}
 
-<!-- Hero Section with Modern Design -->
+<!-- ── Hero ─────────────────────────────────────────────────── -->
 <section class="hero-section">
-    <div class="hero-overlay"></div>
-    <div class="container">
-        <div class="row align-items-center min-vh-80">
-            <div class="col-lg-6 hero-content">
-                <h1 class="hero-title mb-4 animate-fadeInUp">
-                    Land Your  <span class="text-gradient">Dream Job</span> Today
-                </h1>
-                <p class="hero-subtitle mb-4 animate-fadeInUp">
-                    Join thousands of professionals who found their perfect career match. 
-                    Your next opportunity is just a click away.
-                </p>
-                <div class="hero-buttons animate-fadeInUp">
-                    <a role="button" class="btn btn-hero-primary btn-lg me-3" href="{% url 'register' %}">
-                        <i class="bi bi-person-plus me-2"></i>Get Started
-                    </a>
-                    <a role="button" class="btn btn-hero-secondary btn-lg" href="{% url 'posted-jobs' %}">
-                        <i class="bi bi-search me-2"></i>Browse Jobs
-                    </a>
-                </div>
-                <div class="hero-stats mt-5">
-                    <div class="row text-center text-lg-start">
-                        <div class="col-4">
-                            <h3 class="stat-number">500+</h3>
-                            <p class="stat-label">Active Jobs</p>
-                        </div>
-                        <div class="col-4">
-                            <h3 class="stat-number">1000+</h3>
-                            <p class="stat-label">Happy Users</p>
-                        </div>
-                        <div class="col-4">
-                            <h3 class="stat-number">50+</h3>
-                            <p class="stat-label">Companies</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="hero-image-wrapper animate-fadeInRight">
-                    <img class="img-fluid hero-image" src="{% static 'img/4565.jpg' %}" alt="Job Search">
-                    <div class="floating-card card-1">
-                        <i class="bi bi-briefcase-fill"></i>
-                        <span>New Job Alert!</span>
-                    </div>
-                    <div class="floating-card card-2">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Application Sent</span>
-                    </div>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <h1 class="hero-title">
+          Find Your <span>Next Opportunity</span> at Neotech
+        </h1>
+        <p class="hero-subtitle">
+          Neotech's official talent hub — connecting driven professionals with
+          the roles where they'll thrive. Browse open positions, apply directly,
+          and track every step of your journey.
+        </p>
+        <div class="d-flex gap-3 mb-4 flex-wrap">
+          <a href="{% url 'posted-jobs' %}" class="btn-primary-th">
+            <i class="fa-solid fa-magnifying-glass"></i> Browse Jobs
+          </a>
+          {% if not user.is_authenticated %}
+          <a href="{% url 'register-staff' %}" class="btn-outline-th">
+            <i class="fa-solid fa-building"></i> Post a Job
+          </a>
+          {% else %}
+          {% if user.user_type == 'staff' %}
+          <a href="{% url 'add-job' %}" class="btn-outline-th">
+            <i class="fa-solid fa-plus"></i> Post a Job
+          </a>
+          {% endif %}
+          {% endif %}
         </div>
+
+        <!-- Search bar -->
+        <form action="{% url 'posted-jobs' %}" method="get" class="hero-search">
+          <input type="text" name="q" placeholder="Search by job title or skills…" value="{{ request.GET.q }}">
+          <button type="submit"><i class="fa-solid fa-search"></i> Search</button>
+        </form>
+      </div>
+
+      <div class="col-lg-6 d-none d-lg-flex justify-content-center">
+        <div style="background:rgba(10,102,194,.06);border-radius:20px;padding:40px;width:100%;max-width:420px;">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            {% for job in featured_jobs %}
+            <a href="{% url 'job-details' job.id %}" style="background:white;border:1px solid #E0DFDC;border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;text-decoration:none;transition:all .2s;">
+              <div class="job-company-avatar av-blue" style="width:36px;height:36px;font-size:.9rem;border-radius:8px;">
+                {{ job.company|first|upper|default:"N" }}
+              </div>
+              <div>
+                <div style="font-size:.88rem;font-weight:700;color:#1C1C1C;">{{ job.title }}</div>
+                <div style="font-size:.78rem;color:#888;">{{ job.location }} · {{ job.job_type }}</div>
+              </div>
+            </a>
+            {% empty %}
+            <div style="background:white;border-radius:10px;padding:20px;text-align:center;color:#888;font-size:.88rem;">
+              <i class="fa-solid fa-briefcase fa-2x mb-2" style="color:#0A66C2;opacity:.3;"></i>
+              <p>Jobs loading soon…</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- Features Section -->
-<section class="features-section py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="section-title">Why Choose Us?</h2>
-            <p class="section-subtitle">Discover what makes us the best platform for job seekers</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon-wrapper bg-gradient-blue">
-                        <i class="bi bi-people feature-icon"></i>
-                    </div>
-                    <h3 class="feature-title">About Talent Hub</h3>
-                    <p class="feature-text">
-                        Our intuitive platform makes finding your perfect job effortless. Search, filter, and apply to opportunities in just a few clicks
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon-wrapper bg-gradient-purple">
-                        <i class="bi bi-briefcase feature-icon"></i>
-                    </div>
-                    <h3 class="feature-title">Diverse Opportunities</h3>
-                    <p class="feature-text">
-                        Explore exciting positions including Software Development, IT Support, 
-                        Database Analysis, Project Management, and many more career opportunities 
-                        tailored to your skills.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon-wrapper bg-gradient-orange">
-                        <i class="bi bi-target feature-icon"></i>
-                    </div>
-                    <h3 class="feature-title">Trusted Platform</h3>
-                    <p class="feature-text">
-                        We connect talented professionals with verified employers, ensuring a secure and reliable job search experience for everyone.
-                    </p>
-                </div>
-            </div>
-        </div>
+<!-- ── Stats Strip ───────────────────────────────────────────── -->
+<div class="stats-strip">
+  <div class="container">
+    <div class="row">
+      <div class="col-4 stats-strip-item">
+        <span class="stats-strip-number">{{ total_jobs|default:"0" }}+</span>
+        <span class="stats-strip-label">Active Jobs</span>
+      </div>
+      <div class="col-4 stats-strip-item">
+        <span class="stats-strip-number">1</span>
+        <span class="stats-strip-label">Company</span>
+      </div>
+      <div class="col-4 stats-strip-item">
+        <span class="stats-strip-number">{{ total_applicants|default:"0" }}+</span>
+        <span class="stats-strip-label">Registered Talent</span>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- ── Featured Jobs ─────────────────────────────────────────── -->
+<section class="py-5">
+  <div class="container">
+    <div class="section-header d-flex align-items-center justify-content-between">
+      <div>
+        <h2 class="section-title">Featured Positions</h2>
+        <p class="section-subtitle">Hand-picked open roles at Neotech</p>
+      </div>
+      <a href="{% url 'posted-jobs' %}" class="btn-outline-th">View All Jobs <i class="fa-solid fa-arrow-right ms-1"></i></a>
+    </div>
+
+    <div class="row g-3">
+      {% for job in featured_jobs %}
+      <div class="col-md-4">
+        <div class="th-card p-3 h-100 d-flex flex-column">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="job-company-avatar av-{% cycle 'blue' 'teal' 'violet' %}" style="width:44px;height:44px;">
+              {{ job.company|first|upper|default:"N" }}
+            </div>
+            <div>
+              <div style="font-size:.88rem;font-weight:700;color:#1C1C1C;">{{ job.title }}</div>
+              <div style="font-size:.78rem;color:#888;">{{ job.company|default:"Neotech" }}</div>
+            </div>
+          </div>
+          <div class="job-meta mb-2">
+            <span><i class="fa-solid fa-location-dot"></i> {{ job.location }}</span>
+            <span><i class="fa-regular fa-clock"></i> {{ job.job_type }}</span>
+          </div>
+          {% if job.skills_req %}
+          <div class="job-skills mb-3">
+            {% for skill in job.get_skills_list|slice:":3" %}
+            <span class="skill-tag">{{ skill }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="mt-auto pt-2">
+            <a href="{% url 'job-details' job.id %}" class="btn-primary-th w-100 justify-content-center" style="display:flex;">
+              View Position
+            </a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-4">
+        <p class="text-muted">No featured jobs at this time. <a href="{% url 'posted-jobs' %}">Browse all jobs</a></p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
-<!-- How It Works Section -->
-<section class="how-it-works-section py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="section-title">How It Works</h2>
-            <p class="section-subtitle">Get hired in 3 simple steps</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <div class="step-icon-wrapper">
-                        <i class="bi bi-person-plus-fill"></i>
-                    </div>
-                    <h4>Create Account</h4>
-                    <p>Sign up and build your professional profile in minutes</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <div class="step-icon-wrapper">
-                        <i class="bi bi-search"></i>
-                    </div>
-                    <h4>Find Jobs</h4>
-                    <p>Browse through hundreds of opportunities matching your skills</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <div class="step-icon-wrapper">
-                        <i class="bi bi-send-fill"></i>
-                    </div>
-                    <h4>Apply & Get Hired</h4>
-                    <p>Submit applications and land your dream job</p>
-                </div>
-            </div>
-        </div>
+<!-- ── How it Works ──────────────────────────────────────────── -->
+<section class="py-5" style="background:var(--white);border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="section-header text-center mb-5">
+      <h2 class="section-title">How TalentHub Works</h2>
+      <p class="section-subtitle">Get hired in three simple steps</p>
     </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-icon"><i class="fa-solid fa-user-plus"></i></div>
+          <h4>Create Your Profile</h4>
+          <p>Sign up, add your skills, upload your resume, and set your job preferences in minutes.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <h4>Discover Roles</h4>
+          <p>Browse and filter open positions at Neotech. Save the ones that interest you most.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-icon"><i class="fa-solid fa-paper-plane"></i></div>
+          <h4>Apply &amp; Get Hired</h4>
+          <p>Submit your application directly on TalentHub and track its status in real time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Contact Section -->
-<section class="contact-section py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <h2 class="section-title mb-4">Get in Touch</h2>
-                <p class="lead mb-4">
-                    Have questions? Our expert support team is here to help you 
-                    navigate your career journey.
-                </p>
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="bi bi-geo-alt-fill"></i>
-                        </div>
-                        <div>
-                            <h5>Location</h5>
-                            <p>Nairobi, Kenya</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="bi bi-telephone-fill"></i>
-                        </div>
-                        <div>
-                            <h5>Phone</h5>
-                            <p>+254 000 000 001</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="bi bi-envelope-fill"></i>
-                        </div>
-                        <div>
-                            <h5>Email</h5>
-                            <p>contact@TalentHub.com</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="cta-card">
-                    <h3 class="mb-3">Ready to Start Your Journey?</h3>
-                    <p class="mb-4">Join thousands of professionals who found their dream jobs through our platform.</p>
-                    <a href="{% url 'register' %}" class="btn btn-cta btn-lg">
-                        <i class="bi bi-rocket-takeoff me-2"></i>Start Now
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer class="modern-footer">
-    <div class="container">
-        <div class="row py-5">
-            <div class="col-lg-4 mb-4 mb-lg-0">
-                <div class="footer-brand mb-3">
-                    <div class="footer-logo-icon">
-                        <i class="bi bi-diagram-3-fill"></i>
-                    </div>
-                    <h4 class="d-inline-block">Talent Hub</h4>
-                </div>
-                <p class="footer-description">
-                    Connecting talented professionals with amazing opportunities. 
-                    Your career journey starts here.
-                </p>
-                <div class="social-links mt-3">
-                    <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
-                <h5 class="footer-title">Company</h5>
-                <ul class="footer-links">
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Press</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
-                <h5 class="footer-title">Resources</h5>
-                <ul class="footer-links">
-                    <li><a href="{% url 'posted-jobs' %}">Browse Jobs</a></li>
-                    <li><a href="{% url 'services' %}">Services</a></li>
-                    <li><a href="{% url 'contact' %}">Contact</a></li>
-                    <li><a href="#">Help Center</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-4 col-md-12">
-                <h5 class="footer-title">Newsletter</h5>
-                <p class="footer-newsletter-text">Subscribe to get the latest job opportunities</p>
-                <div class="newsletter-form">
-                    <input type="email" placeholder="Enter your email" class="form-control">
-                    <button class="btn btn-newsletter"><i class="bi bi-send-fill"></i></button>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom py-3">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
-                    <p class="mb-0">&copy; 2026 TalentHub.com - All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-center text-md-end">
-                    <a href="#" class="footer-bottom-link">Privacy Policy</a>
-                    <span class="mx-2">|</span>
-                    <a href="#" class="footer-bottom-link">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <a href="#" class="back-to-top" id="backToTop">
-        <i class="bi bi-arrow-up-circle-fill"></i>
+<!-- ── CTA Banner ────────────────────────────────────────────── -->
+<section class="py-5" style="background:linear-gradient(135deg,#0A66C2 0%,#084d93 100%);">
+  <div class="container text-center text-white">
+    <h2 style="color:white;font-size:1.8rem;margin-bottom:10px;">Ready to join Neotech?</h2>
+    <p style="color:rgba(255,255,255,.85);margin-bottom:28px;font-size:1rem;">
+      Create a free account and start applying to open positions today.
+    </p>
+    {% if not user.is_authenticated %}
+    <a href="{% url 'register' %}" style="background:white;color:#0A66C2;padding:12px 28px;border-radius:24px;font-weight:700;font-size:.95rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s;">
+      <i class="fa-solid fa-rocket"></i> Get Started — It's Free
     </a>
+    {% else %}
+    <a href="{% url 'posted-jobs' %}" style="background:white;color:#0A66C2;padding:12px 28px;border-radius:24px;font-weight:700;font-size:.95rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
+      <i class="fa-solid fa-briefcase"></i> Browse All Jobs
+    </a>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ── Footer ────────────────────────────────────────────────── -->
+<footer class="th-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 mb-4 mb-md-0">
+        <div class="footer-brand"><i class="fa-solid fa-briefcase me-2"></i>TalentHub</div>
+        <p class="footer-tagline">Neotech's official recruitment platform. Connecting talent with opportunity.</p>
+      </div>
+      <div class="col-md-2 col-6 mb-3">
+        <div class="footer-heading">Platform</div>
+        <ul class="footer-links">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'posted-jobs' %}">Browse Jobs</a></li>
+          <li><a href="{% url 'register' %}">Sign Up</a></li>
+          <li><a href="{% url 'login' %}">Sign In</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2 col-6 mb-3">
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          <li><a href="#">About Neotech</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <div class="footer-heading">Contact</div>
+        <ul class="footer-links">
+          <li><i class="fa-solid fa-location-dot me-2"></i>Nairobi, Kenya</li>
+          <li><i class="fa-solid fa-envelope me-2"></i>careers@neotech.co.ke</li>
+          <li><i class="fa-solid fa-phone me-2"></i>+254 700 000 001</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 TalentHub by Neotech. All rights reserved.</span>
+      <span>Built with Django &amp; Bootstrap 5</span>
+    </div>
+  </div>
 </footer>
 
-{% endblock body %}
+{% endblock %}

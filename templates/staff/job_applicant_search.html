@@ -1,55 +1,78 @@
-<!--Display the most relevant applicant s for a particular job post-->
-<!--Visible When staff clicks the Get Relevant Apllicants button from the job detals page-->
-<!--Applicants are rannked based on the match % of the applicant skills with the skills of the job-->
 {% extends 'base.html' %}
-{% block title %}Relevant Jobs{% endblock %}
-{% load static %}
+{% block title %}Relevant Candidates — {{ job.title }} — TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
 {% block body %}
 
-<br />
-<div>
-    <h3 class="text-center">
-        <b>Most Relevant Candidates for {{job.title}} (Beta)</b>
-    </h3>
+{% include 'staff/side_bar_staff.html' %}
 
-    {% if relevant %}
-    <div class="row">
-        {% for profile, common in objects %}
-        <div class="col-md-6">
-            <div class="card card-signin my-2">
-                <span class="ml-3 mt-3">
-                    <a href="{% url 'profile-view' profile.slug %}">
-                        {% if profile.full_name %}
-                        <h4 class="text-dark">
-                            <b>{{profile.full_name}}</b>
-                        </h4>
-                        {% else %}
-                        <h4 class="text-dark">
-                            <b>{{profile.user.username}}</b>
-                        </h4>
-                        {% endif %}
-                    </a>
-                    <p style="font-size: 17px">
-                        {{profile.user.email}}<br />
-                        {% if profile.location %} {{profile.location}}
-                        {% endif %}
-                    </p>
-                </span>
-                <div class="card-footer">
-                    <span style="font-size: 18px">This Applicant has <b class="text-success">{{ common }} </b>out of
-                        <b class="text-danger">{{ job_skills }}</b> skills required for this particular 
-                        job.</span>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+<div class="sidebar-main">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Relevant Candidates</h1>
+      <p class="page-subtitle">Ranked by skill match for: {{ job.title }}</p>
     </div>
-    {% else %}
-    <p class="text-center">
-        No relevant applicant found for this job! Please check if your
-        <a href="{% url 'add-job'%}">job post</a> is complete.
-    </p>
-    <br />
-    {% endif %}
+    <a href="{% url 'job-applicants' job.id %}" class="btn-outline-th">
+      <i class="fa-solid fa-arrow-left"></i> Back to Applicants
+    </a>
+  </div>
+
+  {% if relevant %}
+  <div style="margin-bottom:16px;font-size:.88rem;color:var(--text-light);">
+    Found <strong>{{ relevant }}</strong> candidate{{ relevant|pluralize }} with matching skills out of {{ job_skills }} required.
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">
+    {% for profile, common in objects %}
+    <div class="th-card" style="margin:0;">
+      <div class="th-card-body" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <div style="width:44px;height:44px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;color:#fff;flex-shrink:0;">
+            {{ profile.user.initials }}
+          </div>
+          <div style="min-width:0;">
+            <div style="font-weight:700;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+              {{ profile.full_name|default:profile.user.username }}
+            </div>
+            <div style="font-size:.78rem;color:var(--text-light);">{{ profile.user.email }}</div>
+          </div>
+        </div>
+
+        {% if profile.location %}
+        <div style="font-size:.82rem;color:var(--text-light);margin-bottom:10px;">
+          <i class="fa-solid fa-location-dot me-1"></i>{{ profile.location }}
+        </div>
+        {% endif %}
+
+        <!-- Match bar -->
+        <div style="margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px;">
+            <span style="color:var(--text-light);">Skill match</span>
+            <span style="font-weight:700;color:var(--primary);">{{ common }}/{{ job_skills }} skills</span>
+          </div>
+          <div style="background:var(--border);border-radius:99px;height:6px;overflow:hidden;">
+            {% widthratio common job_skills 100 as pct %}
+            <div style="background:var(--primary);height:100%;width:{{ pct }}%;border-radius:99px;"></div>
+          </div>
+        </div>
+
+        <a href="{% url 'profile-view' profile.slug %}" class="btn-primary-th" style="font-size:.82rem;padding:8px 16px;display:block;text-align:center;border-radius:7px;">
+          View Full Profile
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-state" style="padding:60px 20px;">
+    <div class="empty-state-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+    <h3>No relevant candidates found</h3>
+    <p>No applicants with matching skills were found for this job. Make sure the job's required skills are filled in.</p>
+    <a href="{% url 'edit-job-post' job.slug %}" class="btn-outline-th">Edit Job Skills</a>
+  </div>
+  {% endif %}
+
 </div>
-{% endblock%}
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Server Error — TalentHub{% endblock %}
+{% block body %}
+
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px;">
+  <div style="text-align:center;max-width:480px;">
+
+    <div style="font-size:6rem;font-weight:900;color:#dc2626;line-height:1;margin-bottom:8px;">500</div>
+    <div style="font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:12px;">Server Error</div>
+    <p style="color:var(--text-light);margin-bottom:32px;line-height:1.6;">
+      Something went wrong on our end. Please try again in a moment.
+    </p>
+
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="{% url 'home' %}" class="btn-primary-th">
+        <i class="fa-solid fa-house me-2"></i>Go Home
+      </a>
+      <a href="javascript:location.reload()" class="btn-outline-th">
+        <i class="fa-solid fa-rotate me-2"></i>Retry
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

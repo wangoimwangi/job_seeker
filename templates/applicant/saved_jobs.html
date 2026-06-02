@@ -1,269 +1,78 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block title %}Saved Jobs | TalentHub{% endblock %}
+{% block title %}Saved Jobs — TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
 {% block body %}
 
 {% include 'applicant/side_bar_applicant.html' %}
 
-<div class="main-content-wrapper">
-    <div class="page-header-section">
-        <div>
-            <h1 class="page-title"><i class="bi bi-bookmark-heart me-2"></i>Saved Jobs</h1>
-            <p class="page-subtitle">Your bookmarked opportunities - {{jobs.count}} job{% if jobs.count != 1 %}s{% endif %}</p>
-        </div>
+<div class="sidebar-main">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Saved Jobs</h1>
+      <p class="page-subtitle">{{ jobs|length }} saved job{{ jobs|length|pluralize }}</p>
     </div>
+    <a href="{% url 'posted-jobs' %}" class="btn-primary-th">
+      <i class="fa-solid fa-search"></i> Browse More
+    </a>
+  </div>
 
-    {% if jobs %}
-    <div class="saved-jobs-grid">
-        {% for job in jobs %}
-        <div class="saved-job-card">
-            <div class="saved-bookmark-badge">
-                <i class="bi bi-bookmark-fill"></i>
-            </div>
-            
-            <div class="saved-job-header">
-                <div class="job-icon">
-                    <i class="bi bi-building"></i>
-                </div>
-                <div class="saved-job-title-section">
-                    <a href="{% url 'job-details' job.id %}" class="saved-job-title-link">
-                        <h3>{{job.job.title}}</h3>
-                    </a>
-                    <p class="saved-job-company">
-                        <i class="bi bi-briefcase me-2"></i>{{job.job.company}}
-                    </p>
-                </div>
-            </div>
-
-            <div class="saved-job-body">
-                <div class="saved-job-meta">
-                    <span class="saved-meta-item">
-                        <i class="bi bi-geo-alt-fill"></i>
-                        {{job.job.location}}
-                    </span>
-                    <span class="saved-meta-item">
-                        <i class="bi bi-clock"></i>
-                        {{job.job.job_type}}
-                    </span>
-                    <span class="saved-meta-item">
-                        <i class="bi bi-calendar-event"></i>
-                        Posted: {{job.job.date_posted|date:"M d, Y"}}
-                    </span>
-                </div>
-
-                <p class="saved-job-description">{{job.job.description|truncatewords:25}}</p>
-
-                <div class="saved-job-footer">
-                    <a href="{% url 'job-details' job.job.id %}" class="btn-saved-view">
-                        View Details
-                        <i class="bi bi-arrow-right ms-2"></i>
-                    </a>
-                    <a href="{% url 'apply-job' job.job.id %}" class="btn-saved-apply">
-                        <i class="bi bi-send me-2"></i>Apply Now
-                    </a>
-                </div>
-            </div>
+  {% if jobs %}
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    {% for saved in jobs %}
+    {% with job=saved.job %}
+    <div class="job-card">
+      <div class="job-company-avatar av-{% cycle 'blue' 'teal' 'violet' 'rose' 'amber' %}" style="width:48px;height:48px;border-radius:10px;">
+        {{ job.company|first|upper|default:"N" }}
+      </div>
+      <div class="job-body">
+        <a href="{% url 'job-details' job.id %}" class="job-title">{{ job.title }}</a>
+        <div class="job-company">{{ job.company|default:"Neotech" }}</div>
+        <div class="job-meta">
+          <span><i class="fa-solid fa-location-dot"></i> {{ job.location }}</span>
+          <span><i class="fa-regular fa-clock"></i> {{ job.job_type }}</span>
+          <span><i class="fa-regular fa-calendar"></i> Saved {{ saved.date_posted|date:"M j, Y" }}</span>
         </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="empty-saved-state">
-        <div class="empty-saved-icon">
-            <i class="bi bi-bookmark"></i>
+        {% if job.skills_req %}
+        <div class="job-skills">
+          {% for skill in job.get_skills_list|slice:":4" %}
+          <span class="skill-tag">{{ skill }}</span>
+          {% endfor %}
         </div>
-        <h3>No Saved Jobs Yet</h3>
-        <p>Start bookmarking jobs you're interested in to keep track of them here!</p>
-        <a href="{% url 'posted-jobs' %}" class="btn-primary-action">
-            <i class="bi bi-search me-2"></i>Explore Jobs
-        </a>
+        {% endif %}
+        <div class="job-footer">
+          <span class="job-posted-date">Posted {{ job.date_posted|timesince }} ago</span>
+          <div class="job-actions">
+            <!-- Remove from saved -->
+            <form action="{% url 'save-job' job.slug %}?next={{ request.path }}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="save-btn saved">
+                <i class="fa-solid fa-bookmark"></i> Saved
+              </button>
+            </form>
+            {% if job.id in applied_ids %}
+            <span class="badge-status badge-shortlisted"><i class="fa-solid fa-check"></i> Applied</span>
+            {% elif job.link %}
+            <a href="{{ job.link }}" target="_blank" class="btn-success-th">Apply <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i></a>
+            {% else %}
+            <a href="{% url 'apply-job' job.id %}" class="btn-success-th">Apply Now</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
     </div>
-    {% endif %}
+    {% endwith %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-state-icon"><i class="fa-solid fa-bookmark"></i></div>
+    <h3>No saved jobs</h3>
+    <p>Save jobs that interest you to review them later.</p>
+    <a href="{% url 'posted-jobs' %}" class="btn-primary-th">Browse Jobs</a>
+  </div>
+  {% endif %}
+
 </div>
-
-<style>
-.saved-jobs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 25px;
-}
-
-.saved-job-card {
-    position: relative;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.saved-job-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-}
-
-.saved-bookmark-badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-    z-index: 1;
-}
-
-.saved-job-header {
-    padding: 25px;
-    display: flex;
-    gap: 15px;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.saved-job-title-section {
-    flex: 1;
-    padding-right: 40px;
-}
-
-.saved-job-title-link {
-    text-decoration: none;
-}
-
-.saved-job-title-link h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 8px;
-    transition: color 0.3s ease;
-}
-
-.saved-job-title-link:hover h3 {
-    color: #667eea;
-}
-
-.saved-job-company {
-    color: #64748b;
-    font-weight: 500;
-    margin: 0;
-    display: flex;
-    align-items: center;
-}
-
-.saved-job-body {
-    padding: 25px;
-}
-
-.saved-job-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 18px;
-}
-
-.saved-meta-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #64748b;
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.saved-meta-item i {
-    color: #6366f1;
-    width: 20px;
-}
-
-.saved-job-description {
-    color: #475569;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.saved-job-footer {
-    display: flex;
-    gap: 12px;
-}
-
-.btn-saved-view, .btn-saved-apply {
-    flex: 1;
-    padding: 12px 20px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.btn-saved-view {
-    background: #f8fafc;
-    color: #64748b;
-    border: 2px solid #e2e8f0;
-}
-
-.btn-saved-view:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-    border-color: #cbd5e1;
-}
-
-.btn-saved-apply {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.btn-saved-apply:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    color: white;
-}
-
-.empty-saved-state {
-    text-align: center;
-    padding: 80px 20px;
-}
-
-.empty-saved-icon {
-    width: 120px;
-    height: 120px;
-    background: #f8fafc;
-    border-radius: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 25px;
-    font-size: 3.5rem;
-    color: #cbd5e1;
-}
-
-.empty-saved-state h3 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 10px;
-}
-
-.empty-saved-state p {
-    color: #64748b;
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-}
-
-@media (max-width: 768px) {
-    .saved-jobs-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .saved-job-footer {
-        flex-direction: column;
-    }
-}
-</style>
 
 {% endblock %}

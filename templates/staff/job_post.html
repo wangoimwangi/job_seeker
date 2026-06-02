@@ -1,387 +1,113 @@
 {% extends 'base.html' %}
-{% block title %}Manage Jobs | TalentHub{% endblock %}
-{% load static %}
+{% block title %}Manage Jobs — TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
 {% block body %}
+
 {% include 'staff/side_bar_staff.html' %}
 
-<div class="main-content-wrapper">
-    <div class="job-list-header">
-        <div>
-            <h1 class="job-list-title"><i class="bi bi-list-task me-2"></i>Your Job Posts</h1>
-            <p class="job-list-subtitle">Manage all your active and past job postings</p>
-        </div>
-        <a href="{% url 'add-job' %}" class="btn-add-new">
-            <i class="bi bi-plus-circle me-2"></i>Post New Job
-        </a>
-    </div>
+<div class="sidebar-main">
 
-    {% if not jobs %}
-    <div class="empty-jobs-state">
-        <div class="empty-jobs-icon">
-            <i class="bi bi-briefcase"></i>
-        </div>
-        <h3>No Job Posts Yet</h3>
-        <p>Start attracting talent by posting your first job!</p>
-        <a href="{% url 'add-job' %}" class="btn-post-first">
-            <i class="bi bi-plus-circle me-2"></i>Post Your First Job
-        </a>
+  <div class="page-header">
+    <h1 class="page-title">Manage Jobs</h1>
+    <a href="{% url 'add-job' %}" class="btn-primary-th">
+      <i class="fa-solid fa-plus"></i> Post New Job
+    </a>
+  </div>
+
+  <!-- Search -->
+  <form method="get" class="filter-bar mb-4" style="max-width:500px;">
+    <div class="filter-group" style="flex:1;">
+      <input type="text" name="q" value="{{ search_query }}" class="th-form-control" placeholder="Search by title or location…">
     </div>
-    {% else %}
-    <div class="jobs-grid-staff">
+    <button type="submit" class="btn-primary-th">Search</button>
+    {% if search_query %}<a href="{% url 'job-list' %}" class="btn-outline-th">Clear</a>{% endif %}
+  </form>
+
+  <div class="th-table-wrapper">
+    <table class="th-table">
+      <thead>
+        <tr>
+          <th>Job Title</th>
+          <th>Job Type</th>
+          <th>Applicants</th>
+          <th>Posted</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
         {% for job in jobs %}
-        <div class="staff-job-card">
-            <div class="staff-job-header">
-                <div class="staff-job-icon">
-                    <i class="bi bi-building"></i>
-                </div>
-                <div class="staff-job-title-section">
-                    <a href="{% url 'staff-job-detail' job.slug %}" class="staff-job-title-link">
-                        <h3>{{job.title}}</h3>
-                    </a>
-                    <p class="staff-job-company">{{job.company}}</p>
-                </div>
+        <tr>
+          <td>
+            <div style="font-weight:600;color:var(--text-dark);">{{ job.title }}</div>
+            <div style="font-size:.78rem;color:var(--text-light);">{{ job.location }}</div>
+          </td>
+          <td>
+            <span class="badge-status badge-active">{{ job.job_type }}</span>
+          </td>
+          <td>
+            <a href="{% url 'job-applicants' job.id %}" style="font-weight:700;color:var(--primary);">
+              {{ job.app_count }} applicant{{ job.app_count|pluralize }}
+            </a>
+          </td>
+          <td style="font-size:.82rem;color:var(--text-light);">{{ job.date_posted|date:"M j, Y" }}</td>
+          <td>
+            {% if job.deadline and job.deadline < today %}
+            <span class="badge-status badge-rejected">Closed</span>
+            {% else %}
+            <span class="badge-status badge-shortlisted">Active</span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <a href="{% url 'job-applicants' job.id %}" class="btn-outline-th" style="font-size:.78rem;padding:4px 10px;">
+                <i class="fa-solid fa-users me-1"></i>Applicants
+              </a>
+              <a href="{% url 'edit-job-post' job.slug %}" class="btn-outline-th" style="font-size:.78rem;padding:4px 10px;">
+                <i class="fa-solid fa-pen me-1"></i>Edit
+              </a>
+              <a href="{% url 'delete-job' job.slug %}" class="btn-danger-th" style="font-size:.78rem;padding:4px 10px;"
+                 onclick="return confirm('Delete this job? This cannot be undone.')">
+                <i class="fa-solid fa-trash me-1"></i>Delete
+              </a>
             </div>
-
-            <div class="staff-job-body">
-                <div class="staff-job-meta">
-                    <span class="staff-meta-item">
-                        <i class="bi bi-geo-alt-fill"></i>
-                        {{job.location}}
-                    </span>
-                    <span class="staff-meta-item">
-                        <i class="bi bi-clock"></i>
-                        {{job.job_type}}
-                    </span>
-                    <span class="staff-meta-item">
-                        <i class="bi bi-calendar-event"></i>
-                        Posted: {{job.date_posted|date:"M d, Y"}}
-                    </span>
-                </div>
-
-                <p class="staff-job-description">{{job.description|truncatewords:30}}</p>
-
-                <div class="staff-job-footer">
-                    <a href="{% url 'staff-job-detail' job.slug %}" class="btn-staff-view">
-                        View Details
-                        <i class="bi bi-arrow-right ms-2"></i>
-                    </a>
-                    <a href="{% url 'edit-job-post' job.slug %}" class="btn-staff-edit">
-                        <i class="bi bi-pencil me-2"></i>Edit
-                    </a>
-                </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">
+            <div class="empty-state" style="padding:40px 20px;">
+              <div class="empty-state-icon"><i class="fa-solid fa-briefcase"></i></div>
+              <h3>No jobs posted yet</h3>
+              <p>Start by posting your first job opening.</p>
+              <a href="{% url 'add-job' %}" class="btn-primary-th">Post a Job</a>
             </div>
-        </div>
+          </td>
+        </tr>
         {% endfor %}
-    </div>
+      </tbody>
+    </table>
+  </div>
 
-    {% if jobs.has_other_pages %}
-    <div class="pagination-modern">
-        {% if jobs.has_previous %}
-        <a class="page-btn first" href="?page=1">
-            <i class="bi bi-chevron-double-left"></i> First
-        </a>
-        <a class="page-btn prev" href="?page={{ jobs.previous_page_number }}">
-            <i class="bi bi-chevron-left"></i> Prev
-        </a>
-        {% endif %}
-        
-        <span class="page-info">
-            Page <strong>{{ jobs.number }}</strong> of <strong>{{ jobs.paginator.num_pages }}</strong>
-        </span>
-        
-        {% if jobs.has_next %}
-        <a class="page-btn next" href="?page={{ jobs.next_page_number }}">
-            Next <i class="bi bi-chevron-right"></i>
-        </a>
-        <a class="page-btn last" href="?page={{ jobs.paginator.num_pages }}">
-            Last <i class="bi bi-chevron-double-right"></i>
-        </a>
-        {% endif %}
-    </div>
+  <!-- Pagination -->
+  {% if jobs.has_other_pages %}
+  <div class="d-flex justify-content-center gap-2 mt-4">
+    {% if jobs.has_previous %}
+    <a href="?{% if search_query %}q={{ search_query }}&{% endif %}page={{ jobs.previous_page_number }}" class="btn-outline-th">
+      <i class="fa-solid fa-chevron-left"></i> Previous
+    </a>
     {% endif %}
+    <span style="display:flex;align-items:center;font-size:.88rem;color:var(--text-light);">
+      Page {{ jobs.number }} of {{ jobs.paginator.num_pages }}
+    </span>
+    {% if jobs.has_next %}
+    <a href="?{% if search_query %}q={{ search_query }}&{% endif %}page={{ jobs.next_page_number }}" class="btn-outline-th">
+      Next <i class="fa-solid fa-chevron-right"></i>
+    </a>
     {% endif %}
+  </div>
+  {% endif %}
+
 </div>
 
-<style>
-.job-list-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.job-list-title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #1e293b;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-}
-
-.job-list-subtitle {
-    color: #64748b;
-    font-size: 1.05rem;
-}
-
-.btn-add-new {
-    padding: 14px 24px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-}
-
-.btn-add-new:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
-    color: white;
-}
-
-.empty-jobs-state {
-    text-align: center;
-    padding: 80px 20px;
-}
-
-.empty-jobs-icon {
-    width: 120px;
-    height: 120px;
-    background: #f8fafc;
-    border-radius: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 25px;
-    font-size: 3.5rem;
-    color: #cbd5e1;
-}
-
-.empty-jobs-state h3 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 10px;
-}
-
-.empty-jobs-state p {
-    color: #64748b;
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-}
-
-.btn-post-first {
-    padding: 14px 32px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.3s ease;
-}
-
-.btn-post-first:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
-    color: white;
-}
-
-.jobs-grid-staff {
-    display: grid;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.staff-job-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.staff-job-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-.staff-job-header {
-    display: flex;
-    align-items: start;
-    gap: 20px;
-    padding: 25px;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.staff-job-icon {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    flex-shrink: 0;
-}
-
-.staff-job-title-section {
-    flex: 1;
-}
-
-.staff-job-title-link {
-    text-decoration: none;
-}
-
-.staff-job-title-link h3 {
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 8px;
-    transition: color 0.3s ease;
-}
-
-.staff-job-title-link:hover h3 {
-    color: #f5576c;
-}
-
-.staff-job-company {
-    color: #64748b;
-    font-weight: 500;
-    margin: 0;
-}
-
-.staff-job-body {
-    padding: 25px;
-}
-
-.staff-job-meta {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-}
-
-.staff-meta-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #64748b;
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.staff-meta-item i {
-    color: #f5576c;
-}
-
-.staff-job-description {
-    color: #475569;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.staff-job-footer {
-    display: flex;
-    gap: 12px;
-}
-
-.btn-staff-view, .btn-staff-edit {
-    flex: 1;
-    padding: 12px 20px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.btn-staff-view {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
-}
-
-.btn-staff-view:hover {
-    transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
-    color: white;
-}
-
-.btn-staff-edit {
-    background: #f8fafc;
-    color: #64748b;
-    border: 2px solid #e2e8f0;
-}
-
-.btn-staff-edit:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-    border-color: #cbd5e1;
-}
-
-.pagination-modern {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 30px 0;
-}
-
-.page-btn {
-    padding: 10px 20px;
-    background: white;
-    color: #64748b;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    transition: all 0.3s ease;
-}
-
-.page-btn:hover {
-    background: #f8fafc;
-    color: #1e293b;
-    border-color: #cbd5e1;
-}
-
-.page-info {
-    padding: 10px 20px;
-    color: #475569;
-    font-weight: 500;
-}
-
-@media (max-width: 768px) {
-    .job-list-header {
-        flex-direction: column;
-    }
-    
-    .btn-add-new {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .staff-job-footer {
-        flex-direction: column;
-    }
-    
-    .pagination-modern {
-        flex-wrap: wrap;
-    }
-}
-</style>
-
-{% endblock%}
+{% endblock %}

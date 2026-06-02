@@ -1,263 +1,82 @@
 {% extends 'base.html' %}
-{% block title %}Edit Profile | TalentHub{% endblock %}
-{% load static %}
-{% load crispy_forms_tags %}
+{% block title %}Edit Profile — TalentHub{% endblock %}
+{% load widget_tweaks %}
+{% block navbar %}{% endblock %}
 {% block body %}
 
 {% include 'applicant/side_bar_applicant.html' %}
 
-<div class="main-content-wrapper">
-    <div class="edit-profile-container">
-        <div class="edit-profile-header">
-            <div class="header-icon">
-                <i class="bi bi-person-gear"></i>
-            </div>
-            <div>
-                <h1 class="edit-page-title">Update Your Profile</h1>
-                <p class="edit-page-subtitle">Keep your information current to stand out to employers</p>
-            </div>
-        </div>
+<div class="sidebar-main">
+  <div style="max-width:680px;">
 
-        <div class="edit-profile-card">
-            <form class="modern-form" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                
-                <div class="form-section">
-                    <h3 class="form-section-title">
-                        <i class="bi bi-person-circle me-2"></i>
-                        Personal Information
-                    </h3>
-                    <div class="form-fields">
-                        {{ form|crispy }}
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <a href="{% url 'profile' %}" class="btn-cancel">
-                        <i class="bi bi-x-circle me-2"></i>Cancel
-                    </a>
-                    <button class="btn-save" type="submit">
-                        <i class="bi bi-check-circle me-2"></i>Save Changes
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <div class="profile-tips-section">
-            <div class="tip-card">
-                <div class="tip-icon">💡</div>
-                <div>
-                    <h4>Profile Tips</h4>
-                    <ul>
-                        <li>Keep your resume updated and in PDF format</li>
-                        <li>Add a professional location (City, State/Country)</li>
-                        <li>Specify your graduation year to match relevant opportunities</li>
-                        <li>Include your preferred job type for better recommendations</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <div class="page-header">
+      <h1 class="page-title">Edit Profile</h1>
+      <a href="{% url 'my-profile' %}" class="btn-outline-th">
+        <i class="fa-solid fa-arrow-left"></i> Back to Profile
+      </a>
     </div>
+
+    <div class="th-card">
+      <div class="th-card-header"><i class="fa-solid fa-user-pen me-2 text-primary-th"></i>Profile Information</div>
+      <div class="th-card-body">
+
+        <form method="POST" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+
+          <div class="th-fieldset-title">Basic Details</div>
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <label class="th-form-label">Full Name</label>
+              {% render_field form.full_name class="th-form-control" %}
+              {% if form.full_name.errors %}<div class="th-error-msg">{{ form.full_name.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-12">
+              <label class="th-form-label">Location</label>
+              {% render_field form.location class="th-form-control" %}
+              {% if form.location.errors %}<div class="th-error-msg">{{ form.location.errors.0 }}</div>{% endif %}
+            </div>
+          </div>
+
+          <div class="th-fieldset-title">Education &amp; Preferences</div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="th-form-label">Graduation Year</label>
+              {% render_field form.grad_year class="th-form-control" %}
+              {% if form.grad_year.errors %}<div class="th-error-msg">{{ form.grad_year.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="th-form-label">Preferred Job Type</label>
+              {% render_field form.job_type class="th-form-control" %}
+              {% if form.job_type.errors %}<div class="th-error-msg">{{ form.job_type.errors.0 }}</div>{% endif %}
+            </div>
+          </div>
+
+          <div class="th-fieldset-title">Resume</div>
+          <div class="th-form-group">
+            <label class="th-form-label">Upload Resume</label>
+            {% if profile.resume %}
+            <div class="th-alert th-alert-info mb-2">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span>Current resume: <a href="{{ profile.resume.url }}" target="_blank">{{ profile.resume.name|cut:"resumes/" }}</a></span>
+            </div>
+            {% endif %}
+            {% render_field form.resume class="th-form-control" %}
+            <p class="th-help-text">PDF, DOC or DOCX · Max 5 MB. Leave empty to keep current.</p>
+            {% if form.resume.errors %}<div class="th-error-msg">{{ form.resume.errors.0 }}</div>{% endif %}
+          </div>
+
+          <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="btn-primary-th" style="padding:12px 28px;border-radius:8px;">
+              <i class="fa-solid fa-floppy-disk me-2"></i>Save Changes
+            </button>
+            <a href="{% url 'my-profile' %}" class="btn-outline-th" style="padding:11px 24px;border-radius:8px;">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<style>
-.edit-profile-container {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.edit-profile-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.header-icon {
-    width: 70px;
-    height: 70px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 2rem;
-    flex-shrink: 0;
-}
-
-.edit-page-title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #1e293b;
-    margin-bottom: 5px;
-}
-
-.edit-page-subtitle {
-    color: #64748b;
-    font-size: 1.05rem;
-    margin: 0;
-}
-
-.edit-profile-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    padding: 40px;
-    margin-bottom: 25px;
-}
-
-.form-section {
-    margin-bottom: 30px;
-}
-
-.form-section-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 25px;
-    display: flex;
-    align-items: center;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #f1f5f9;
-}
-
-.form-section-title i {
-    color: #6366f1;
-}
-
-.form-fields {
-    display: grid;
-    gap: 20px;
-}
-
-.modern-form .form-group label {
-    font-weight: 600;
-    color: #475569;
-    margin-bottom: 8px;
-    display: block;
-}
-
-.modern-form .form-control {
-    padding: 12px 16px;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.modern-form .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    outline: none;
-}
-
-.modern-form textarea.form-control {
-    min-height: 120px;
-    resize: vertical;
-}
-
-.form-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: flex-end;
-    padding-top: 20px;
-    border-top: 1px solid #f1f5f9;
-}
-
-.btn-cancel, .btn-save {
-    padding: 14px 30px;
-    border-radius: 12px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.btn-cancel {
-    background: #f8fafc;
-    color: #64748b;
-    border: 2px solid #e2e8f0;
-}
-
-.btn-cancel:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-    border-color: #cbd5e1;
-}
-
-.btn-save {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-}
-
-.btn-save:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.profile-tips-section {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    padding: 30px;
-}
-
-.tip-card {
-    display: flex;
-    gap: 20px;
-}
-
-.tip-icon {
-    font-size: 2.5rem;
-    flex-shrink: 0;
-}
-
-.tip-card h4 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 15px;
-}
-
-.tip-card ul {
-    margin: 0;
-    padding-left: 20px;
-    color: #475569;
-    line-height: 1.8;
-}
-
-.tip-card li {
-    margin-bottom: 8px;
-}
-
-@media (max-width: 768px) {
-    .edit-profile-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .edit-profile-card {
-        padding: 25px;
-    }
-    
-    .form-actions {
-        flex-direction: column;
-    }
-    
-    .btn-cancel, .btn-save {
-        width: 100%;
-    }
-    
-    .tip-card {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-</style>
-
-{% endblock body %}
+{% endblock %}

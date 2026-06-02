@@ -1,17 +1,119 @@
 {% extends 'base.html' %}
-{% block title %}Our Services{% endblock %}
-{% load static %}
-{% block body%}
-<br>
-<section class="section-content section-services bg-dark text-light " id="sectionservices">
-    <div class="container container-small">
-        <h4 class="section-title"><span class="text-info">Our Services</span> </h4>
-        <h5>Find Relevant Job</h5>
-        <p>We help you take your carrer to the next level by connecting you with different Job opportunities available for you. We will find the most Relevant job  for you.</p><br>
-        <h5>Find Relevant Employees</h5>
-        <p>We offer hiring opportunities to companys and help them chose the most relevant applicants for their company thus improving the general success of the company in the long run </p>
-       
-    </div>
+{% block title %}Our Services — TalentHub{% endblock %}
+{% block body %}
+
+<!-- Hero -->
+<section style="background:var(--primary);padding:64px 0 48px;text-align:center;color:#fff;">
+  <div style="max-width:600px;margin:0 auto;padding:0 20px;">
+    <h1 style="font-size:2.2rem;font-weight:800;margin-bottom:12px;">What We Offer</h1>
+    <p style="font-size:1.05rem;opacity:.88;">TalentHub connects job seekers with the right opportunities and helps employers find qualified talent — all in one place.</p>
+  </div>
 </section>
 
-{% endblock body%}
+<!-- Services Grid -->
+<section style="padding:64px 0;background:var(--bg);">
+  <div style="max-width:960px;margin:0 auto;padding:0 20px;">
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;margin-bottom:48px;">
+
+      <div class="th-card" style="margin:0;">
+        <div class="th-card-body" style="padding:28px;">
+          <div style="width:48px;height:48px;background:var(--primary-lt);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:1.2rem;margin-bottom:16px;">
+            <i class="fa-solid fa-briefcase"></i>
+          </div>
+          <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin-bottom:8px;">Job Discovery</h3>
+          <p style="font-size:.88rem;color:var(--text-light);line-height:1.7;margin:0;">
+            Browse hundreds of verified job listings across industries. Filter by job type, location, and salary to find your perfect match.
+          </p>
+        </div>
+      </div>
+
+      <div class="th-card" style="margin:0;">
+        <div class="th-card-body" style="padding:28px;">
+          <div style="width:48px;height:48px;background:var(--success-lt);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--success);font-size:1.2rem;margin-bottom:16px;">
+            <i class="fa-solid fa-user-tie"></i>
+          </div>
+          <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin-bottom:8px;">Talent Matching</h3>
+          <p style="font-size:.88rem;color:var(--text-light);line-height:1.7;margin:0;">
+            Our skill-matching algorithm ranks candidates by how closely their skills align with your job requirements — so you review the best first.
+          </p>
+        </div>
+      </div>
+
+      <div class="th-card" style="margin:0;">
+        <div class="th-card-body" style="padding:28px;">
+          <div style="width:48px;height:48px;background:var(--info-lt);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--info);font-size:1.2rem;margin-bottom:16px;">
+            <i class="fa-solid fa-file-lines"></i>
+          </div>
+          <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin-bottom:8px;">Application Tracking</h3>
+          <p style="font-size:.88rem;color:var(--text-light);line-height:1.7;margin:0;">
+            Track every application from submission to decision. Applicants see real-time status updates; employers manage pipelines efficiently.
+          </p>
+        </div>
+      </div>
+
+      <div class="th-card" style="margin:0;">
+        <div class="th-card-body" style="padding:28px;">
+          <div style="width:48px;height:48px;background:var(--warning-lt);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--warning);font-size:1.2rem;margin-bottom:16px;">
+            <i class="fa-solid fa-chart-bar"></i>
+          </div>
+          <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin-bottom:8px;">Hiring Analytics</h3>
+          <p style="font-size:.88rem;color:var(--text-light);line-height:1.7;margin:0;">
+            View monthly application reports and hiring trends to make smarter staffing decisions for your organisation.
+          </p>
+        </div>
+      </div>
+
+      <div class="th-card" style="margin:0;">
+        <div class="th-card-body" style="padding:28px;">
+          <div style="width:48px;height:48px;background:var(--primary-lt);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:1.2rem;margin-bottom:16px;">
+            <i class="fa-solid fa-bookmark"></i>
+          </div>
+          <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin-bottom:8px;">Saved Jobs</h3>
+          <p style="font-size:.88rem;color:var(--text-light);line-height:1.7;margin:0;">
+            Bookmark interesting positions and apply when you're ready. Your saved jobs are always just one click away.
+          </p>
+        </div>
+      </div>
+
+      <div class="th-card" style="margin:0;">
+        <div class="th-card-body" style="padding:28px;">
+          <div style="width:48px;height:48px;background:var(--success-lt);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--success);font-size:1.2rem;margin-bottom:16px;">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-dark);margin-bottom:8px;">Secure Platform</h3>
+          <p style="font-size:.88rem;color:var(--text-light);line-height:1.7;margin:0;">
+            Your data is protected with role-based access control, CSRF protection, and secure session management throughout the platform.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div style="background:var(--primary);border-radius:16px;padding:40px;text-align:center;color:#fff;">
+      <h2 style="font-size:1.6rem;font-weight:700;margin-bottom:10px;">Ready to get started?</h2>
+      <p style="opacity:.88;margin-bottom:24px;">Join thousands of job seekers and employers already using TalentHub.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="{% url 'register' %}" style="background:#fff;color:var(--primary);font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:.95rem;">Get Started Free</a>
+        <a href="{% url 'posted-jobs' %}" style="border:2px solid rgba(255,255,255,.4);color:#fff;font-weight:600;padding:11px 28px;border-radius:8px;text-decoration:none;font-size:.95rem;">Browse Jobs</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer style="background:#1e293b;color:#94a3b8;padding:32px 0;text-align:center;font-size:.88rem;">
+  <div style="max-width:960px;margin:0 auto;padding:0 20px;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
+      <div style="width:24px;height:24px;background:var(--primary);border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;">
+        <i class="fa-solid fa-briefcase"></i>
+      </div>
+      <span style="font-weight:700;color:#e2e8f0;">TalentHub</span>
+    </div>
+    <p>© 2024 TalentHub · Connecting talent with opportunity across Kenya</p>
+  </div>
+</footer>
+
+{% endblock %}

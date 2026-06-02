@@ -1,445 +1,95 @@
-<!--Used for staff registration-->
 {% extends 'base.html' %}
-{% load static %}
-{% block title %} Employer Registration | TalentHub {% endblock %}
+{% block title %}Employer Registration — TalentHub{% endblock %}
+{% load widget_tweaks %}
 {% block body %}
 
-<section class="registration-form-section">
-    <div class="container">
-        <div class="registration-wrapper">
-            <!-- Left Side - Info -->
-            <div class="registration-info employer-info">
-                <a href="{% url 'home' %}" class="back-link">
-                    <i class="bi bi-arrow-left"></i> Back to Home
-                </a>
-                <div class="info-content">
-                    <div class="info-icon">
-                        <i class="bi bi-building"></i>
-                    </div>
-                    <h2>Find Your Next Great Hire</h2>
-                    <p class="info-description">
-                        Create your employer account and connect with talented professionals ready to contribute to your company's success.
-                    </p>
-                    
-                    <div class="benefits-list">
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <i class="bi bi-check-circle-fill"></i>
-                            </div>
-                            <div>
-                                <h4>Post Jobs</h4>
-                                <p>Unlimited job postings to reach qualified candidates</p>
-                            </div>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <i class="bi bi-check-circle-fill"></i>
-                            </div>
-                            <div>
-                                <h4>Manage Applications</h4>
-                                <p>Review and track all candidates in one place</p>
-                            </div>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <i class="bi bi-check-circle-fill"></i>
-                            </div>
-                            <div>
-                                <h4>Build Your Brand</h4>
-                                <p>Showcase your company to attract top talent</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="register-form-page">
+  <div class="container">
 
-            <!-- Right Side - Form -->
-            <div class="registration-form-container">
-                <div class="form-header">
-                    <h1>Create Employer Account</h1>
-                    <p>Start hiring the best talent for your organization</p>
-                </div>
-
-                <form action="{% url 'register-staff' %}" method="POST" class="modern-form">
-                    {% csrf_token %}
-                    
-                    {% if form.errors %}
-                    <div class="form-errors">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        <div>
-                            <strong>Please correct the errors below:</strong>
-                            <ul>
-                                {% for field, errors in form.errors.items %}
-                                    {% for error in errors %}
-                                        <li>{{ field }}: {{ error }}</li>
-                                    {% endfor %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    {% for field in form %}
-                    <div class="form-group-modern">
-                        <label for="{{ field.id_for_label }}" class="form-label-modern">
-                            {{ field.label }}
-                            {% if field.field.required %}
-                            <span class="required-star">*</span>
-                            {% endif %}
-                        </label>
-                        {{ field }}
-                        {% if field.help_text %}
-                        <small class="form-help-text">{{ field.help_text }}</small>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-
-                    <button type="submit" class="btn-submit-modern employer-btn">
-                        <span>Create Account</span>
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-                </form>
-
-                <div class="form-footer">
-                    <p>Already have an account? <a href="{% url 'login' %}" class="footer-link">Log in here</a></p>
-                </div>
-            </div>
-        </div>
+    <div class="text-center mb-4">
+      <a href="{% url 'register' %}" style="font-size:.85rem;color:var(--text-light);text-decoration:none;">
+        <i class="fa-solid fa-arrow-left me-1"></i> Back to account type
+      </a>
     </div>
-</section>
 
-<style>
-.registration-form-section {
-    min-height: 100vh;
-    background: #f8fafc;
-    padding: 40px 20px;
-}
+    <div class="register-form-card">
+      <div class="text-center mb-4">
+        <div style="width:56px;height:56px;background:var(--success-lt);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem;color:var(--success);">
+          <i class="fa-solid fa-building"></i>
+        </div>
+        <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:4px;">Create Employer Account</h2>
+        <p style="font-size:.88rem;color:var(--text-light);">Start posting jobs and discovering talent at Neotech</p>
+      </div>
 
-.registration-wrapper {
-    max-width: 1200px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    min-height: 800px;
-}
+      <form method="POST" novalidate>
+        {% csrf_token %}
 
-/* Left Side - Info for Employer */
-.registration-info {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 50px;
-    color: white;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
+        <div class="th-fieldset-title">Contact Details</div>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="th-form-label">First Name *</label>
+            {% render_field form.first_name class="th-form-control" %}
+            {% if form.first_name.errors %}<div class="th-error-msg">{{ form.first_name.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="th-form-label">Last Name *</label>
+            {% render_field form.last_name class="th-form-control" %}
+            {% if form.last_name.errors %}<div class="th-error-msg">{{ form.last_name.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="th-form-label">Work Email *</label>
+            {% render_field form.email class="th-form-control" %}
+            {% if form.email.errors %}<div class="th-error-msg">{{ form.email.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="th-form-label">Phone Number *</label>
+            {% render_field form.contact class="th-form-control" %}
+            {% if form.contact.errors %}<div class="th-error-msg">{{ form.contact.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-12">
+            <label class="th-form-label">Office Location *</label>
+            {% render_field form.location class="th-form-control" %}
+            {% if form.location.errors %}<div class="th-error-msg">{{ form.location.errors.0 }}</div>{% endif %}
+          </div>
+        </div>
 
-.employer-info {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
+        <div class="th-fieldset-title">Account Credentials</div>
+        <div class="row g-3 mb-4">
+          <div class="col-12">
+            <label class="th-form-label">Username *</label>
+            {% render_field form.username class="th-form-control" %}
+            {% if form.username.errors %}<div class="th-error-msg">{{ form.username.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="th-form-label">Password *</label>
+            {% render_field form.password1 class="th-form-control" %}
+            {% if form.password1.errors %}<div class="th-error-msg">{{ form.password1.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="th-form-label">Confirm Password *</label>
+            {% render_field form.password2 class="th-form-control" %}
+            {% if form.password2.errors %}<div class="th-error-msg">{{ form.password2.errors.0 }}</div>{% endif %}
+          </div>
+        </div>
 
-.registration-info::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></svg>');
-    opacity: 0.3;
-}
+        {% if form.non_field_errors %}
+        <div class="th-alert th-alert-danger mb-3">
+          <i class="fa-solid fa-circle-xmark"></i>
+          <span>{{ form.non_field_errors.0 }}</span>
+        </div>
+        {% endif %}
 
-.back-link {
-    color: white;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 500;
-    margin-bottom: 40px;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 2;
-}
+        <button type="submit" class="btn-success-th w-100 justify-content-center" style="display:flex;padding:12px;font-size:1rem;border-radius:8px;">
+          Create Employer Account <i class="fa-solid fa-arrow-right ms-2"></i>
+        </button>
 
-.back-link:hover {
-    gap: 12px;
-    color: #ffd900;
-}
+        <p class="text-center mt-3" style="font-size:.85rem;color:var(--text-light);">
+          Already have an account? <a href="{% url 'login' %}">Sign in</a>
+        </p>
+      </form>
+    </div>
 
-.info-content {
-    position: relative;
-    z-index: 2;
-    flex: 1;
-}
+  </div>
+</div>
 
-.info-icon {
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    margin-bottom: 24px;
-    backdrop-filter: blur(10px);
-}
-
-.registration-info h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 16px;
-    line-height: 1.2;
-}
-
-.info-description {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    opacity: 0.95;
-    margin-bottom: 40px;
-}
-
-.benefits-list {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.benefit-item {
-    display: flex;
-    gap: 16px;
-    align-items: start;
-}
-
-.benefit-icon {
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    flex-shrink: 0;
-    backdrop-filter: blur(10px);
-}
-
-.benefit-item h4 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-}
-
-.benefit-item p {
-    font-size: 0.95rem;
-    opacity: 0.9;
-    margin: 0;
-}
-
-/* Right Side - Form */
-.registration-form-container {
-    padding: 50px;
-}
-
-.form-header {
-    margin-bottom: 40px;
-}
-
-.form-header h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #1e293b;
-    margin-bottom: 8px;
-}
-
-.form-header p {
-    color: #64748b;
-    font-size: 1rem;
-}
-
-.modern-form {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.form-group-modern {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-label-modern {
-    font-weight: 600;
-    color: #334155;
-    margin-bottom: 8px;
-    font-size: 0.95rem;
-}
-
-.required-star {
-    color: #ef4444;
-}
-
-.modern-form input[type="text"],
-.modern-form input[type="email"],
-.modern-form input[type="password"],
-.modern-form input[type="number"],
-.modern-form input[type="tel"],
-.modern-form select,
-.modern-form textarea {
-    width: 100%;
-    padding: 14px 16px;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: #f8fafc;
-    color: #1e293b;
-    font-family: inherit;
-}
-
-.modern-form input:focus,
-.modern-form select:focus,
-.modern-form textarea:focus {
-    outline: none;
-    border-color: #f093fb;
-    background: white;
-    box-shadow: 0 0 0 4px rgba(240, 147, 251, 0.1);
-}
-
-.form-help-text {
-    color: #64748b;
-    font-size: 0.875rem;
-    margin-top: 6px;
-}
-
-.form-errors {
-    background: #fef2f2;
-    border: 2px solid #fecaca;
-    border-radius: 12px;
-    padding: 16px;
-    display: flex;
-    gap: 12px;
-    color: #991b1b;
-}
-
-.form-errors i {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-}
-
-.form-errors ul {
-    margin: 8px 0 0 0;
-    padding-left: 20px;
-}
-
-.btn-submit-modern {
-    width: 100%;
-    padding: 16px 32px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    margin-top: 8px;
-}
-
-.employer-btn {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
-}
-
-.btn-submit-modern:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-}
-
-.employer-btn:hover {
-    box-shadow: 0 8px 25px rgba(240, 147, 251, 0.5);
-}
-
-.btn-submit-modern i {
-    font-size: 1.2rem;
-    transition: transform 0.3s ease;
-}
-
-.btn-submit-modern:hover i {
-    transform: translateX(4px);
-}
-
-.form-footer {
-    text-align: center;
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid #e2e8f0;
-}
-
-.form-footer p {
-    color: #64748b;
-}
-
-.footer-link {
-    color: #f093fb;
-    font-weight: 600;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-link:hover {
-    color: #f5576c;
-    text-decoration: underline;
-}
-
-@media (max-width: 992px) {
-    .registration-wrapper {
-        grid-template-columns: 1fr;
-    }
-    
-    .registration-info {
-        padding: 40px 30px;
-    }
-    
-    .registration-info h2 {
-        font-size: 2rem;
-    }
-    
-    .registration-form-container {
-        padding: 40px 30px;
-    }
-}
-
-@media (max-width: 576px) {
-    .registration-form-section {
-        padding: 20px 10px;
-    }
-    
-    .registration-wrapper {
-        border-radius: 16px;
-    }
-    
-    .registration-info {
-        padding: 30px 20px;
-    }
-    
-    .registration-form-container {
-        padding: 30px 20px;
-    }
-    
-    .form-header h1 {
-        font-size: 1.5rem;
-    }
-}
-</style>
-
-{% endblock body %}
+{% endblock %}

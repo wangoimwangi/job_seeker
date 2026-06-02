@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Applicants — {{ job.title }} — TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
+{% block body %}
+
+{% include 'staff/side_bar_staff.html' %}
+
+<div class="sidebar-main">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ job.title }}</h1>
+      <p class="page-subtitle">{{ job.company }} · {{ job.location }} · {{ applications|length }} applicant{{ applications|length|pluralize }}</p>
+    </div>
+    <a href="{% url 'job-list' %}" class="btn-outline-th">
+      <i class="fa-solid fa-arrow-left"></i> Back to Jobs
+    </a>
+  </div>
+
+  <!-- Status legend -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
+    <span class="badge-status badge-pending">Pending</span>
+    <span class="badge-status badge-in_process">In Process</span>
+    <span class="badge-status badge-shortlisted">Shortlisted</span>
+    <span class="badge-status badge-rejected">Rejected</span>
+  </div>
+
+  <div class="th-table-wrapper">
+    <table class="th-table">
+      <thead>
+        <tr>
+          <th>Applicant</th>
+          <th>Applied</th>
+          <th>Status</th>
+          <th>Resume</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in applications %}
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;">
+                {{ app.applicant.user.initials }}
+              </div>
+              <div>
+                <div style="font-weight:600;color:var(--text-dark);">{{ app.applicant.user.full_name }}</div>
+                <div style="font-size:.78rem;color:var(--text-light);">{{ app.applicant.user.email }}</div>
+              </div>
+            </div>
+          </td>
+          <td style="font-size:.82rem;color:var(--text-light);">{{ app.date_applied|date:"M j, Y" }}</td>
+          <td><span class="badge-status badge-{{ app.status }}">{{ app.get_status_display }}</span></td>
+          <td>
+            {% if app.applicant.resume %}
+            <a href="{{ app.applicant.resume.url }}" target="_blank" style="color:var(--primary);font-size:.82rem;font-weight:600;text-decoration:none;">
+              <i class="fa-solid fa-file-pdf me-1"></i>View
+            </a>
+            {% else %}
+            <span style="font-size:.82rem;color:var(--text-light);">—</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'applicant-details' app.id %}" class="btn-outline-th" style="font-size:.78rem;padding:4px 12px;">
+              Review
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">
+            <div class="empty-state" style="padding:40px 20px;">
+              <div class="empty-state-icon"><i class="fa-solid fa-users"></i></div>
+              <h3>No applicants yet</h3>
+              <p>Applications will appear here once candidates apply to this job.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if applications %}
+  <div style="margin-top:16px;display:flex;gap:10px;">
+    <a href="{% url 'job-candidate-search' job.slug %}" class="btn-outline-th" style="font-size:.85rem;">
+      <i class="fa-solid fa-magnifying-glass me-1"></i>Find Relevant Candidates
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

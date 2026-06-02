@@ -1,398 +1,143 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block title %}{{ application.job.title }} - Application Details | TalentHub{% endblock %}
+{% block title %}Application Details — TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
 {% block body %}
+
 {% include 'staff/side_bar_staff.html' %}
 
-<div class="main-content-wrapper">
-    <div class="application-details-container">
-        <div class="application-header">
-            <div class="application-header-icon">
-                <i class="bi bi-file-person"></i>
-            </div>
-            <div>
-                <h1 class="application-title">{{ application.job.title }}</h1>
-                <p class="application-subtitle">
-                    <i class="bi bi-calendar-event me-2"></i>
-                    Posted: {{ application.job.date_posted|date:"F d, Y" }}
-                </p>
-            </div>
-        </div>
+<div class="sidebar-main">
+  <div style="max-width:760px;">
 
-        <div class="applicant-details-card">
-            <div class="card-header-app">
-                <div class="applicant-avatar">
-                    <i class="bi bi-person-fill"></i>
-                </div>
-                <div>
-                    <h2>{{ application.applicant.user.full_name }}</h2>
-                    <p class="applicant-email">{{ application.applicant.user.email }}</p>
-                </div>
-            </div>
-
-            <div class="applicant-info-list">
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="bi bi-geo-alt-fill"></i>
-                        <span>Location</span>
-                    </div>
-                    <div class="info-value">{{ application.applicant.user.location|default:"Not specified" }}</div>
-                </div>
-
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="bi bi-telephone-fill"></i>
-                        <span>Contact</span>
-                    </div>
-                    <div class="info-value">{{ application.applicant.user.contact|default:"Not specified" }}</div>
-                </div>
-
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="bi bi-calendar-event"></i>
-                        <span>Graduation Year</span>
-                    </div>
-                    <div class="info-value">{{ application.applicant.grad_year|default:"Not specified" }}</div>
-                </div>
-
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="bi bi-file-earmark-pdf"></i>
-                        <span>Resume</span>
-                    </div>
-                    <div class="info-value">
-                        {% if application.applicant.resume %}
-                        <a href="{{ application.applicant.resume.url }}" target="_blank" class="resume-download-link">
-                            <i class="bi bi-download me-2"></i>Download Resume
-                        </a>
-                        {% else %}
-                        <span class="text-muted">Not uploaded</span>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="info-row full-width">
-                    <div class="info-label">
-                        <i class="bi bi-envelope-fill"></i>
-                        <span>Cover Letter</span>
-                    </div>
-                    <div class="info-value cover-letter">
-                        {{ application.cover_letter|default:"No cover letter provided" }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="application-status-section">
-                {% if application.date_approved %}
-                    {% if application.approved == True %}
-                    <div class="status-badge-large success">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <span>Already Shortlisted!</span>
-                    </div>
-                    {% else %}
-                    <div class="status-badge-large danger">
-                        <i class="bi bi-x-circle-fill"></i>
-                        <span>Already Declined!</span>
-                    </div>
-                    {% endif %}
-                {% else %}
-                <div class="action-buttons">
-                    <form method="post" class="action-form">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="decline">
-                        <button type="submit" class="btn-decline-app">
-                            <i class="bi bi-x-circle me-2"></i>Decline Application
-                        </button>
-                    </form>
-
-                    <form method="post" class="action-form">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="approve">
-                        <button type="submit" class="btn-approve-app">
-                            <i class="bi bi-check-circle me-2"></i>Shortlist Candidate
-                        </button>
-                    </form>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="back-link-section">
-            <a href="{% url 'job-list' %}" class="btn-back">
-                <i class="bi bi-arrow-left me-2"></i>Back to Job Posts
-            </a>
-        </div>
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Application Details</h1>
+        <p class="page-subtitle">{{ application.job.title }}</p>
+      </div>
+      <a href="{% url 'job-applicants' application.job.id %}" class="btn-outline-th">
+        <i class="fa-solid fa-arrow-left"></i> Back to Applicants
+      </a>
     </div>
+
+    <!-- Applicant Card -->
+    <div class="th-card mb-4">
+      <div class="th-card-header" style="background:var(--primary);color:#fff;border-radius:12px 12px 0 0;padding:20px 24px;">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="width:56px;height:56px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;flex-shrink:0;">
+            {{ application.applicant.user.initials }}
+          </div>
+          <div>
+            <div style="font-size:1.1rem;font-weight:700;">{{ application.applicant.user.full_name }}</div>
+            <div style="font-size:.85rem;opacity:.85;">{{ application.applicant.user.email }}</div>
+          </div>
+          <div style="margin-left:auto;">
+            <span class="badge-status badge-{{ application.status }}">{{ application.get_status_display }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="th-card-body" style="padding:0;">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+          <div style="padding:20px 24px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px;">Location</div>
+            <div style="font-weight:600;color:var(--text-dark);">{{ profile.location|default:"Not specified" }}</div>
+          </div>
+          <div style="padding:20px 24px;border-bottom:1px solid var(--border);">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px;">Graduation Year</div>
+            <div style="font-weight:600;color:var(--text-dark);">{{ application.applicant.grad_year|default:"Not specified" }}</div>
+          </div>
+          <div style="padding:20px 24px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px;">Applied</div>
+            <div style="font-weight:600;color:var(--text-dark);">{{ application.date_applied|date:"M j, Y" }}</div>
+          </div>
+          <div style="padding:20px 24px;border-bottom:1px solid var(--border);">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px;">Job Type Preference</div>
+            <div style="font-weight:600;color:var(--text-dark);">{{ application.applicant.job_type|default:"Not specified" }}</div>
+          </div>
+          <div style="padding:20px 24px;border-right:1px solid var(--border);">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px;">Resume</div>
+            {% if profile and profile.resume %}
+            <a href="{{ profile.resume.url }}" target="_blank" style="color:var(--primary);font-weight:600;text-decoration:none;">
+              <i class="fa-solid fa-file-pdf me-1"></i>Download Resume
+            </a>
+            {% else %}
+            <span style="color:var(--text-light);">Not uploaded</span>
+            {% endif %}
+          </div>
+          <div style="padding:20px 24px;">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px;">Skills</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              {% for skill in skills %}
+              <span style="background:var(--primary-lt);color:var(--primary);font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:20px;">{{ skill.skill }}</span>
+              {% empty %}
+              <span style="color:var(--text-light);font-size:.85rem;">No skills listed</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Cover Letter -->
+        {% if application.cover_letter %}
+        <div style="padding:20px 24px;border-top:1px solid var(--border);">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:10px;">Cover Letter</div>
+          <div style="background:var(--bg);border-radius:8px;padding:16px;font-size:.9rem;line-height:1.7;color:var(--text-dark);white-space:pre-wrap;">{{ application.cover_letter }}</div>
+        </div>
+        {% endif %}
+
+        <!-- Cover Letter File -->
+        {% if application.cover_letter_file %}
+        <div style="padding:0 24px 20px;">
+          <a href="{{ application.cover_letter_file.url }}" target="_blank" style="color:var(--primary);font-weight:600;text-decoration:none;font-size:.88rem;">
+            <i class="fa-solid fa-paperclip me-1"></i>View attached cover letter file
+          </a>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- Status Actions -->
+    <div class="th-card">
+      <div class="th-card-header"><i class="fa-solid fa-sliders me-2 text-primary-th"></i>Update Status</div>
+      <div class="th-card-body">
+
+        {% if application.status == 'pending' %}
+        <p style="font-size:.88rem;color:var(--text-light);margin-bottom:16px;">This application is awaiting your review. Choose an action below.</p>
+        {% else %}
+        <div class="th-alert th-alert-info mb-3">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Current status: <strong>{{ application.get_status_display }}</strong>. You can still update it.</span>
+        </div>
+        {% endif %}
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <form method="POST" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="process">
+            <button type="submit" class="btn-outline-th" style="padding:10px 18px;">
+              <i class="fa-solid fa-rotate me-1"></i>Mark In Process
+            </button>
+          </form>
+          <form method="POST" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="shortlist">
+            <button type="submit" class="btn-success-th" style="padding:10px 18px;">
+              <i class="fa-solid fa-check me-1"></i>Shortlist
+            </button>
+          </form>
+          <form method="POST" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="reject">
+            <button type="submit" class="btn-danger-th" style="padding:10px 18px;"
+                    onclick="return confirm('Reject this application?')">
+              <i class="fa-solid fa-xmark me-1"></i>Reject
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<style>
-.application-details-container {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.application-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.application-header-icon {
-    width: 70px;
-    height: 70px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 2rem;
-    flex-shrink: 0;
-}
-
-.application-title {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: #1e293b;
-    margin-bottom: 5px;
-}
-
-.application-subtitle {
-    color: #64748b;
-    margin: 0;
-    display: flex;
-    align-items: center;
-}
-
-.applicant-details-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-    margin-bottom: 25px;
-}
-
-.card-header-app {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 30px;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.applicant-avatar {
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    flex-shrink: 0;
-    backdrop-filter: blur(10px);
-}
-
-.card-header-app h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.applicant-email {
-    opacity: 0.9;
-    margin: 0;
-}
-
-.applicant-info-list {
-    padding: 30px;
-}
-
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    padding: 20px 0;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.info-row:last-child {
-    border-bottom: none;
-}
-
-.info-row.full-width {
-    flex-direction: column;
-    gap: 15px;
-}
-
-.info-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #64748b;
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-
-.info-label i {
-    color: #6366f1;
-    font-size: 1.2rem;
-}
-
-.info-value {
-    color: #1e293b;
-    font-weight: 500;
-    text-align: right;
-}
-
-.info-value.cover-letter {
-    text-align: left;
-    line-height: 1.6;
-    color: #475569;
-    background: #f8fafc;
-    padding: 15px;
-    border-radius: 10px;
-}
-
-.resume-download-link {
-    color: #6366f1;
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.3s ease;
-}
-
-.resume-download-link:hover {
-    color: #4f46e5;
-    gap: 8px;
-}
-
-.application-status-section {
-    padding: 30px;
-    background: #f8fafc;
-    border-top: 1px solid #f1f5f9;
-}
-
-.status-badge-large {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 20px;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 700;
-}
-
-.status-badge-large.success {
-    background: #f0fdf4;
-    color: #059669;
-}
-
-.status-badge-large.danger {
-    background: #fef2f2;
-    color: #dc2626;
-}
-
-.status-badge-large i {
-    font-size: 1.5rem;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 15px;
-}
-
-.action-form {
-    flex: 1;
-}
-
-.btn-decline-app, .btn-approve-app {
-    width: 100%;
-    padding: 16px 30px;
-    border-radius: 12px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: none;
-    font-size: 1rem;
-}
-
-.btn-decline-app {
-    background: #f8fafc;
-    color: #64748b;
-    border: 2px solid #e2e8f0;
-}
-
-.btn-decline-app:hover {
-    background: #fef2f2;
-    color: #dc2626;
-    border-color: #fecaca;
-}
-
-.btn-approve-app {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-}
-
-.btn-approve-app:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-}
-
-.back-link-section {
-    text-align: center;
-}
-
-.btn-back {
-    display: inline-flex;
-    align-items: center;
-    padding: 12px 24px;
-    background: white;
-    color: #64748b;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.btn-back:hover {
-    background: #f8fafc;
-    color: #1e293b;
-    border-color: #cbd5e1;
-}
-
-@media (max-width: 768px) {
-    .application-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .card-header-app {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .info-row {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .info-value {
-        text-align: left;
-    }
-    
-    .action-buttons {
-        flex-direction: column;
-    }
-}
-</style>
-
-{% endblock body %}
+{% endblock %}

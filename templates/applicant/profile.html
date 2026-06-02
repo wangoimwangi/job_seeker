@@ -1,473 +1,171 @@
-<!--Display ones profile details-->
 {% extends 'base.html' %}
-{% load static %}
-{% load crispy_forms_tags %}
-{% block title %} My Profile | TalentHub {% endblock %}
+{% block title %}My Profile — TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
 {% block body %}
 
 {% include 'applicant/side_bar_applicant.html' %}
 
-<div class="main-content-wrapper">
-    <div class="profile-header-section">
-        <h1 class="page-title"><i class="bi bi-person-circle me-2"></i>My Profile</h1>
-        <p class="page-subtitle">Manage your professional information and showcase your skills</p>
-    </div>
+<div class="sidebar-main">
 
-    <div class="profile-grid">
-        <!-- Profile Information Card -->
-        <div class="profile-card">
-            <div class="profile-card-header">
-                <div class="profile-avatar">
-                    <i class="bi bi-person-fill"></i>
-                </div>
-                <div>
-                    <h2>{{ profile.full_name }}</h2>
-                    <p class="profile-email">{{ u.email }}</p>
-                </div>
-            </div>
-            
-            <div class="profile-card-body">
-                <div class="profile-info-grid">
-                    <div class="profile-info-item">
-                        <div class="info-icon">
-                            <i class="bi bi-geo-alt-fill"></i>
-                        </div>
-                        <div>
-                            <label>Location</label>
-                            <p>{{ profile.location|default:"Not specified" }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-info-item">
-                        <div class="info-icon">
-                            <i class="bi bi-calendar-event"></i>
-                        </div>
-                        <div>
-                            <label>Graduation Year</label>
-                            <p>{{ profile.grad_year|default:"Not specified" }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-info-item">
-                        <div class="info-icon">
-                            <i class="bi bi-briefcase-fill"></i>
-                        </div>
-                        <div>
-                            <label>Job Type Preference</label>
-                            <p>{{ profile.job_type|default:"Not specified" }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-info-item">
-                        <div class="info-icon">
-                            <i class="bi bi-file-earmark-text-fill"></i>
-                        </div>
-                        <div>
-                            <label>Resume</label>
-                            {% if profile.resume %}
-                            <a href="{{ profile.url }}" class="resume-link" target="_blank">
-                                <i class="bi bi-download me-1"></i>View/Download Resume
-                            </a>
-                            {% else %}
-                            <p class="text-muted">Not uploaded</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                {% if request.user == u %}
-                <div class="profile-actions">
-                    <a class="btn-profile-action primary" href="{% url 'edit-profile' %}">
-                        <i class="bi bi-pencil-fill me-2"></i>Edit Profile
-                    </a>
-                    <a class="btn-profile-action secondary" href="{% url 'saved-jobs' %}">
-                        <i class="bi bi-bookmark-fill me-2"></i>Saved Jobs
-                    </a>
-                    <a class="btn-profile-action success" href="{% url 'applied-jobs' %}">
-                        <i class="bi bi-send-fill me-2"></i>Applied Jobs
-                    </a>
-                </div>
-                {% endif %}
-            </div>
+  <div class="page-header">
+    <h1 class="page-title">My Profile</h1>
+    <a href="{% url 'edit-profile' %}" class="btn-primary-th">
+      <i class="fa-solid fa-pen-to-square"></i> Edit Profile
+    </a>
+  </div>
+
+  <div class="profile-grid">
+
+    <!-- Left: Profile Info -->
+    <div>
+      <div class="profile-main-card">
+
+        <!-- Header -->
+        <div class="profile-header">
+          <div class="profile-avatar-lg">{{ u.initials }}</div>
+          <div>
+            <h2>{{ profile.full_name|default:u.full_name }}</h2>
+            <p>{{ u.email }}</p>
+          </div>
         </div>
 
-        <!-- Skills Card -->
-        <div class="skills-card">
-            <div class="card-header-modern">
-                <h3>
-                    <i class="bi bi-stars me-2"></i>
-                    Skills ({{ skills.count }})
-                </h3>
+        <!-- Contact -->
+        <div class="profile-section">
+          <div class="profile-section-title">Contact Information</div>
+          <div class="profile-info-row">
+            <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div>
+              <label>Email</label>
+              <p>{{ u.email|default:"Not provided" }}</p>
             </div>
-            
-            <div class="skills-card-body">
-                {% if request.user != u %}
-                    <div class="skills-display">
-                        {% for skill in skills %}
-                        <span class="skill-badge">{{ skill.skill }}</span>
-                        {% empty %}
-                        <p class="empty-state">No skills added yet</p>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <!-- Add Skill Form -->
-                    <form class="skill-add-form" method="POST">
-                        {% csrf_token %}
-                        <div class="skill-form-group">
-                            {{ form|crispy }}
-                        </div>
-                        <button class="btn-add-skill" type="submit">
-                            <i class="bi bi-plus-circle me-2"></i>Add New Skill
-                        </button>
-                    </form>
-                    
-                    <!-- Skills List -->
-                    {% if skills %}
-                    <div class="skills-section">
-                        <h4 class="skills-section-title">Your Skills</h4>
-                        <form class="skill-delete-form" action="{% url 'skill-delete' %}" method="POST">
-                            {% csrf_token %}
-                            <div class="skills-list">
-                                {% for skill in skills %}
-                                <label class="skill-checkbox-item">
-                                    <input type="checkbox" value="{{ skill.id }}" name="choices" />
-                                    <span class="skill-name">{{ skill.skill }}</span>
-                                </label>
-                                {% endfor %}
-                            </div>
-                            <button class="btn-delete-skills" type="submit" name="delete">
-                                <i class="bi bi-trash3 me-2"></i>Delete Selected Skills
-                            </button>
-                        </form>
-                    </div>
-                    {% else %}
-                    <div class="empty-skills-state">
-                        <i class="bi bi-stars"></i>
-                        <p>Start building your skillset</p>
-                        <small>Add your first skill above to get started</small>
-                    </div>
-                    {% endif %}
-                {% endif %}
+          </div>
+          <div class="profile-info-row">
+            <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+            <div>
+              <label>Phone</label>
+              <p>{{ u.contact|default:"Not provided" }}</p>
             </div>
+          </div>
+          <div class="profile-info-row">
+            <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div>
+              <label>Location</label>
+              <p>{{ profile.location|default:u.location|default:"Not provided" }}</p>
+            </div>
+          </div>
         </div>
+
+        <!-- Education -->
+        <div class="profile-section">
+          <div class="profile-section-title">Education</div>
+          <div class="profile-info-row">
+            <div class="info-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div>
+              <label>Graduation Year</label>
+              <p>{{ profile.grad_year|default:"Not provided" }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job Preference -->
+        <div class="profile-section">
+          <div class="profile-section-title">Job Preference</div>
+          <div class="profile-info-row">
+            <div class="info-icon"><i class="fa-solid fa-briefcase"></i></div>
+            <div>
+              <label>Preferred Job Type</label>
+              <p>{{ profile.job_type|default:"Not set" }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resume -->
+        <div class="profile-section">
+          <div class="profile-section-title">Resume</div>
+          <div class="profile-info-row">
+            <div class="info-icon"><i class="fa-solid fa-file-pdf"></i></div>
+            <div>
+              <label>Resume File</label>
+              {% if profile.resume %}
+              <a href="{{ profile.resume.url }}" target="_blank" style="color:var(--primary);font-weight:600;font-size:.9rem;">
+                <i class="fa-solid fa-download me-1"></i>Download Resume
+              </a>
+              {% else %}
+              <p style="color:var(--danger);">No resume uploaded</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
+
+    <!-- Right: Skills + Completion -->
+    <div>
+
+      <!-- Profile Completion -->
+      <div class="th-card mb-4">
+        <div class="th-card-header"><i class="fa-solid fa-chart-simple me-2 text-primary-th"></i>Profile Strength</div>
+        <div class="th-card-body">
+          <div class="d-flex justify-content-between mb-2">
+            <span style="font-size:.88rem;">{{ completion }}% complete</span>
+            {% if completion == 100 %}
+            <span class="badge-status badge-shortlisted">Complete</span>
+            {% else %}
+            <span style="font-size:.78rem;color:var(--text-light);">Improve your profile</span>
+            {% endif %}
+          </div>
+          <div class="profile-progress">
+            <div class="profile-progress-bar" style="width:{{ completion }}%;"></div>
+          </div>
+          {% if completion < 100 %}
+          <a href="{% url 'edit-profile' %}" class="btn-outline-th mt-3 w-100 justify-content-center" style="display:flex;">Complete Profile</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="th-card">
+        <div class="th-card-header d-flex justify-content-between align-items-center">
+          <span><i class="fa-solid fa-tags me-2 text-primary-th"></i>Skills</span>
+        </div>
+        <div class="th-card-body">
+
+          {% if skills %}
+          <!-- Delete form -->
+          <form action="{% url 'skill-delete' %}" method="POST" id="deleteSkillsForm">
+            {% csrf_token %}
+            <div class="skills-cloud mb-3">
+              {% for skill in skills %}
+              <span class="skill-pill">
+                {{ skill.skill }}
+                <button type="submit" form="deleteSkillsForm" name="choices" value="{{ skill.id }}"
+                        class="delete-skill-btn" onclick="return confirm('Remove {{ skill.skill }}?')">
+                  ×
+                </button>
+              </span>
+              {% endfor %}
+            </div>
+          </form>
+          {% else %}
+          <p style="font-size:.88rem;color:var(--text-light);margin-bottom:16px;">No skills added yet.</p>
+          {% endif %}
+
+          <!-- Add Skill Form -->
+          <hr class="divider">
+          <div style="font-size:.82rem;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Add Skill</div>
+          <form action="{% url 'my-profile' %}" method="POST" class="d-flex gap-2">
+            {% csrf_token %}
+            <input type="text" name="skill" class="th-form-control" placeholder="e.g. Python, Django, React…" required>
+            <button type="submit" class="btn-primary-th" style="white-space:nowrap;">Add</button>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
-
-<style>
-.profile-header-section {
-    margin-bottom: 30px;
-}
-
-.page-title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #1e293b;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-}
-
-.page-subtitle {
-    color: #64748b;
-    font-size: 1.05rem;
-}
-
-.profile-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-}
-
-.profile-card, .skills-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-}
-
-.profile-card-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 30px;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.profile-avatar {
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    flex-shrink: 0;
-    backdrop-filter: blur(10px);
-}
-
-.profile-card-header h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.profile-email {
-    opacity: 0.9;
-    margin: 0;
-}
-
-.profile-card-body {
-    padding: 30px;
-}
-
-.profile-info-grid {
-    display: grid;
-    gap: 25px;
-    margin-bottom: 30px;
-}
-
-.profile-info-item {
-    display: flex;
-    gap: 15px;
-    align-items: start;
-}
-
-.info-icon {
-    width: 45px;
-    height: 45px;
-    background: #f8fafc;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    color: #6366f1;
-    flex-shrink: 0;
-}
-
-.profile-info-item label {
-    font-weight: 600;
-    color: #64748b;
-    font-size: 0.875rem;
-    margin-bottom: 5px;
-    display: block;
-}
-
-.profile-info-item p {
-    color: #1e293b;
-    margin: 0;
-    font-weight: 500;
-}
-
-.resume-link {
-    color: #6366f1;
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.3s ease;
-}
-
-.resume-link:hover {
-    color: #4f46e5;
-    gap: 8px;
-}
-
-.profile-actions {
-    display: grid;
-    gap: 12px;
-}
-
-.btn-profile-action {
-    padding: 14px 20px;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.btn-profile-action.primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.btn-profile-action.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    color: white;
-}
-
-.btn-profile-action.secondary {
-    background: #f8fafc;
-    color: #64748b;
-}
-
-.btn-profile-action.secondary:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-}
-
-.btn-profile-action.success {
-    background: #f0fdf4;
-    color: #059669;
-}
-
-.btn-profile-action.success:hover {
-    background: #dcfce7;
-    color: #047857;
-}
-
-.skills-card-body {
-    padding: 30px;
-}
-
-.skill-add-form {
-    margin-bottom: 30px;
-    padding-bottom: 30px;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.skill-form-group {
-    margin-bottom: 15px;
-}
-
-.btn-add-skill {
-    width: 100%;
-    padding: 14px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.btn-add-skill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.skills-section-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 15px;
-}
-
-.skills-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.skill-checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 15px;
-    background: #f8fafc;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.skill-checkbox-item:hover {
-    background: #f1f5f9;
-}
-
-.skill-checkbox-item input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-.skill-name {
-    font-weight: 500;
-    color: #1e293b;
-}
-
-.btn-delete-skills {
-    width: 100%;
-    padding: 14px 20px;
-    background: #fef2f2;
-    color: #dc2626;
-    border: 2px solid #fecaca;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.btn-delete-skills:hover {
-    background: #fee2e2;
-    border-color: #fca5a5;
-}
-
-.skills-display {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.skill-badge {
-    padding: 10px 18px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.empty-state, .empty-skills-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: #94a3b8;
-}
-
-.empty-skills-state i {
-    font-size: 3rem;
-    color: #cbd5e1;
-    margin-bottom: 15px;
-    display: block;
-}
-
-.empty-skills-state p {
-    font-weight: 600;
-    color: #64748b;
-    margin-bottom: 5px;
-}
-
-@media (max-width: 992px) {
-    .profile-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .profile-card-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .profile-avatar {
-        width: 70px;
-        height: 70px;
-    }
-}
-</style>
 
 {% endblock %}

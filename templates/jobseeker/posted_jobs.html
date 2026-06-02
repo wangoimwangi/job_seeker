@@ -1,33 +1,162 @@
 {% extends 'base.html' %}
+{% block title %}Browse Jobs — TalentHub{% endblock %}
 {% load static %}
 {% block body %}
-<div class="container">
-<div class="row row-cols-1 row-cols-md-3">
-{% for job in jobs %}
-<div class="col">
-    <div class="card text-center">
-        <img src="{% static 'img/01.jpg' %}" class="card-img-top" alt="...">
-        <div class="card-body">
-            <h4 class="card-title">{{ job.title }}</h4>
-            
-            <a href="{% url 'job-details' job_id=job.id %}" class="btn btn-primary">View more</a>
 
-            {% if user.user_type == 'applicant' %}
-            {% if job.id in already_applied %}
-            <small class="d-block text-success mt-2">Already applied</small>
-            {% endif %}
-            {% endif %}
+<div class="container" style="max-width:1100px;padding-top:28px;padding-bottom:40px;">
 
-            {% if user.user_type == 'staff' %}
-            <p class="text-muted text-center">Number of applicants here</p>
-            {% endif %}
-        </div>
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Open Positions</h1>
+      <p class="page-subtitle">Showing {{ total_count }} job{{ total_count|pluralize }}</p>
     </div>
-</div>
-{% empty %}
-<div class="text-danger text-center p-5">No jobs posted yet!</div>
-{% endfor %}
-</div>
+  </div>
+
+  <!-- Filter Bar -->
+  <form method="get" action="{% url 'posted-jobs' %}" class="filter-bar mb-4">
+    <div class="filter-group" style="flex:2;min-width:200px;">
+      <label class="filter-label">Search</label>
+      <input type="text" name="q" value="{{ search_query }}" class="th-form-control"
+             placeholder="Job title, skills, keywords…">
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Location</label>
+      <select name="location" class="th-form-control">
+        <option value="">All Locations</option>
+        {% for loc in locations %}
+        <option value="{{ loc }}" {% if loc == location_filter %}selected{% endif %}>{{ loc }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Job Type</label>
+      <select name="job_type" class="th-form-control">
+        <option value="">All Types</option>
+        {% for jt in job_types %}
+        <option value="{{ jt }}" {% if jt == job_type_filter %}selected{% endif %}>{{ jt }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="display:flex;align-items:flex-end;">
+      <button type="submit" class="btn-primary-th">
+        <i class="fa-solid fa-search"></i> Search
+      </button>
+    </div>
+    {% if search_query or location_filter or job_type_filter %}
+    <div style="display:flex;align-items:flex-end;">
+      <a href="{% url 'posted-jobs' %}" class="btn-outline-th">Clear</a>
+    </div>
+    {% endif %}
+  </form>
+
+  <!-- Job List -->
+  {% if jobs %}
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    {% for job in jobs %}
+    {% with avatar_colors="av-blue,av-teal,av-violet,av-rose,av-amber,av-cyan" %}
+    <div class="job-card">
+
+      <!-- Company Avatar -->
+      <div class="job-company-avatar {% cycle 'av-blue' 'av-teal' 'av-violet' 'av-rose' 'av-amber' %}">
+        {{ job.company|first|upper|default:"N" }}
+      </div>
+
+      <div class="job-body">
+        <div class="d-flex align-items-start justify-content-between">
+          <div>
+            <a href="{% url 'job-details' job.id %}" class="job-title">{{ job.title }}</a>
+            <div class="job-company">{{ job.company|default:"Neotech" }}</div>
+          </div>
+          <!-- Save Button -->
+          {% if user.is_authenticated and user.user_type == 'applicant' %}
+          <form action="{% url 'save-job' job.slug %}?next={{ request.path }}" method="post" style="margin-left:12px;">
+            {% csrf_token %}
+            <button type="submit" class="save-btn {% if job.id in saved_ids %}saved{% endif %}" title="{% if job.id in saved_ids %}Remove from saved{% else %}Save job{% endif %}">
+              <i class="fa-{% if job.id in saved_ids %}solid{% else %}regular{% endif %} fa-bookmark"></i>
+              {% if job.id in saved_ids %}Saved{% else %}Save{% endif %}
+            </button>
+          </form>
+          {% endif %}
+        </div>
+
+        <div class="job-meta">
+          <span><i class="fa-solid fa-location-dot"></i> {{ job.location }}</span>
+          <span><i class="fa-regular fa-clock"></i> {{ job.job_type }}</span>
+          {% if job.deadline %}<span><i class="fa-regular fa-calendar"></i> Deadline: {{ job.deadline|date:"M j, Y" }}</span>{% endif %}
+        </div>
+
+        {% if job.skills_req %}
+        <div class="job-skills">
+          {% for skill in job.get_skills_list|slice:":5" %}
+          <span class="skill-tag">{{ skill }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <p class="job-desc">{{ job.description|truncatewords:20 }}</p>
+
+        <div class="job-footer">
+          <span class="job-posted-date">
+            <i class="fa-regular fa-clock me-1"></i>Posted {{ job.date_posted|timesince }} ago
+          </span>
+          <div class="job-actions">
+            {% if user.is_authenticated and user.user_type == 'applicant' %}
+              {% if job.id in applied_ids %}
+              <span class="badge-status badge-shortlisted">
+                <i class="fa-solid fa-check"></i> Applied
+              </span>
+              {% elif job.link %}
+              <a href="{{ job.link }}" target="_blank" class="btn-success-th">Apply <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i></a>
+              {% else %}
+              <a href="{% url 'apply-job' job.id %}" class="btn-success-th">Apply Now</a>
+              {% endif %}
+            {% else %}
+            <a href="{% url 'job-details' job.id %}" class="btn-outline-th">View Details</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if jobs.has_other_pages %}
+  <div class="d-flex justify-content-center gap-2 mt-4">
+    {% if jobs.has_previous %}
+    <a href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if location_filter %}location={{ location_filter }}&{% endif %}{% if job_type_filter %}job_type={{ job_type_filter }}&{% endif %}page={{ jobs.previous_page_number }}"
+       class="btn-outline-th">
+      <i class="fa-solid fa-chevron-left"></i> Previous
+    </a>
+    {% endif %}
+    <span style="display:flex;align-items:center;font-size:.88rem;color:var(--text-light);">
+      Page {{ jobs.number }} of {{ jobs.paginator.num_pages }}
+    </span>
+    {% if jobs.has_next %}
+    <a href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if location_filter %}location={{ location_filter }}&{% endif %}{% if job_type_filter %}job_type={{ job_type_filter }}&{% endif %}page={{ jobs.next_page_number }}"
+       class="btn-outline-th">
+      Next <i class="fa-solid fa-chevron-right"></i>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-state-icon"><i class="fa-solid fa-briefcase-blank"></i></div>
+    <h3>No jobs found</h3>
+    <p>
+      {% if search_query or location_filter or job_type_filter %}
+        Try adjusting your search filters.
+        <a href="{% url 'posted-jobs' %}">Clear all filters</a>
+      {% else %}
+        No jobs have been posted yet. Check back soon!
+      {% endif %}
+    </p>
+  </div>
+  {% endif %}
+
 </div>
 
-{% endblock body %}
+{% endblock %}
