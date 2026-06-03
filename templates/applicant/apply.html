@@ -71,10 +71,27 @@
           {% endif %}
         </div>
 
-        <!-- Cover Letter Upload -->
-        <div class="th-fieldset-title">Cover Letter (Optional)</div>
+        <!-- Resume Upload -->
+        <div class="th-fieldset-title">Resume / CV</div>
         <form method="POST" enctype="multipart/form-data">
           {% csrf_token %}
+          <div class="th-form-group">
+            <label class="th-form-label">Upload a CV tailored for this role</label>
+            {% if profile and profile.resume %}
+            <div class="th-alert th-alert-success mb-2">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>You have a resume on file. We recommend uploading a tailored version for this specific role.</span>
+            </div>
+            {% endif %}
+            {% render_field form.resume class="th-form-control" %}
+            <p class="th-help-text">PDF, DOC or DOCX - Max 5MB - Strongly recommended</p>
+            {% if form.resume.errors %}
+            <div class="th-error-msg">{{ form.resume.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Cover Letter Upload -->
+          <div class="th-fieldset-title mt-3">Cover Letter (Optional)</div>
           <div class="th-form-group">
             <label class="th-form-label">Upload Cover Letter</label>
             {% render_field form.cover_letter class="th-form-control" %}
@@ -104,7 +121,7 @@
         <ul style="margin:0;padding-left:20px;font-size:.88rem;color:var(--text-med);line-height:2;">
           <li>Tailor your cover letter to the specific role and highlight relevant skills</li>
           <li>Make sure your resume is up to date and in PDF format</li>
-          <li>Apply early — positions fill up fast at Neotech</li>
+          <li>Apply early - positions fill up fast at Neotech</li>
           <li>Check your email regularly for responses</li>
         </ul>
       </div>

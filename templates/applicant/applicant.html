@@ -1,7 +1,24 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard — TalentHub{% endblock %}
+{% block title %}Dashboard - TalentHub{% endblock %}
 {% block navbar %}{% endblock %}
 {% block body %}
+<style>
+  /* Sign Out: gray default, red on hover */
+  .sidebar-logout { color: #666666 !important; transition: color 0.2s ease !important; }
+  .sidebar-logout:hover { color: #CC1016 !important; background: var(--danger-lt) !important; }
+  /* Recommended compact list */
+  .rec-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .rec-list-item:last-child { border-bottom: none; }
+  .rec-list-item:hover { background: var(--bg); }
+</style>
 
 {% include 'applicant/side_bar_applicant.html' %}
 
@@ -50,11 +67,12 @@
     </div>
   </div>
 
-  <div class="row g-4">
+  <!-- Two-column layout: align-items flex-start prevents right column from stretching left -->
+  <div class="row g-4" style="align-items:flex-start;">
 
-    <!-- Recent Applications -->
-    <div class="col-lg-7">
-      <div class="th-card">
+    <!-- LEFT: Recent Applications -->
+    <div class="col-lg-7" style="align-self:flex-start;">
+      <div class="th-card" style="align-self:flex-start;height:auto !important;">
         <div class="th-card-header d-flex justify-content-between align-items-center">
           <span><i class="fa-solid fa-file-lines me-2 text-primary-th"></i>Recent Applications</span>
           <a href="{% url 'applied-jobs' %}" style="font-size:.82rem;color:var(--primary);">View all</a>
@@ -87,18 +105,18 @@
             </tbody>
           </table>
           {% else %}
-          <div class="empty-state">
-            <div class="empty-state-icon"><i class="fa-solid fa-file-circle-question"></i></div>
-            <h3>No applications yet</h3>
-            <p>Start browsing jobs and apply for your dream role.</p>
-            <a href="{% url 'posted-jobs' %}" class="btn-primary-th">Browse Jobs</a>
+          <div style="text-align:center;padding:32px 24px;">
+            <i class="fa-solid fa-file-circle-plus" style="font-size:2.5rem;color:#0A66C2;display:block;margin-bottom:16px;"></i>
+            <h5 style="font-weight:600;color:#1C1C1C;margin-bottom:8px;">No applications yet</h5>
+            <p style="color:#555555;font-size:0.9rem;margin-bottom:20px;">Start browsing jobs and apply for positions that match your skills.</p>
+            <a href="{% url 'posted-jobs' %}" class="btn-primary-th" style="font-size:.88rem;padding:8px 20px;">Browse Jobs</a>
           </div>
           {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- Quick Actions + Profile Completion -->
+    <!-- RIGHT: Profile + Quick Actions + Recommended (sidebar) -->
     <div class="col-lg-5">
 
       <!-- Profile Completion -->
@@ -123,7 +141,7 @@
       {% endif %}
 
       <!-- Quick Actions -->
-      <div class="th-card">
+      <div class="th-card mb-3">
         <div class="th-card-header"><i class="fa-solid fa-bolt me-2 text-primary-th"></i>Quick Actions</div>
         <div class="th-card-body" style="padding:12px;">
           <div style="display:flex;flex-direction:column;gap:8px;">
@@ -166,39 +184,42 @@
           </div>
         </div>
       </div>
-    </div>
 
-  </div>
-
-  <!-- Recommended Jobs -->
-  {% if recommended_jobs %}
-  <div class="mt-4">
-    <div class="section-header">
-      <h2 class="section-title" style="font-size:1.1rem;">Recommended for You</h2>
-    </div>
-    <div class="row g-3">
-      {% for job in recommended_jobs %}
-      <div class="col-md-4">
-        <div class="th-card p-3">
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <div class="job-company-avatar av-{% cycle 'blue' 'teal' 'violet' %}" style="width:40px;height:40px;font-size:.9rem;border-radius:8px;">
+      <!-- Recommended for You (compact list) -->
+      <div class="th-card">
+        <div class="th-card-header d-flex justify-content-between align-items-center">
+          <span><i class="fa-solid fa-star me-2 text-primary-th"></i>Recommended for You</span>
+          <a href="{% url 'posted-jobs' %}" style="font-size:.82rem;color:var(--primary);">View all</a>
+        </div>
+        {% if recommended_jobs %}
+        <div>
+          {% for job in recommended_jobs|slice:":3" %}
+          <a href="{% url 'job-details' job.id %}" class="rec-list-item">
+            <div class="job-company-avatar av-{% cycle 'blue' 'teal' 'violet' %}"
+                 style="width:32px;height:32px;font-size:.8rem;border-radius:6px;flex-shrink:0;">
               {{ job.company|first|upper|default:"N" }}
             </div>
-            <div>
-              <a href="{% url 'job-details' job.id %}" class="job-title" style="font-size:.88rem;">{{ job.title }}</a>
-              <div style="font-size:.78rem;color:var(--text-light);">{{ job.company|default:"Neotech" }}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:.85rem;font-weight:600;color:var(--primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ job.title }}</div>
+              <div style="font-size:.75rem;color:var(--text-light);">{{ job.company|default:"Neotech" }} - {{ job.location }}</div>
             </div>
-          </div>
-          <div class="job-meta">
-            <span><i class="fa-solid fa-location-dot"></i> {{ job.location }}</span>
-            <span><i class="fa-regular fa-clock"></i> {{ job.job_type }}</span>
-          </div>
+            <span style="font-size:.72rem;background:var(--primary-lt);color:var(--primary);padding:2px 8px;border-radius:10px;font-weight:500;white-space:nowrap;flex-shrink:0;">{{ job.job_type }}</span>
+          </a>
+          {% endfor %}
         </div>
+        {% else %}
+        <div class="th-card-body text-center">
+          <i class="fa-solid fa-briefcase fa-2x mb-3" style="color:#c8dff0;display:block;"></i>
+          <h6 style="font-weight:600;color:var(--text-dark);margin-bottom:6px;">You're up to date!</h6>
+          <p style="font-size:.82rem;color:var(--text-light);margin-bottom:16px;">You've applied to all available positions. Check back soon for new opportunities.</p>
+          <a href="{% url 'posted-jobs' %}" class="btn-primary-th" style="font-size:.85rem;padding:8px 16px;">Browse All Jobs</a>
+        </div>
+        {% endif %}
       </div>
-      {% endfor %}
+
     </div>
+
   </div>
-  {% endif %}
 
 </div>
 

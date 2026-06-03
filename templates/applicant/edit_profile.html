@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Edit Profile — TalentHub{% endblock %}
+{% block title %}Edit Profile - TalentHub{% endblock %}
 {% load widget_tweaks %}
 {% block navbar %}{% endblock %}
 {% block body %}
@@ -49,6 +49,16 @@
               {% render_field form.job_type class="th-form-control" %}
               {% if form.job_type.errors %}<div class="th-error-msg">{{ form.job_type.errors.0 }}</div>{% endif %}
             </div>
+          </div>
+
+          <div class="th-fieldset-title">Social Links</div>
+          <div class="th-form-group">
+            <label class="th-form-label">
+              <i class="fa-brands fa-linkedin me-1" style="color:#0A66C2;"></i>LinkedIn Profile URL
+            </label>
+            {% render_field form.linkedin_url class="th-form-control" %}
+            <p class="th-help-text">Optional - e.g. https://linkedin.com/in/yourname</p>
+            {% if form.linkedin_url.errors %}<div class="th-error-msg">{{ form.linkedin_url.errors.0 }}</div>{% endif %}
           </div>
 
           <div class="th-fieldset-title">Resume</div>

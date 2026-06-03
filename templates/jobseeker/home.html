@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}TalentHub — Find Your Next Opportunity at Neotech{% endblock %}
+{% block title %}TalentHub - Find Your Next Opportunity at Neotech{% endblock %}
 {% load static %}
 {% block body %}
 
@@ -12,11 +12,11 @@
           Find Your <span>Next Opportunity</span> at Neotech
         </h1>
         <p class="hero-subtitle">
-          Neotech's official talent hub — connecting driven professionals with
+          Neotech's official talent hub - connecting driven professionals with
           the roles where they'll thrive. Browse open positions, apply directly,
           and track every step of your journey.
         </p>
-        <div class="d-flex gap-3 mb-4 flex-wrap">
+        <div class="d-flex gap-3 flex-wrap">
           <a href="{% url 'posted-jobs' %}" class="btn-primary-th">
             <i class="fa-solid fa-magnifying-glass"></i> Browse Jobs
           </a>
@@ -32,107 +32,260 @@
           {% endif %}
           {% endif %}
         </div>
-
-        <!-- Search bar -->
-        <form action="{% url 'posted-jobs' %}" method="get" class="hero-search">
-          <input type="text" name="q" placeholder="Search by job title or skills…" value="{{ request.GET.q }}">
-          <button type="submit"><i class="fa-solid fa-search"></i> Search</button>
-        </form>
       </div>
 
-      <div class="col-lg-6 d-none d-lg-flex justify-content-center">
-        <div style="background:rgba(10,102,194,.06);border-radius:20px;padding:40px;width:100%;max-width:420px;">
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            {% for job in featured_jobs %}
-            <a href="{% url 'job-details' job.id %}" style="background:white;border:1px solid #E0DFDC;border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;text-decoration:none;transition:all .2s;">
-              <div class="job-company-avatar av-blue" style="width:36px;height:36px;font-size:.9rem;border-radius:8px;">
-                {{ job.company|first|upper|default:"N" }}
-              </div>
-              <div>
-                <div style="font-size:.88rem;font-weight:700;color:#1C1C1C;">{{ job.title }}</div>
-                <div style="font-size:.78rem;color:#888;">{{ job.location }} · {{ job.job_type }}</div>
-              </div>
-            </a>
-            {% empty %}
-            <div style="background:white;border-radius:10px;padding:20px;text-align:center;color:#888;font-size:.88rem;">
-              <i class="fa-solid fa-briefcase fa-2x mb-2" style="color:#0A66C2;opacity:.3;"></i>
-              <p>Jobs loading soon…</p>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
+      <div class="col-lg-6 d-none d-lg-block">
+        <svg viewBox="0 0 500 400" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <style>
+              @keyframes svgFloatA {
+                0%,100% { transform: translateY(0px); }
+                50%      { transform: translateY(-10px); }
+              }
+              @keyframes svgFloatB {
+                0%,100% { transform: translateY(0px); }
+                50%      { transform: translateY(-8px); }
+              }
+              @keyframes svgFloatC {
+                0%,100% { transform: translateY(0px); }
+                50%      { transform: translateY(-11px); }
+              }
+              @keyframes svgBadgeBounce {
+                0%   { transform: translateY(-24px); opacity:0; }
+                55%  { transform: translateY(5px);   opacity:1; }
+                75%  { transform: translateY(-3px); }
+                90%  { transform: translateY(1px); }
+                100% { transform: translateY(0px);  opacity:1; }
+              }
+              @keyframes svgPulse {
+                0%,100% { opacity:0.2; }
+                50%      { opacity:0.5; }
+              }
+              @keyframes svgDrawArc {
+                0%   { stroke-dashoffset:138; }
+                100% { stroke-dashoffset:30; }
+              }
+              @keyframes svgScreenBlink {
+                0%,100% { opacity:0.9; }
+                50%      { opacity:1; }
+              }
+              .svg-card-1 { animation: svgFloatA 3s   ease-in-out infinite; }
+              .svg-card-2 { animation: svgFloatB 3.5s ease-in-out infinite; animation-delay:.5s; }
+              .svg-card-3 { animation: svgFloatC 4s   ease-in-out infinite; animation-delay:1s; }
+              .svg-badge  { animation: svgBadgeBounce 1s cubic-bezier(.34,1.4,.64,1) forwards; animation-delay:.4s; opacity:0; }
+              .svg-dot-1  { animation: svgPulse 2.5s ease-in-out infinite; }
+              .svg-dot-2  { animation: svgPulse 2.5s ease-in-out infinite; animation-delay:.8s; }
+              .svg-dot-3  { animation: svgPulse 2.5s ease-in-out infinite; animation-delay:1.5s; }
+              .svg-arc    { stroke-dasharray:138 138; stroke-dashoffset:138; animation: svgDrawArc 2s ease-out forwards; animation-delay:.6s; }
+              .svg-screen { animation: svgScreenBlink 3s ease-in-out infinite; }
+            </style>
+            <filter id="cardDrop" x="-8%" y="-8%" width="120%" height="125%">
+              <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000000" flood-opacity="0.07"/>
+            </filter>
+          </defs>
+
+          <!-- Main backdrop -->
+          <rect x="15" y="15" width="470" height="370" rx="22" fill="#EBF3FB"/>
+
+          <!-- Background grid dots -->
+          <g fill="#0A66C2" opacity="0.13">
+            <circle cx="42" cy="42" r="2.5"/> <circle cx="82" cy="42" r="2.5"/>
+            <circle cx="42" cy="82" r="2.5"/> <circle cx="82" cy="82" r="2.5"/>
+            <circle cx="122" cy="42" r="2.5"/><circle cx="122" cy="82" r="2.5"/>
+            <circle cx="42" cy="122" r="2.5"/><circle cx="82" cy="122" r="2.5"/>
+            <circle cx="440" cy="355" r="2.5"/><circle cx="466" cy="355" r="2.5"/>
+            <circle cx="440" cy="375" r="2.5"/><circle cx="466" cy="375" r="2.5"/>
+            <circle cx="458" cy="112" r="2.5"/><circle cx="474" cy="132" r="2.5"/>
+            <circle cx="458" cy="152" r="2.5"/><circle cx="474" cy="92"  r="2.5"/>
+          </g>
+
+          <!-- Desk surface + legs -->
+          <rect x="55" y="290" width="210" height="13" rx="4" fill="#D8D7D3"/>
+          <rect x="70"  y="302" width="7" height="30" rx="3" fill="#C8C7C3"/>
+          <rect x="245" y="302" width="7" height="30" rx="3" fill="#C8C7C3"/>
+
+          <!-- Chair seat + back + legs -->
+          <rect x="98" y="290" width="72" height="7" rx="3" fill="#C4C3BF"/>
+          <rect x="98" y="245" width="8" height="48" rx="3" fill="#C4C3BF"/>
+          <rect x="98" y="297" width="5" height="32" rx="2" fill="#B5B4B0"/>
+          <rect x="162" y="297" width="5" height="32" rx="2" fill="#B5B4B0"/>
+
+          <!-- Person - torso / shirt -->
+          <rect x="112" y="226" width="48" height="65" rx="9" fill="#0A66C2"/>
+          <path d="M125 226 Q136 226 136 238 L133 238 Q133 229 125 229 Z" fill="white" opacity="0.2"/>
+          <!-- Neck -->
+          <rect x="128" y="216" width="16" height="13" rx="5" fill="#FDBCB4"/>
+          <!-- Head -->
+          <circle cx="136" cy="196" r="25" fill="#FDBCB4"/>
+          <!-- Hair -->
+          <path d="M112 192 Q112 167 136 167 Q160 167 160 192 L156 187 Q136 175 116 187 Z" fill="#2D2D2D"/>
+          <!-- Ears -->
+          <ellipse cx="112" cy="196" rx="4.5" ry="6" fill="#f0a898"/>
+          <ellipse cx="160" cy="196" rx="4.5" ry="6" fill="#f0a898"/>
+          <!-- Eyes -->
+          <circle cx="128" cy="195" r="3" fill="#2D2D2D"/>
+          <circle cx="127" cy="194" r="1" fill="white"/>
+          <circle cx="144" cy="195" r="3" fill="#2D2D2D"/>
+          <circle cx="143" cy="194" r="1" fill="white"/>
+          <!-- Smile -->
+          <path d="M130 205 Q136 210 142 205" stroke="#c0826e" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <!-- Left arm + hand -->
+          <rect x="100" y="231" width="13" height="42" rx="6" fill="#0A66C2"/>
+          <circle cx="106" cy="275" r="6" fill="#FDBCB4"/>
+          <!-- Right arm reaching toward laptop -->
+          <path d="M160 240 C172 250 188 261 198 269" stroke="#0A66C2" stroke-width="13" stroke-linecap="round" fill="none"/>
+          <circle cx="199" cy="270" r="6" fill="#FDBCB4"/>
+
+          <!-- Laptop screen bezel -->
+          <rect x="155" y="208" width="108" height="62" rx="6" fill="#2D2D2D"/>
+          <!-- Screen content background -->
+          <rect x="158" y="211" width="102" height="56" rx="4" fill="#EBF3FB" class="svg-screen"/>
+          <!-- Screen navbar bar -->
+          <rect x="158" y="211" width="102" height="11" rx="4" fill="#0A66C2"/>
+          <!-- Screen content lines -->
+          <rect x="163" y="228" width="55" height="4" rx="2" fill="#0A66C2" opacity="0.5"/>
+          <rect x="163" y="236" width="40" height="3" rx="1.5" fill="#888" opacity="0.45"/>
+          <rect x="163" y="243" width="48" height="3" rx="1.5" fill="#888" opacity="0.35"/>
+          <!-- Mini bar chart on screen -->
+          <rect x="221" y="227" width="6" height="14" rx="1" fill="#0A66C2" opacity="0.7"/>
+          <rect x="230" y="232" width="6" height="9"  rx="1" fill="#057642" opacity="0.65"/>
+          <rect x="239" y="224" width="6" height="17" rx="1" fill="#0A66C2" opacity="0.55"/>
+          <rect x="248" y="230" width="6" height="11" rx="1" fill="#057642" opacity="0.45"/>
+          <!-- Laptop hinge -->
+          <rect x="158" y="269" width="104" height="4" rx="1" fill="#2D2D2D"/>
+          <!-- Laptop keyboard base -->
+          <rect x="153" y="272" width="110" height="20" rx="5" fill="#D8D7D3"/>
+          <rect x="158" y="276" width="100" height="11" rx="3" fill="#C4C3BF"/>
+          <rect x="190" y="278" width="32" height="7"  rx="2" fill="#B5B4B0" opacity="0.7"/>
+
+          <!-- ── Floating job cards ── -->
+
+          <!-- Card 1 - top -->
+          <g class="svg-card-1" filter="url(#cardDrop)">
+            <rect x="262" y="80" width="148" height="90" rx="10" fill="white" stroke="#E0DFDC" stroke-width="1"/>
+            <rect x="262" y="80" width="46"  height="8"  rx="5"  fill="#0A66C2" opacity="0.65"/>
+            <circle cx="281" cy="109" r="13" fill="#EBF3FB"/>
+            <text x="281" y="113.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#0A66C2">N</text>
+            <rect x="300" y="102" width="74" height="5" rx="2.5" fill="#1C1C1C" opacity="0.65"/>
+            <rect x="300" y="111" width="55" height="4" rx="2"   fill="#888"   opacity="0.45"/>
+            <line x1="270" y1="129" x2="400" y2="129" stroke="#E0DFDC" stroke-width="1"/>
+            <rect x="270" y="138" width="40" height="14" rx="7" fill="#EBF3FB"/>
+            <text x="290" y="148" text-anchor="middle" font-family="Arial,sans-serif" font-size="7.5" fill="#0A66C2" font-weight="600">Full-time</text>
+            <rect x="317" y="138" width="42" height="14" rx="7" fill="#EBF3FB"/>
+            <text x="338" y="148" text-anchor="middle" font-family="Arial,sans-serif" font-size="7.5" fill="#0A66C2" font-weight="600">Nairobi</text>
+            <circle cx="390" cy="145" r="7" fill="none" stroke="#057642" stroke-width="1.5"/>
+            <path d="M386 145 L389 148 L395 141" stroke="#057642" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </g>
+
+          <!-- Card 2 - middle -->
+          <g class="svg-card-2" filter="url(#cardDrop)">
+            <rect x="290" y="196" width="148" height="90" rx="10" fill="white" stroke="#E0DFDC" stroke-width="1"/>
+            <rect x="290" y="196" width="52"  height="8"  rx="5"  fill="#057642" opacity="0.6"/>
+            <circle cx="309" cy="225" r="13" fill="#EBF3FB"/>
+            <text x="309" y="229.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#0A66C2">N</text>
+            <rect x="328" y="218" width="70" height="5" rx="2.5" fill="#1C1C1C" opacity="0.65"/>
+            <rect x="328" y="227" width="52" height="4" rx="2"   fill="#888"   opacity="0.45"/>
+            <line x1="298" y1="245" x2="428" y2="245" stroke="#E0DFDC" stroke-width="1"/>
+            <rect x="298" y="254" width="46" height="14" rx="7" fill="#EBF3FB"/>
+            <text x="321" y="264" text-anchor="middle" font-family="Arial,sans-serif" font-size="7.5" fill="#0A66C2" font-weight="600">Contract</text>
+            <rect x="351" y="254" width="38" height="14" rx="7" fill="#EBF3FB"/>
+            <text x="370" y="264" text-anchor="middle" font-family="Arial,sans-serif" font-size="7.5" fill="#0A66C2" font-weight="600">Remote</text>
+            <circle cx="418" cy="261" r="7" fill="none" stroke="#057642" stroke-width="1.5"/>
+            <path d="M414 261 L417 264 L423 257" stroke="#057642" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </g>
+
+          <!-- Card 3 - lower -->
+          <g class="svg-card-3" filter="url(#cardDrop)">
+            <rect x="268" y="300" width="148" height="68" rx="10" fill="white" stroke="#E0DFDC" stroke-width="1"/>
+            <rect x="268" y="300" width="58"  height="7"  rx="4"  fill="#E7A33E" opacity="0.7"/>
+            <circle cx="287" cy="325" r="13" fill="#EBF3FB"/>
+            <text x="287" y="329.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#0A66C2">N</text>
+            <rect x="306" y="318" width="70" height="5" rx="2.5" fill="#1C1C1C" opacity="0.65"/>
+            <rect x="306" y="327" width="50" height="4" rx="2"   fill="#888"   opacity="0.45"/>
+            <rect x="276" y="344" width="44" height="14" rx="7" fill="#EBF3FB"/>
+            <text x="298" y="354" text-anchor="middle" font-family="Arial,sans-serif" font-size="7.5" fill="#0A66C2" font-weight="600">Part-time</text>
+            <circle cx="396" cy="351" r="7" fill="none" stroke="#057642" stroke-width="1.5"/>
+            <path d="M392 351 L395 354 L401 347" stroke="#057642" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </g>
+
+          <!-- ── Success badge (top right) ── -->
+          <g class="svg-badge">
+            <rect x="305" y="27" width="168" height="38" rx="19" fill="white" stroke="#E0DFDC" stroke-width="1" filter="url(#cardDrop)"/>
+            <circle cx="329" cy="46" r="12" fill="#057642" opacity="0.1"/>
+            <path d="M324 46 L328 50 L335 40" stroke="#057642" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <rect x="347" y="37" width="80" height="6"   rx="3"   fill="#1C1C1C" opacity="0.7"/>
+            <rect x="347" y="48" width="58" height="5"   rx="2.5" fill="#888"   opacity="0.45"/>
+          </g>
+
+          <!-- Pulsing network dots -->
+          <g class="svg-dot-1">
+            <circle cx="250" cy="168" r="5" fill="#0A66C2" opacity="0.25"/>
+            <circle cx="250" cy="168" r="9" fill="none" stroke="#0A66C2" stroke-width="1" opacity="0.12"/>
+          </g>
+          <g class="svg-dot-2">
+            <circle cx="456" cy="198" r="5" fill="#0A66C2" opacity="0.25"/>
+            <circle cx="456" cy="198" r="9" fill="none" stroke="#0A66C2" stroke-width="1" opacity="0.12"/>
+          </g>
+          <g class="svg-dot-3">
+            <circle cx="58" cy="330" r="4" fill="#0A66C2" opacity="0.2"/>
+          </g>
+
+          <!-- Subtle connection lines -->
+          <line x1="250" y1="168" x2="262" y2="125" stroke="#0A66C2" stroke-width="1" opacity="0.12"/>
+          <line x1="250" y1="168" x2="290" y2="241" stroke="#0A66C2" stroke-width="1" opacity="0.12"/>
+
+          <!-- ── Circular progress element (bottom right) ── -->
+          <g transform="translate(446,336)">
+            <circle cx="0" cy="0" r="30" fill="white" stroke="#E0DFDC" stroke-width="1" filter="url(#cardDrop)"/>
+            <circle cx="0" cy="0" r="22" fill="none" stroke="#EBF3FB" stroke-width="5"/>
+            <circle cx="0" cy="0" r="22" fill="none" stroke="#0A66C2" stroke-width="5"
+                    stroke-linecap="round" class="svg-arc" transform="rotate(-90)"/>
+            <text x="0" y="-1" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#0A66C2">78%</text>
+            <text x="0" y="9"  text-anchor="middle" font-family="Arial,sans-serif" font-size="6.5" fill="#888">done</text>
+          </g>
+          <text x="446" y="378" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#888">Profile</text>
+
+        </svg>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Stats Strip ───────────────────────────────────────────── -->
-<div class="stats-strip">
+<!-- ── Why Work at Neotech ───────────────────────────────────── -->
+<section class="why-neotech-section">
   <div class="container">
-    <div class="row">
-      <div class="col-4 stats-strip-item">
-        <span class="stats-strip-number">{{ total_jobs|default:"0" }}+</span>
-        <span class="stats-strip-label">Active Jobs</span>
-      </div>
-      <div class="col-4 stats-strip-item">
-        <span class="stats-strip-number">1</span>
-        <span class="stats-strip-label">Company</span>
-      </div>
-      <div class="col-4 stats-strip-item">
-        <span class="stats-strip-number">{{ total_applicants|default:"0" }}+</span>
-        <span class="stats-strip-label">Registered Talent</span>
-      </div>
+    <div class="section-header text-center mb-5">
+      <h2 class="section-title">Why Work at Neotech?</h2>
+      <p class="section-subtitle">Join a team that values growth, innovation, and impact</p>
     </div>
-  </div>
-</div>
-
-<!-- ── Featured Jobs ─────────────────────────────────────────── -->
-<section class="py-5">
-  <div class="container">
-    <div class="section-header d-flex align-items-center justify-content-between">
-      <div>
-        <h2 class="section-title">Featured Positions</h2>
-        <p class="section-subtitle">Hand-picked open roles at Neotech</p>
-      </div>
-      <a href="{% url 'posted-jobs' %}" class="btn-outline-th">View All Jobs <i class="fa-solid fa-arrow-right ms-1"></i></a>
-    </div>
-
-    <div class="row g-3">
-      {% for job in featured_jobs %}
+    <div class="row g-4">
       <div class="col-md-4">
-        <div class="th-card p-3 h-100 d-flex flex-column">
-          <div class="d-flex align-items-center gap-2 mb-3">
-            <div class="job-company-avatar av-{% cycle 'blue' 'teal' 'violet' %}" style="width:44px;height:44px;">
-              {{ job.company|first|upper|default:"N" }}
-            </div>
-            <div>
-              <div style="font-size:.88rem;font-weight:700;color:#1C1C1C;">{{ job.title }}</div>
-              <div style="font-size:.78rem;color:#888;">{{ job.company|default:"Neotech" }}</div>
-            </div>
+        <div class="why-card scroll-reveal" data-delay="0">
+          <div class="why-icon-wrap">
+            <i class="fa-solid fa-chart-line"></i>
           </div>
-          <div class="job-meta mb-2">
-            <span><i class="fa-solid fa-location-dot"></i> {{ job.location }}</span>
-            <span><i class="fa-regular fa-clock"></i> {{ job.job_type }}</span>
-          </div>
-          {% if job.skills_req %}
-          <div class="job-skills mb-3">
-            {% for skill in job.get_skills_list|slice:":3" %}
-            <span class="skill-tag">{{ skill }}</span>
-            {% endfor %}
-          </div>
-          {% endif %}
-          <div class="mt-auto pt-2">
-            <a href="{% url 'job-details' job.id %}" class="btn-primary-th w-100 justify-content-center" style="display:flex;">
-              View Position
-            </a>
-          </div>
+          <h5 class="why-title">Grow Your Career</h5>
+          <p class="why-desc">Clear progression paths and mentorship to help you reach your potential.</p>
         </div>
       </div>
-      {% empty %}
-      <div class="col-12 text-center py-4">
-        <p class="text-muted">No featured jobs at this time. <a href="{% url 'posted-jobs' %}">Browse all jobs</a></p>
+      <div class="col-md-4">
+        <div class="why-card scroll-reveal" data-delay="150">
+          <div class="why-icon-wrap">
+            <i class="fa-solid fa-people-group"></i>
+          </div>
+          <h5 class="why-title">Collaborative Culture</h5>
+          <p class="why-desc">An inclusive environment where every voice is heard and great ideas thrive.</p>
+        </div>
       </div>
-      {% endfor %}
+      <div class="col-md-4">
+        <div class="why-card scroll-reveal" data-delay="300">
+          <div class="why-icon-wrap">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <h5 class="why-title">Innovate &amp; Impact</h5>
+          <p class="why-desc">Work on meaningful projects that directly shape products our clients rely on.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -146,7 +299,7 @@
     </div>
     <div class="row g-4">
       <div class="col-md-4">
-        <div class="step-card">
+        <div class="step-card how-it-works-card" data-delay="0">
           <div class="step-number">1</div>
           <div class="step-icon"><i class="fa-solid fa-user-plus"></i></div>
           <h4>Create Your Profile</h4>
@@ -154,7 +307,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="step-card">
+        <div class="step-card how-it-works-card" data-delay="180">
           <div class="step-number">2</div>
           <div class="step-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
           <h4>Discover Roles</h4>
@@ -162,7 +315,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="step-card">
+        <div class="step-card how-it-works-card" data-delay="360">
           <div class="step-number">3</div>
           <div class="step-icon"><i class="fa-solid fa-paper-plane"></i></div>
           <h4>Apply &amp; Get Hired</h4>
@@ -174,7 +327,7 @@
 </section>
 
 <!-- ── CTA Banner ────────────────────────────────────────────── -->
-<section class="py-5" style="background:linear-gradient(135deg,#0A66C2 0%,#084d93 100%);">
+<section class="py-5 scroll-reveal" data-delay="0" style="background:linear-gradient(135deg,#0A66C2 0%,#084d93 100%);">
   <div class="container text-center text-white">
     <h2 style="color:white;font-size:1.8rem;margin-bottom:10px;">Ready to join Neotech?</h2>
     <p style="color:rgba(255,255,255,.85);margin-bottom:28px;font-size:1rem;">
@@ -182,7 +335,7 @@
     </p>
     {% if not user.is_authenticated %}
     <a href="{% url 'register' %}" style="background:white;color:#0A66C2;padding:12px 28px;border-radius:24px;font-weight:700;font-size:.95rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s;">
-      <i class="fa-solid fa-rocket"></i> Get Started — It's Free
+      <i class="fa-solid fa-rocket"></i> Get Started - It's Free
     </a>
     {% else %}
     <a href="{% url 'posted-jobs' %}" style="background:white;color:#0A66C2;padding:12px 28px;border-radius:24px;font-weight:700;font-size:.95rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
@@ -229,9 +382,40 @@
     </div>
     <div class="footer-bottom">
       <span>&copy; 2026 TalentHub by Neotech. All rights reserved.</span>
-      <span>Built with Django &amp; Bootstrap 5</span>
     </div>
   </div>
 </footer>
+
+<script>
+  (function () {
+    function makeObserver(options) {
+      return new IntersectionObserver(function (entries, obs) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var el = entry.target;
+            var delay = parseInt(el.dataset.delay, 10) || 0;
+            setTimeout(function () { el.classList.add('animated-in'); }, delay);
+            obs.unobserve(el);
+          }
+        });
+      }, options);
+    }
+
+    /* General scroll-reveal (why-cards, CTA) */
+    var revealObs = makeObserver({ threshold: 0.15 });
+    document.querySelectorAll('.scroll-reveal').forEach(function (el) {
+      revealObs.observe(el);
+    });
+
+    /* How It Works - stricter trigger, rootMargin pulls trigger earlier */
+    var hiwObs = makeObserver({
+      threshold: 0.2,
+      rootMargin: '0px 0px -50px 0px'
+    });
+    document.querySelectorAll('.how-it-works-card').forEach(function (el) {
+      hiwObs.observe(el);
+    });
+  })();
+</script>
 
 {% endblock %}

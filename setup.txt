@@ -1,58 +1,63 @@
-superuser
-admin
-Mariakoi9august
---------------------------------------------------------
-staff
-maria_koi, faith_nzilani, maria
-Password: Mariakoi9august
--------------------------------------------------------------
-start server= 
-stop server= ctrl+c python manage.py runserver
----------------------------------------------------------------
-Set up a virtual environment;python -m venv env
-Activate the virtual environment;
-    If error; Set-ExecutionPolicy Unrestricted -Scope P.\\env\Scripts\activaterocess
-              .\\env\Scripts\activate
------------------------------------------------------------------
-install django= pip install django
-to create the project folder= mkdir projects(where projects is the name of your folder)
-to move to the project folder = cd project
-create your project inside the empty folder created= django-admin startproject jobs(where jobs repr the name of your project)
+TalentHub - Neotech Recruitment System
+========================================
 
+SYSTEM CREDENTIALS
+------------------
+Admin (Django admin panel /admin/):
+  Username: admin
+  Password: Neotech@Admin2026
 
-----------------------------------------------------------------------------
-pip install -r requirements.txt  
-Pin your dependencies;python -m pip freeze > requirements.txt
-----------------------------------------------------------------------
-Set up a Django project; django-admin startproject <projectname>
------------------------------------------------------------------------
-Start a Django app;python manage.py startapp <appname>
-------------------------------------------------------------------------
-To build tables = python manage.py migrate
-python manage.py makemigrations(Turn off the server first then run this migration)
-Run this command again to create the table in your database; python manage.py migrate
-Register the created tables with the admin panel
---------------------------------------------------------------------------
-Creating a Super User;python manage.py createsuperuser
----------------------------------------------------------------
-Query database =python manage .py shell
-from jobseeker.models import *
-------------------------------------------------------
+Staff Users:
+  Username: kimathi   Password: Neotech@Staff2026  (John Kimanthi)
+  Username: mike      Password: Neotech@Staff2026  (Mike Njoroge)
+
+Applicant Users:
+  Username: jane      Password: Neotech@2026
+  Username: Alex      Password: Testpass123
+
+========================================
+SERVER COMMANDS
+---------------
+Start server:  python manage.py runserver
+Stop server:   Ctrl+C
+
+========================================
+VIRTUAL ENVIRONMENT
+-------------------
+Set up:     python -m venv env
+Activate:   .\env\Scripts\activate
+  (if error: Set-ExecutionPolicy Unrestricted -Scope Process)
+
+========================================
+DJANGO COMMANDS
+---------------
+Install deps:       pip install -r requirements.txt
+Create migrations:  python manage.py makemigrations
+Apply migrations:   python manage.py migrate
+Create superuser:   python manage.py createsuperuser
+Open shell:         python manage.py shell
+
+========================================
+INSTALL DEPENDENCIES
+--------------------
+pip install django
 pip install django-widget-tweaks
-pip install phonenumbers
-pip install django-phonenumber-field
- -------------------------------------------------------
-ctrl k+u comment all
-----------------------------------------------------------
+pip install django-autoslug
+pip install Pillow
+pip install -r requirements.txt
+pip freeze > requirements.txt
 
-#System users
-----------------------------
-STAFF!!
-kimanthi           mike
-maria9august       9AUGUSTmaria
-......................................
-APPLICANT!!
-jane               peter
-MARIA9august       mariakoi9august
---------------------------------------------
-ctrl+/ =To delete all
+========================================
+JOBS IN SYSTEM (8 active - 2026)
+---------------------------------
+Posted by kimathi (John Kimanthi):
+  1. Software Developer      - Full Time  (2 days ago)
+  2. Data Analyst            - Full Time  (5 days ago)
+  3. IT Support Specialist   - Full Time  (7 days ago)
+  4. Business Development Intern - Internship (10 days ago)
+
+Posted by mike (Mike Njoroge):
+  5. Finance Officer         - Full Time  (1 day ago)
+  6. Human Resources Officer - Full Time  (3 days ago)
+  7. Sales Executive         - Full Time  (8 days ago)
+  8. Digital Marketing Officer - Full Time (14 days ago)

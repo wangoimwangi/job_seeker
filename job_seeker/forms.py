@@ -88,11 +88,12 @@ class ApplicantRegistrationForm(UserCreationForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['full_name', 'location', 'resume', 'grad_year', 'job_type']
+        fields = ['full_name', 'location', 'resume', 'grad_year', 'job_type', 'linkedin_url']
         widgets = {
             'full_name': forms.TextInput(attrs={'placeholder': 'Your full name'}),
             'location': forms.TextInput(attrs={'placeholder': 'City, Country'}),
             'grad_year': forms.NumberInput(attrs={'placeholder': 'e.g. 2024', 'min': 1990, 'max': 2030}),
+            'linkedin_url': forms.URLInput(attrs={'placeholder': 'https://linkedin.com/in/yourname'}),
         }
 
 
@@ -131,9 +132,16 @@ class NewJobForm(forms.ModelForm):
 
 
 class JobApplicationForm(forms.ModelForm):
+    resume = forms.FileField(
+        required=False,
+        label='Resume/CV',
+        help_text='Upload a CV tailored for this specific role. PDF, DOC or DOCX. Max 5MB.',
+        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx'}),
+    )
+
     class Meta:
         model = Application
-        fields = ['cover_letter']
+        fields = ['resume', 'cover_letter']
         widgets = {
             'cover_letter': forms.FileInput(attrs={'accept': '.pdf,.doc,.docx'})
         }

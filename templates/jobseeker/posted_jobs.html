@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Browse Jobs — TalentHub{% endblock %}
+{% block title %}Browse Jobs - TalentHub{% endblock %}
 {% load static %}
 {% block body %}
 
@@ -93,11 +93,23 @@
         </div>
         {% endif %}
 
+        <div style="font-size:.8rem;color:#888;margin-top:6px;">
+          <i class="fa-solid fa-users me-1"></i>{{ job.applicant_count }} applicant{{ job.applicant_count|pluralize }}
+        </div>
+
         <p class="job-desc">{{ job.description|truncatewords:20 }}</p>
 
         <div class="job-footer">
           <span class="job-posted-date">
-            <i class="fa-regular fa-clock me-1"></i>Posted {{ job.date_posted|timesince }} ago
+            <i class="fa-regular fa-clock me-1"></i>
+            {% now "Y-m-d" as today_str %}
+            {% if job.date_posted|date:"Y-m-d" == today_str %}
+              Posted today
+            {% elif job.date_posted|timesince|slice:":1" == "0" %}
+              Posted today
+            {% else %}
+              Posted {{ job.date_posted|timesince }} ago
+            {% endif %}
           </span>
           <div class="job-actions">
             {% if user.is_authenticated and user.user_type == 'applicant' %}

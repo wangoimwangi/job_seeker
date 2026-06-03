@@ -1,5 +1,5 @@
 /* ============================================================
-   TalentHub — Design System
+   TalentHub - Design System
    LinkedIn/Indeed inspired professional recruitment platform
    ============================================================ */
 
@@ -353,10 +353,10 @@ img { max-width: 100%; }
   gap: 12px;
   padding: 10px 12px;
   border-radius: 8px;
-  color: var(--danger);
+  color: #555555;
   font-size: 0.9rem;
   font-weight: 500;
-  transition: var(--transition);
+  transition: color 0.2s ease, background 0.2s ease;
 }
 .sidebar-logout:hover { background: var(--danger-lt); color: var(--danger); }
 
@@ -372,6 +372,11 @@ img { max-width: 100%; }
   min-height: 100vh;
   background: var(--bg);
   padding: 28px 32px;
+}
+
+/* Prevent Bootstrap flex-row columns from stretching to the tallest sibling's height */
+.sidebar-main .row > * {
+  align-self: flex-start;
 }
 
 /* ── Stat Cards ──────────────────────────────────────────────── */
@@ -814,7 +819,7 @@ select.th-form-control { appearance: none; background-image: url("data:image/svg
   background: var(--white);
   border-top: 1px solid var(--border);
   padding: 40px 0 20px;
-  margin-top: 60px;
+  margin-top: 0;
 }
 
 .footer-brand {
@@ -860,10 +865,11 @@ select.th-form-control { appearance: none; background-image: url("data:image/svg
   font-size: 0.82rem;
   color: var(--text-light);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
+  text-align: center;
 }
 
 /* ── Alerts / Messages ───────────────────────────────────────── */
@@ -900,7 +906,8 @@ select.th-form-control { appearance: none; background-image: url("data:image/svg
   background: var(--bg);
   display: flex;
   align-items: center;
-  padding: 40px 0;
+  justify-content: center;
+  padding: 24px;
 }
 
 .login-wrap {
@@ -1523,6 +1530,120 @@ select.th-form-control { appearance: none; background-image: url("data:image/svg
 @media (max-width: 480px) {
   .stats-row { grid-template-columns: 1fr 1fr; }
   .hero-title { font-size: 1.7rem; }
+}
+
+/* ── Why Work at Neotech ─────────────────────────────────────── */
+.why-neotech-section {
+  padding: 90px 0;
+  background-color: #EBF3FB;
+  background-image: radial-gradient(rgba(10,102,194,0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.why-card {
+  background: #FFFFFF;
+  border: 1px solid #E0DFDC;
+  border-radius: 12px;
+  padding: 32px 28px;
+  height: 100%;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.why-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(10,102,194,0.15);
+  border-color: #0A66C2;
+}
+
+.why-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #EBF3FB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  font-size: 1.4rem;
+  color: #0A66C2;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.why-card:hover .why-icon-wrap {
+  background: #0A66C2;
+  color: #FFFFFF;
+}
+
+.why-title {
+  font-weight: 700;
+  color: #1C1C1C;
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+}
+
+.why-desc {
+  color: #555555;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── Scroll Reveal ───────────────────────────────────────────── */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(40px) scale(0.96);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.scroll-reveal.animated-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ── How It Works Animation ──────────────────────────────────── */
+.how-it-works-card {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.how-it-works-card.animated-in {
+  opacity: 1;
+  transform: translateY(0);
+  animation: hiwSideFlash 1.3s ease forwards;
+}
+
+@keyframes hiwSideFlash {
+  0%, 25% { box-shadow: inset 3px 0 0 #0A66C2; }
+  100%    { box-shadow: none; }
+}
+
+/* Step number: bounces in 200ms after card */
+.how-it-works-card .step-number {
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.4s ease 0.2s,
+              transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s;
+}
+
+.how-it-works-card.animated-in .step-number {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Icon: fades in 100ms after number (300ms after card) */
+.how-it-works-card .step-icon {
+  opacity: 0;
+  transition: opacity 0.35s ease 0.3s;
+}
+
+.how-it-works-card.animated-in .step-icon {
+  opacity: 1;
 }
 
 /* ── Override Bootstrap input styles globally ────────────────── */

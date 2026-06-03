@@ -108,6 +108,7 @@ class Profile(models.Model):
     grad_year = models.IntegerField(blank=True, null=True)
     job_type = models.CharField(max_length=30, choices=JOB_TYPES, default='Full Time', null=True)
     slug = AutoSlugField(populate_from='user', unique=True)
+    linkedin_url = models.URLField(blank=True, null=True, verbose_name='LinkedIn Profile URL')
 
     def get_absolute_url(self):
         return '/profile/{}'.format(self.slug)
@@ -145,6 +146,7 @@ class Application(models.Model):
     job = models.ForeignKey(Job, on_delete=CASCADE)
     applicant = models.ForeignKey(Applicant, on_delete=CASCADE, related_name='applications')
     date_applied = models.DateTimeField(default=timezone.now)
+    resume = models.FileField(upload_to='applications/resumes/', null=True, blank=True, verbose_name='Resume/CV')
     cover_letter = models.FileField(upload_to='cover_letters/', null=True, blank=True)
     status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='pending')
     reviewed_by = models.ForeignKey(Staff, blank=True, null=True, on_delete=SET_NULL, related_name='reviewed_applications')

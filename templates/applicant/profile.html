@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}My Profile — TalentHub{% endblock %}
+{% block title %}My Profile - TalentHub{% endblock %}
 {% block navbar %}{% endblock %}
 {% block body %}
 
@@ -78,6 +78,23 @@
             </div>
           </div>
         </div>
+
+        <!-- LinkedIn -->
+        {% if profile.linkedin_url %}
+        <div class="profile-section">
+          <div class="profile-section-title">Social Links</div>
+          <div class="profile-info-row">
+            <div class="info-icon"><i class="fa-brands fa-linkedin" style="color:#0A66C2;"></i></div>
+            <div>
+              <label>LinkedIn</label>
+              <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer"
+                 style="font-size:.9rem;color:var(--primary);font-weight:600;">
+                View LinkedIn Profile <i class="fa-solid fa-arrow-up-right-from-square ms-1" style="font-size:.75rem;"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
 
         <!-- Resume -->
         <div class="profile-section">
