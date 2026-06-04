@@ -36,6 +36,7 @@ urlpatterns = [
     path('staff/jobs/<int:job_id>/applicants/', views.job_applicants, name='job-applicants'),
     path('staff/applications/<int:application_id>/', views.application_details, name='applicant-details'),
     path('staff/applicants/', views.search_applicant, name='search-applicant'),
+    path('staff/applicant/<int:user_id>/profile/', views.staff_view_applicant_profile, name='staff-applicant-profile'),
     path('staff/jobs/<slug:slug>/search/', views.job_candidate_search, name='job-candidate-search'),
 
     # ── Reports ───────────────────────────────────────────────────────────────

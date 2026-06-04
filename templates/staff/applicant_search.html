@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Search Applicants — TalentHub{% endblock %}
+{% block title %}Search Applicants - TalentHub{% endblock %}
 {% block navbar %}{% endblock %}
 {% block body %}
 
@@ -39,7 +39,7 @@
         {% if job_type_q %}<input type="hidden" name="s" value="{{ job_type_q }}">{% endif %}
         <label class="th-form-label" style="margin:0;">Applications in month:</label>
         <select name="month" class="th-form-control" style="width:160px;" onchange="this.form.submit()">
-          <option value="">— Select month —</option>
+          <option value="">Select month</option>
           {% for num, name in months %}
           <option value="{{ num }}" {% if selected_month == num %}selected{% endif %}>{{ name }}</option>
           {% endfor %}
@@ -70,26 +70,50 @@
             <div style="font-weight:700;color:var(--text-dark);font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
               {{ profile.full_name|default:profile.user.username }}
             </div>
+            {% if profile.grad_year %}
+            <div style="font-size:.75rem;color:var(--primary);font-weight:600;">Class of {{ profile.grad_year }}</div>
+            {% endif %}
             <div style="font-size:.78rem;color:var(--text-light);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ profile.user.email }}</div>
           </div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;">
           {% if profile.location %}
           <div style="font-size:.82rem;color:var(--text-light);">
             <i class="fa-solid fa-location-dot me-1"></i>{{ profile.location }}
           </div>
           {% endif %}
-          {% if profile.job_type %}
-          <div style="font-size:.82rem;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            {% if profile.job_type %}
             <span class="badge-status badge-active">{{ profile.job_type }}</span>
+            {% endif %}
+            <span style="font-size:.75rem;color:var(--text-light);">
+              <i class="fa-solid fa-file-lines me-1"></i>{{ profile.user.applicant.applications.count }} application{{ profile.user.applicant.applications.count|pluralize }}
+            </span>
           </div>
+        </div>
+        {% with profile.user.skills.all as skills %}
+        {% if skills %}
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">
+          {% for skill in skills|slice:":4" %}
+          <span style="background:var(--primary-lt);color:var(--primary);font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:20px;">{{ skill.skill }}</span>
+          {% endfor %}
+          {% if skills|length > 4 %}
+          <span style="background:var(--bg);color:var(--text-light);font-size:.7rem;padding:2px 8px;border-radius:20px;">+{{ skills|length|add:"-4" }} more</span>
           {% endif %}
         </div>
+        {% endif %}
+        {% endwith %}
         <div style="display:flex;gap:8px;">
+          {% if profile.resume %}
           <a href="{{ profile.resume.url }}" target="_blank" class="btn-outline-th" style="font-size:.78rem;padding:4px 12px;flex:1;text-align:center;">
             <i class="fa-solid fa-file-pdf me-1"></i>Resume
           </a>
-          <a href="{% url 'profile-view' profile.slug %}" class="btn-primary-th" style="font-size:.78rem;padding:5px 12px;flex:1;text-align:center;">
+          {% else %}
+          <span class="btn-outline-th" style="font-size:.78rem;padding:4px 12px;flex:1;text-align:center;opacity:.45;cursor:default;">
+            <i class="fa-solid fa-file me-1"></i>No Resume
+          </span>
+          {% endif %}
+          <a href="{% url 'staff-applicant-profile' profile.user.id %}" class="btn-primary-th" style="font-size:.78rem;padding:5px 12px;flex:1;text-align:center;">
             View Profile
           </a>
         </div>

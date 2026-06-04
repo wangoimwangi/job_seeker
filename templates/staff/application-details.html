@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Application Details — TalentHub{% endblock %}
+{% block title %}Application Details - TalentHub{% endblock %}
 {% block navbar %}{% endblock %}
 {% block body %}
 
@@ -28,6 +28,9 @@
           <div>
             <div style="font-size:1.1rem;font-weight:700;">{{ application.applicant.user.full_name }}</div>
             <div style="font-size:.85rem;opacity:.85;">{{ application.applicant.user.email }}</div>
+            {% if application.applicant.user.contact %}
+            <div style="font-size:.82rem;opacity:.75;margin-top:2px;"><i class="fa-solid fa-phone me-1"></i>{{ application.applicant.user.contact }}</div>
+            {% endif %}
           </div>
           <div style="margin-left:auto;">
             <span class="badge-status badge-{{ application.status }}">{{ application.get_status_display }}</span>
@@ -92,6 +95,36 @@
         </div>
         {% endif %}
 
+      </div>
+    </div>
+
+    <!-- Application History -->
+    <div class="th-card mb-4">
+      <div class="th-card-header"><i class="fa-solid fa-clock-rotate-left me-2 text-primary-th"></i>All Applications at Neotech</div>
+      <div class="th-card-body" style="padding:0;">
+        <table class="th-table">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Applied</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for app in all_applications %}
+            <tr {% if app.id == application.id %}style="background:var(--primary-lt);"{% endif %}>
+              <td style="font-size:.88rem;font-weight:{% if app.id == application.id %}700{% else %}500{% endif %};color:var(--text-dark);">
+                {{ app.job.title }}
+                {% if app.id == application.id %}<span style="font-size:.72rem;color:var(--primary);margin-left:6px;">(this application)</span>{% endif %}
+              </td>
+              <td style="font-size:.82rem;color:var(--text-light);">{{ app.date_applied|date:"M j, Y" }}</td>
+              <td><span class="badge-status badge-{{ app.status }}">{{ app.get_status_display }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" style="text-align:center;color:var(--text-light);font-size:.85rem;padding:16px;">No applications on record.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
 

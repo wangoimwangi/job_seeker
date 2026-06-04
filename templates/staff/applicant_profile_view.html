@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %}{{ applicant_user.full_name }} - TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
+{% block body %}
+
+{% include 'staff/side_bar_staff.html' %}
+
+<div class="sidebar-main">
+  <div style="max-width:760px;">
+
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">{{ applicant_user.full_name }}</h1>
+        <p class="page-subtitle">Applicant Profile</p>
+      </div>
+      <a href="{% url 'search-applicant' %}" class="btn-outline-th">
+        <i class="fa-solid fa-arrow-left"></i> Back to Search
+      </a>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="th-card mb-4">
+
+      <!-- Header banner -->
+      <div class="th-card-header" style="background:var(--primary);color:#fff;border-radius:12px 12px 0 0;padding:20px 24px;">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="width:56px;height:56px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;flex-shrink:0;">
+            {{ applicant_user.initials }}
+          </div>
+          <div>
+            <div style="font-size:1.1rem;font-weight:700;">{{ applicant_user.full_name }}</div>
+            <div style="font-size:.85rem;opacity:.85;">{{ applicant_user.email }}</div>
+            {% if applicant_user.contact %}
+            <div style="font-size:.82rem;opacity:.75;margin-top:2px;">
+              <i class="fa-solid fa-phone me-1"></i>{{ applicant_user.contact }}
+            </div>
+            {% endif %}
+          </div>
+          <div style="margin-left:auto;">
+            <span class="badge-status badge-active" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">Applicant</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="th-card-body" style="padding:0;">
+
+        <!-- Info grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+          <div style="padding:20px 24px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px;">Location</div>
+            <div style="font-weight:600;color:var(--text-dark);">
+              {{ profile.location|default:applicant_user.location|default:"Not specified" }}
+            </div>
+          </div>
+          <div style="padding:20px 24px;border-bottom:1px solid var(--border);">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px;">Graduation Year</div>
+            <div style="font-weight:600;color:var(--text-dark);">
+              {% if profile and profile.grad_year %}Class of {{ profile.grad_year }}{% else %}Not specified{% endif %}
+            </div>
+          </div>
+          <div style="padding:20px 24px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px;">Job Preference</div>
+            <div style="font-weight:600;color:var(--text-dark);">
+              {{ profile.job_type|default:"Not specified" }}
+            </div>
+          </div>
+          <div style="padding:20px 24px;border-bottom:1px solid var(--border);">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px;">Resume</div>
+            {% if profile and profile.resume %}
+            <a href="{{ profile.resume.url }}" target="_blank"
+               style="color:var(--primary);font-weight:600;text-decoration:none;font-size:.9rem;">
+              <i class="fa-solid fa-file-pdf me-1"></i>Download Resume
+            </a>
+            {% else %}
+            <span style="color:var(--text-light);font-size:.9rem;">Not uploaded</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Skills (read-only) -->
+        <div style="padding:20px 24px;border-top:1px solid var(--border);">
+          <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:10px;">Skills</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            {% for skill in skills %}
+            <span style="background:var(--primary-lt);color:var(--primary);font-size:.78rem;font-weight:600;padding:4px 12px;border-radius:20px;">
+              {{ skill.skill }}
+            </span>
+            {% empty %}
+            <span style="color:var(--text-light);font-size:.88rem;">No skills listed.</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- LinkedIn -->
+        {% if profile and profile.linkedin_url %}
+        <div style="padding:14px 24px;border-top:1px solid var(--border);">
+          <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer"
+             style="color:var(--primary);font-size:.88rem;font-weight:600;text-decoration:none;">
+            <i class="fa-brands fa-linkedin me-1" style="color:#0A66C2;"></i>View LinkedIn Profile
+            <i class="fa-solid fa-arrow-up-right-from-square ms-1" style="font-size:.72rem;"></i>
+          </a>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- Applications at Neotech (read-only) -->
+    <div class="th-card">
+      <div class="th-card-header">
+        <i class="fa-solid fa-clock-rotate-left me-2 text-primary-th"></i>All Applications at Neotech
+      </div>
+      <div class="th-card-body" style="padding:0;">
+        <table class="th-table">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Date Applied</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for app in applications %}
+            <tr>
+              <td style="font-size:.88rem;font-weight:600;color:var(--text-dark);">{{ app.job.title }}</td>
+              <td style="font-size:.82rem;color:var(--text-light);">{{ app.date_applied|date:"M j, Y" }}</td>
+              <td><span class="badge-status badge-{{ app.status }}">{{ app.get_status_display }}</span></td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3" style="text-align:center;padding:24px;color:var(--text-light);font-size:.88rem;">
+                No applications submitted yet.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

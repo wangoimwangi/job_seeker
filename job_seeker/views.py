@@ -248,6 +248,24 @@ def profile_view(request, slug):
 
 
 @login_required
+@staff_required
+def staff_view_applicant_profile(request, user_id):
+    applicant_user = get_object_or_404(User, id=user_id)
+    profile = Profile.objects.filter(user=applicant_user).first()
+    skills = Skill.objects.filter(user=applicant_user)
+    applications = Application.objects.filter(
+        applicant__user=applicant_user
+    ).select_related('job').order_by('-date_applied')
+    context = {
+        'applicant_user': applicant_user,
+        'profile': profile,
+        'skills': skills,
+        'applications': applications,
+    }
+    return render(request, 'staff/applicant_profile_view.html', context)
+
+
+@login_required
 @csrf_exempt
 def delete_skill(request, pk=None):
     if request.method == 'POST':
@@ -508,7 +526,7 @@ def all_jobs(request):
     paginator = Paginator(jobs, 10)
     page_obj = paginator.get_page(request.GET.get('page'))
 
-    context = {'jobs': page_obj, 'search_query': search_query}
+    context = {'jobs': page_obj, 'search_query': search_query, 'today': DT.date.today()}
     return render(request, 'staff/job_post.html', context)
 
 
@@ -545,10 +563,14 @@ def application_details(request, application_id):
 
     profile = Profile.objects.filter(user=application.applicant.user).first()
     skills = Skill.objects.filter(user=application.applicant.user)
+    all_applications = Application.objects.filter(
+        applicant=application.applicant
+    ).select_related('job').order_by('-date_applied')
     context = {
         'application': application,
         'profile': profile,
         'skills': skills,
+        'all_applications': all_applications,
     }
     return render(request, 'staff/application-details.html', context)
 

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Applicants — {{ job.title }} — TalentHub{% endblock %}
+{% block title %}Applicants - {{ job.title }} - TalentHub{% endblock %}
 {% block navbar %}{% endblock %}
 {% block body %}
 
@@ -58,13 +58,46 @@
               <i class="fa-solid fa-file-pdf me-1"></i>View
             </a>
             {% else %}
-            <span style="font-size:.82rem;color:var(--text-light);">—</span>
+            <span style="font-size:.82rem;color:var(--text-light);">-</span>
             {% endif %}
           </td>
           <td>
-            <a href="{% url 'applicant-details' app.id %}" class="btn-outline-th" style="font-size:.78rem;padding:4px 12px;">
-              Review
-            </a>
+            <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;">
+              <a href="{% url 'applicant-details' app.id %}" class="btn-outline-th" style="font-size:.75rem;padding:4px 10px;">
+                <i class="fa-solid fa-eye me-1"></i>Review
+              </a>
+              {% if app.status != 'shortlisted' %}
+              <form method="POST" action="{% url 'applicant-details' app.id %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="shortlist">
+                <button type="submit" class="btn-success-th" style="font-size:.75rem;padding:4px 10px;cursor:pointer;"
+                        title="Shortlist this applicant">
+                  <i class="fa-solid fa-check"></i>
+                </button>
+              </form>
+              {% endif %}
+              {% if app.status != 'in_process' %}
+              <form method="POST" action="{% url 'applicant-details' app.id %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="process">
+                <button type="submit" class="btn-outline-th" style="font-size:.75rem;padding:4px 10px;cursor:pointer;border-color:#e07b00;color:#e07b00;"
+                        title="Mark as In Process">
+                  <i class="fa-solid fa-rotate"></i>
+                </button>
+              </form>
+              {% endif %}
+              {% if app.status != 'rejected' %}
+              <form method="POST" action="{% url 'applicant-details' app.id %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="reject">
+                <button type="submit" class="btn-danger-th" style="font-size:.75rem;padding:4px 10px;cursor:pointer;"
+                        title="Reject this applicant"
+                        onclick="return confirm('Reject {{ app.applicant.user.full_name }}?')">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </form>
+              {% endif %}
+            </div>
           </td>
         </tr>
         {% empty %}
