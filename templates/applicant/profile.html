@@ -36,21 +36,37 @@
             <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
             <div>
               <label>Email</label>
-              <p>{{ u.email|default:"Not provided" }}</p>
+              <p>{{ u.email|default:"Not specified" }}</p>
             </div>
           </div>
           <div class="profile-info-row">
             <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
             <div>
               <label>Phone</label>
-              <p>{{ u.contact|default:"Not provided" }}</p>
+              <p>{{ u.contact|default:"Not specified" }}</p>
             </div>
           </div>
           <div class="profile-info-row">
             <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
             <div>
               <label>Location</label>
-              <p>{{ profile.location|default:u.location|default:"Not provided" }}</p>
+              <p>{{ profile.location|default:u.location|default:"Not specified" }}</p>
+            </div>
+          </div>
+          <div class="profile-info-row">
+            <div class="info-icon">
+              <i class="fa-brands fa-linkedin" style="color:{% if profile.linkedin_url %}#0A66C2{% else %}var(--text-light){% endif %};"></i>
+            </div>
+            <div>
+              <label>LinkedIn</label>
+              {% if profile.linkedin_url %}
+              <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer"
+                 style="font-size:.9rem;color:var(--primary);font-weight:600;">
+                View LinkedIn Profile <i class="fa-solid fa-arrow-up-right-from-square ms-1" style="font-size:.75rem;"></i>
+              </a>
+              {% else %}
+              <p>Not specified</p>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -62,7 +78,7 @@
             <div class="info-icon"><i class="fa-solid fa-graduation-cap"></i></div>
             <div>
               <label>Graduation Year</label>
-              <p>{{ profile.grad_year|default:"Not provided" }}</p>
+              <p>{{ profile.grad_year|default:"Not specified" }}</p>
             </div>
           </div>
         </div>
@@ -78,23 +94,6 @@
             </div>
           </div>
         </div>
-
-        <!-- LinkedIn -->
-        {% if profile.linkedin_url %}
-        <div class="profile-section">
-          <div class="profile-section-title">Social Links</div>
-          <div class="profile-info-row">
-            <div class="info-icon"><i class="fa-brands fa-linkedin" style="color:#0A66C2;"></i></div>
-            <div>
-              <label>LinkedIn</label>
-              <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-                 style="font-size:.9rem;color:var(--primary);font-weight:600;">
-                View LinkedIn Profile <i class="fa-solid fa-arrow-up-right-from-square ms-1" style="font-size:.75rem;"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-        {% endif %}
 
         <!-- Resume -->
         <div class="profile-section">

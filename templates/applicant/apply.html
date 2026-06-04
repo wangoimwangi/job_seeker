@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Apply — {{ job.title }} — TalentHub{% endblock %}
-{% load widget_tweaks %}
+{% block title %}Apply - {{ job.title }} - TalentHub{% endblock %}
 {% block navbar %}{% endblock %}
 {% block body %}
 
@@ -23,90 +22,147 @@
       </div>
       <div class="th-card-body">
 
-        <!-- Job summary -->
-        <div style="background:var(--bg);border-radius:8px;padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:24px;">
-          <div class="job-company-avatar av-blue" style="width:48px;height:48px;">{{ job.company|first|upper|default:"N" }}</div>
+        <!-- Job header — light blue background, prominent info -->
+        <div style="background:#EBF3FB;border:1px solid #c8dff0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;margin-bottom:28px;">
+          <div class="job-company-avatar av-blue" style="width:52px;height:52px;font-size:1.2rem;flex-shrink:0;">
+            {{ job.company|first|upper|default:"N" }}
+          </div>
           <div>
-            <div style="font-size:1rem;font-weight:700;color:var(--text-dark);">{{ job.title }}</div>
-            <div style="font-size:.85rem;color:var(--text-light);">{{ job.company|default:"Neotech" }} · {{ job.location }} · {{ job.job_type }}</div>
+            <div style="font-size:1.05rem;font-weight:700;color:var(--text-dark);margin-bottom:5px;">{{ job.title }}</div>
+            <div style="font-size:.85rem;color:var(--text-med);display:flex;flex-wrap:wrap;gap:12px;">
+              <span><i class="fa-solid fa-building me-1" style="color:#0A66C2;"></i>{{ job.company|default:"Neotech" }}</span>
+              <span><i class="fa-solid fa-location-dot me-1" style="color:#0A66C2;"></i>{{ job.location }}</span>
+              <span><i class="fa-regular fa-clock me-1" style="color:#0A66C2;"></i>{{ job.job_type }}</span>
+            </div>
           </div>
         </div>
 
-        <!-- Your Profile Summary -->
-        <div class="th-fieldset-title">Your Profile</div>
-        <div style="background:var(--bg);border-radius:8px;padding:16px;margin-bottom:24px;">
-          <div class="row g-2">
-            <div class="col-md-6">
-              <div style="font-size:.78rem;color:var(--text-light);">Full Name</div>
-              <div style="font-size:.9rem;font-weight:600;color:var(--text-dark);">{{ request.user.full_name }}</div>
-            </div>
-            <div class="col-md-6">
-              <div style="font-size:.78rem;color:var(--text-light);">Email</div>
-              <div style="font-size:.9rem;font-weight:600;color:var(--text-dark);">{{ request.user.email }}</div>
-            </div>
-            {% if profile %}
-            <div class="col-md-6">
-              <div style="font-size:.78rem;color:var(--text-light);">Location</div>
-              <div style="font-size:.9rem;font-weight:600;color:var(--text-dark);">{{ profile.location|default:"Not set" }}</div>
-            </div>
-            <div class="col-md-6">
-              <div style="font-size:.78rem;color:var(--text-light);">Resume</div>
-              {% if profile.resume %}
-              <a href="{{ profile.resume.url }}" target="_blank" style="font-size:.9rem;color:var(--primary);font-weight:600;">
-                <i class="fa-solid fa-file-pdf me-1"></i>View Resume
-              </a>
-              {% else %}
-              <div style="font-size:.9rem;color:var(--danger);">
-                <i class="fa-solid fa-triangle-exclamation me-1"></i>No resume uploaded
+        <!-- Your Profile -->
+        <div class="apply-section-title">Your Profile</div>
+        <div class="th-card mb-4" style="background:#fafafa;">
+          <div class="th-card-body" style="padding:16px 20px;">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div style="font-size:.72rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;">Full Name</div>
+                <div style="font-size:.92rem;font-weight:600;color:var(--text-dark);">{{ request.user.full_name }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size:.72rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;">Email</div>
+                <div style="font-size:.92rem;font-weight:600;color:var(--text-dark);">{{ request.user.email }}</div>
+              </div>
+              {% if profile %}
+              <div class="col-md-6">
+                <div style="font-size:.72rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;">Location</div>
+                <div style="font-size:.92rem;font-weight:600;color:var(--text-dark);">{{ profile.location|default:"Not set" }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size:.72rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;">Profile Resume</div>
+                {% if profile.resume %}
+                <a href="{{ profile.resume.url }}" target="_blank" style="font-size:.92rem;color:var(--primary);font-weight:600;">
+                  <i class="fa-solid fa-file-pdf me-1"></i>View Resume
+                </a>
+                {% else %}
+                <span style="font-size:.88rem;color:var(--danger);">
+                  <i class="fa-solid fa-triangle-exclamation me-1"></i>Not uploaded
+                </span>
+                {% endif %}
               </div>
               {% endif %}
             </div>
+            {% if not profile or not profile.resume %}
+            <div class="mt-3 th-alert th-alert-warning">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>Your profile is incomplete. <a href="{% url 'edit-profile' %}">Complete it</a> to strengthen your application.</span>
+            </div>
             {% endif %}
           </div>
-          {% if not profile or not profile.resume %}
-          <div class="mt-3 th-alert th-alert-warning">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>Your profile is incomplete. <a href="{% url 'edit-profile' %}">Complete it</a> to strengthen your application.</span>
-          </div>
-          {% endif %}
         </div>
 
-        <!-- Resume Upload -->
-        <div class="th-fieldset-title">Resume / CV</div>
-        <form method="POST" enctype="multipart/form-data">
+        <form action="{{ request.path }}" method="post"
+              enctype="multipart/form-data"
+              class="modern-apply-form">
           {% csrf_token %}
+
+          <!-- Resume Upload -->
+          <div class="apply-section-title">Resume / CV</div>
           <div class="th-form-group">
-            <label class="th-form-label">Upload a CV tailored for this role</label>
             {% if profile and profile.resume %}
-            <div class="th-alert th-alert-success mb-2">
+            <div class="th-alert th-alert-success mb-3">
               <i class="fa-solid fa-circle-check"></i>
               <span>You have a resume on file. We recommend uploading a tailored version for this specific role.</span>
             </div>
             {% endif %}
-            {% render_field form.resume class="th-form-control" %}
-            <p class="th-help-text">PDF, DOC or DOCX - Max 5MB - Strongly recommended</p>
+
+            <div class="upload-zone" id="resume-zone"
+                 onclick="document.getElementById('id_resume').click();">
+              <div id="resume-default">
+                <i class="fa-solid fa-cloud-arrow-up upload-zone-icon"></i>
+                <div class="upload-zone-text">Upload Your CV</div>
+                <div class="upload-zone-hint">PDF, DOC or DOCX - Max 5MB - Strongly recommended</div>
+              </div>
+              <div id="resume-chosen" style="display:none;">
+                <i class="fa-solid fa-circle-check" style="font-size:1.8rem;color:#057642;display:block;margin-bottom:10px;"></i>
+                <div class="upload-zone-filename" id="resume-name"></div>
+                <div style="font-size:.8rem;color:#888;margin-top:6px;">Click to change file</div>
+              </div>
+            </div>
+            <div style="margin-top:10px;">
+              <input type="file"
+                     name="resume"
+                     id="id_resume"
+                     accept=".pdf,.doc,.docx"
+                     style="display:block;
+                            width:100%;
+                            padding:8px;
+                            margin-top:8px;
+                            border:1px solid #E0DFDC;
+                            border-radius:6px;
+                            background:white;
+                            cursor:pointer;"
+                     onchange="fileChosen('id_resume','resume-zone','resume-default','resume-chosen','resume-name')">
+              <small style="color:#888888;font-size:0.8rem;
+                            margin-top:4px;display:block;">
+                PDF, DOC or DOCX - Max 5MB
+              </small>
+            </div>
             {% if form.resume.errors %}
-            <div class="th-error-msg">{{ form.resume.errors.0 }}</div>
+            <div class="th-error-msg mt-1">{{ form.resume.errors.0 }}</div>
             {% endif %}
           </div>
 
           <!-- Cover Letter Upload -->
-          <div class="th-fieldset-title mt-3">Cover Letter (Optional)</div>
+          <div class="apply-section-title mt-2">
+            Cover Letter
+            <span style="font-weight:400;color:var(--text-light);font-size:.78rem;text-transform:none;letter-spacing:0;">(Optional)</span>
+          </div>
           <div class="th-form-group">
-            <label class="th-form-label">Upload Cover Letter</label>
-            {% render_field form.cover_letter class="th-form-control" %}
-            <p class="th-help-text">PDF, DOC or DOCX · Max 5 MB · Optional but recommended</p>
+            <div class="upload-zone" id="cover-zone"
+                 onclick="document.getElementById('cover-file').click();">
+              <div id="cover-default">
+                <i class="fa-solid fa-cloud-arrow-up upload-zone-icon"></i>
+                <div class="upload-zone-text">Upload Cover Letter</div>
+                <div class="upload-zone-hint">PDF, DOC or DOCX - Max 5MB - Optional but recommended</div>
+              </div>
+              <div id="cover-chosen" style="display:none;">
+                <i class="fa-solid fa-circle-check" style="font-size:1.8rem;color:#057642;display:block;margin-bottom:10px;"></i>
+                <div class="upload-zone-filename" id="cover-name"></div>
+                <div style="font-size:.8rem;color:#888;margin-top:6px;">Click to change file</div>
+              </div>
+            </div>
+            <input type="file" id="cover-file" name="cover_letter"
+                   accept=".pdf,.doc,.docx" style="display:none;"
+                   onchange="fileChosen('cover-file','cover-zone','cover-default','cover-chosen','cover-name')">
             {% if form.cover_letter.errors %}
-            <div class="th-error-msg">{{ form.cover_letter.errors.0 }}</div>
+            <div class="th-error-msg mt-1">{{ form.cover_letter.errors.0 }}</div>
             {% endif %}
           </div>
 
           <div class="d-flex gap-3 mt-4">
-            <button type="submit" class="btn-success-th" style="padding:12px 28px;font-size:.95rem;border-radius:8px;">
+            <button type="submit" class="btn-success-th" style="padding:12px 32px;font-size:.95rem;border-radius:24px;">
               <i class="fa-solid fa-paper-plane me-2"></i>Submit Application
             </button>
-            <a href="{% url 'job-details' job.id %}" class="btn-outline-th" style="padding:11px 24px;border-radius:8px;">
-              Cancel
+            <a href="{% url 'job-details' job.id %}" class="btn-outline-th" style="padding:11px 28px;border-radius:24px;">
+              <i class="fa-solid fa-xmark me-1"></i>Cancel
             </a>
           </div>
         </form>
@@ -114,20 +170,39 @@
       </div>
     </div>
 
-    <!-- Tips -->
-    <div class="th-card mt-3">
-      <div class="th-card-header"><i class="fa-solid fa-lightbulb me-2 text-primary-th"></i>Application Tips</div>
+    <!-- Application Tips — blue left border accent -->
+    <div class="th-card mt-3" style="border-left:3px solid #0A66C2;">
+      <div class="th-card-header">
+        <i class="fa-solid fa-lightbulb me-2 text-primary-th"></i>Application Tips
+      </div>
       <div class="th-card-body">
-        <ul style="margin:0;padding-left:20px;font-size:.88rem;color:var(--text-med);line-height:2;">
-          <li>Tailor your cover letter to the specific role and highlight relevant skills</li>
-          <li>Make sure your resume is up to date and in PDF format</li>
+        <ul style="margin:0;padding-left:20px;font-size:.88rem;color:var(--text-med);line-height:2.2;">
+          <li>Tailor your CV to highlight skills that match this specific role</li>
+          <li>Write a cover letter that explains why you want to work at Neotech</li>
+          <li>Make sure your resume is current and saved in PDF format</li>
           <li>Apply early - positions fill up fast at Neotech</li>
-          <li>Check your email regularly for responses</li>
+          <li>Check your email regularly for updates from our team</li>
         </ul>
       </div>
     </div>
 
   </div>
 </div>
+
+<script>
+function fileChosen(inputId, zoneId, defaultId, chosenId, nameId) {
+  var input  = document.getElementById(inputId);
+  var zone   = document.getElementById(zoneId);
+  var def    = document.getElementById(defaultId);
+  var chosen = document.getElementById(chosenId);
+  var name   = document.getElementById(nameId);
+  if (input.files && input.files.length > 0) {
+    name.textContent = input.files[0].name;
+    def.style.display    = 'none';
+    chosen.style.display = 'block';
+    zone.classList.add('has-file');
+  }
+}
+</script>
 
 {% endblock %}

@@ -33,6 +33,11 @@
       </a>
     </li>
     <li>
+      <a href="{% url 'my-profile' %}" class="{% if request.resolver_match.url_name == 'my-profile' or request.resolver_match.url_name == 'edit-profile' %}active{% endif %}">
+        <i class="fa-solid fa-user"></i> My Profile
+      </a>
+    </li>
+    <li>
       <a href="{% url 'posted-jobs' %}" class="{% if request.resolver_match.url_name == 'posted-jobs' %}active{% endif %}">
         <i class="fa-solid fa-briefcase"></i> Browse Jobs
       </a>
@@ -45,11 +50,6 @@
     <li>
       <a href="{% url 'saved-jobs' %}" class="{% if request.resolver_match.url_name == 'saved-jobs' %}active{% endif %}">
         <i class="fa-solid fa-bookmark"></i> Saved Jobs
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'my-profile' %}" class="{% if request.resolver_match.url_name == 'my-profile' or request.resolver_match.url_name == 'edit-profile' %}active{% endif %}">
-        <i class="fa-solid fa-user"></i> My Profile
       </a>
     </li>
   </ul>

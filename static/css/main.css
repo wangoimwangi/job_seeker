@@ -1646,6 +1646,95 @@ select.th-form-control { appearance: none; background-image: url("data:image/svg
   opacity: 1;
 }
 
+/* ── Apply Page — Section Title ─────────────────────────────── */
+.apply-section-title {
+  font-weight: 600;
+  color: #1C1C1C;
+  font-size: .82rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Apply Page — File Input ─────────────────────────────────── */
+.th-file-input {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  background: var(--white);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.th-file-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(10,102,194,.1);
+}
+.th-file-input::file-selector-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 14px;
+  transition: background .2s;
+}
+.th-file-input::file-selector-button:hover {
+  background: var(--primary-dk);
+}
+
+/* ── Apply Page — Upload Zone ────────────────────────────────── */
+.upload-zone {
+  border: 2px dashed #E0DFDC;
+  border-radius: 8px;
+  background: #F8F9FA;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease;
+  user-select: none;
+}
+.upload-zone:hover {
+  border-color: #0A66C2;
+  background: #EBF3FB;
+}
+.upload-zone.has-file {
+  border-color: #057642;
+  background: #e8f4ed;
+  border-style: solid;
+}
+.upload-zone-icon {
+  font-size: 1.8rem;
+  color: #0A66C2;
+  display: block;
+  margin-bottom: 10px;
+}
+.upload-zone-text {
+  font-size: .9rem;
+  color: #555555;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.upload-zone-hint {
+  font-size: .8rem;
+  color: #888888;
+}
+.upload-zone-filename {
+  font-size: .88rem;
+  color: #057642;
+  font-weight: 600;
+  margin-top: 4px;
+  word-break: break-all;
+}
+
 /* ── Override Bootstrap input styles globally ────────────────── */
 .form-control:focus {
   border-color: var(--primary);
