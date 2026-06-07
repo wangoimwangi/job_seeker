@@ -85,7 +85,7 @@ TalentHub is a full-stack recruitment management system built for Neotech Compan
 
 7. **Visit the app**
    ```
-   http://127.0.0.1:8001/
+   http://127.0.0.1:8000/
    ```
 
 ---
