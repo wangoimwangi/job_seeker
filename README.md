@@ -1,4 +1,4 @@
-# TalentHub — Web-Based Recruitment Management System
+# TalentHub - Web-Based Recruitment Management System
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue)
 ![Django](https://img.shields.io/badge/Django-6.0-green)
@@ -6,7 +6,7 @@
 
 ## About
 
-TalentHub is a full-stack recruitment management system built for Neotech Company to streamline the hiring process. It provides a dedicated portal for job seekers to discover and apply for roles, and a separate employer dashboard for posting jobs, reviewing applications, and managing candidates — all in one place.
+TalentHub is a full-stack recruitment management system built for Neotech Company to streamline the hiring process. It provides a dedicated portal for job seekers to discover and apply for roles, and a separate employer dashboard for posting jobs, reviewing applications, and managing candidates  -all in one place.
 
 ---
 
