@@ -11,9 +11,9 @@
     <h1 class="page-title">Application Reports</h1>
   </div>
 
-  <div style="max-width:560px;">
+  <div>
 
-    <div class="th-card mb-4">
+    <div class="th-card mb-4" style="max-width:560px;">
       <div class="th-card-header"><i class="fa-solid fa-chart-bar me-2 text-primary-th"></i>Applications Per Month</div>
       <div class="th-card-body">
         <p style="font-size:.9rem;color:var(--text-light);margin-bottom:20px;">
@@ -43,7 +43,83 @@
       </div>
     </div>
 
-    <div class="th-card">
+    <!-- Applications by Status -->
+    {% if status_counts %}
+    <div class="th-card mb-4">
+      <div class="th-card-header"><i class="fa-solid fa-chart-pie me-2 text-primary-th"></i>Applications by Status</div>
+      <div class="th-card-body">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-orange"><i class="fa-solid fa-clock"></i></div>
+            <div>
+              <div class="stat-number">{{ status_counts.pending }}</div>
+              <p class="stat-label">Pending</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-info"><i class="fa-solid fa-rotate"></i></div>
+            <div>
+              <div class="stat-number">{{ status_counts.in_process }}</div>
+              <p class="stat-label">In Process</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-green"><i class="fa-solid fa-check"></i></div>
+            <div>
+              <div class="stat-number">{{ status_counts.shortlisted }}</div>
+              <p class="stat-label">Shortlisted</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fce8e8;color:#CC1016;"><i class="fa-solid fa-xmark"></i></div>
+            <div>
+              <div class="stat-number">{{ status_counts.rejected }}</div>
+              <p class="stat-label">Rejected</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Top Jobs by Applications -->
+    {% if top_jobs %}
+    <div class="th-card mb-4">
+      <div class="th-card-header"><i class="fa-solid fa-trophy me-2 text-primary-th"></i>Top Jobs by Applications</div>
+      <div class="th-card-body" style="padding:0;">
+        <table class="th-table">
+          <thead>
+            <tr>
+              <th>Job Title</th>
+              <th>Applications</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for job in top_jobs %}
+            <tr>
+              <td>
+                <a href="{% url 'job-applicants' job.id %}" style="font-weight:600;color:var(--primary);text-decoration:none;">{{ job.title }}</a>
+                <div style="font-size:.78rem;color:var(--text-light);">{{ job.location }}</div>
+              </td>
+              <td style="font-weight:700;color:var(--text-dark);">{{ job.app_count }}</td>
+              <td>
+                {% if job.deadline and job.deadline < today %}
+                <span class="badge-status badge-rejected">Closed</span>
+                {% else %}
+                <span class="badge-status badge-shortlisted">Active</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Quick Stats -->
+    <div class="th-card" style="max-width:560px;">
       <div class="th-card-header"><i class="fa-solid fa-circle-info me-2 text-primary-th"></i>Quick Stats</div>
       <div class="th-card-body">
         <div style="display:flex;gap:16px;flex-wrap:wrap;">

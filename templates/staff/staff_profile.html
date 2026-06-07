@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}My Profile - TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
+{% block body %}
+
+{% include 'staff/side_bar_staff.html' %}
+
+<div class="sidebar-main">
+  <div style="max-width:680px;">
+
+    <div class="page-header">
+      <h1 class="page-title">My Profile</h1>
+      <a href="{% url 'edit-profile' %}" class="btn-outline-th">
+        <i class="fa-solid fa-user-pen"></i> Edit Profile
+      </a>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="th-card mb-4">
+      <div class="th-card-header" style="background:var(--primary);color:#fff;border-radius:12px 12px 0 0;padding:24px;">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="width:64px;height:64px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:700;color:#fff;flex-shrink:0;">
+            {{ u.initials }}
+          </div>
+          <div>
+            <div style="font-size:1.2rem;font-weight:700;">{{ u.full_name }}</div>
+            <div style="font-size:.85rem;opacity:.85;">{{ u.email }}</div>
+            <div style="margin-top:6px;">
+              <span style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:20px;font-size:.75rem;font-weight:600;padding:3px 10px;">Employer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="th-card-body">
+
+        <div class="th-fieldset-title">Contact Information</div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <i class="fa-solid fa-envelope" style="color:var(--primary);width:16px;text-align:center;"></i>
+            <span style="font-size:.9rem;color:var(--text-dark);">{{ u.email }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <i class="fa-solid fa-phone" style="color:var(--primary);width:16px;text-align:center;"></i>
+            <span style="font-size:.9rem;color:var(--text-dark);">{{ u.contact|default:"Not provided" }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <i class="fa-solid fa-location-dot" style="color:var(--primary);width:16px;text-align:center;"></i>
+            <span style="font-size:.9rem;color:var(--text-dark);">{{ u.location|default:"Not specified" }}</span>
+          </div>
+        </div>
+
+        <div class="th-fieldset-title">Employer Information</div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <i class="fa-solid fa-building" style="color:var(--primary);width:16px;text-align:center;"></i>
+            <span style="font-size:.9rem;color:var(--text-dark);">Neotech</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <i class="fa-solid fa-user-tie" style="color:var(--primary);width:16px;text-align:center;"></i>
+            <span style="font-size:.9rem;color:var(--text-dark);">Employer / Recruiter</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-row mb-4">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-blue"><i class="fa-solid fa-briefcase"></i></div>
+        <div>
+          <div class="stat-number">{{ jobs_count }}</div>
+          <p class="stat-label">Jobs Posted</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green"><i class="fa-solid fa-users"></i></div>
+        <div>
+          <div class="stat-number">{{ applications_count }}</div>
+          <p class="stat-label">Applications Received</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

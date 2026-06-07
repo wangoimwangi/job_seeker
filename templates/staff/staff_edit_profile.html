@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile - TalentHub{% endblock %}
+{% block navbar %}{% endblock %}
+{% block body %}
+
+{% include 'staff/side_bar_staff.html' %}
+
+<div class="sidebar-main">
+  <div style="max-width:680px;">
+
+    <div class="page-header">
+      <h1 class="page-title">Edit Profile</h1>
+      <a href="{% url 'my-profile' %}" class="btn-outline-th">
+        <i class="fa-solid fa-arrow-left"></i> Back to Profile
+      </a>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="th-alert th-alert-{{ message.tags }} mb-3">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>{{ message }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="th-card">
+      <div class="th-card-header"><i class="fa-solid fa-user-pen me-2 text-primary-th"></i>Profile Information</div>
+      <div class="th-card-body">
+
+        <form method="POST" novalidate>
+          {% csrf_token %}
+
+          <div class="th-fieldset-title">Basic Details</div>
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <label class="th-form-label">Full Name</label>
+              <input type="text" name="full_name" value="{{ u.full_name }}" class="th-form-control" placeholder="Your full name">
+            </div>
+            <div class="col-12">
+              <label class="th-form-label">Location</label>
+              <input type="text" name="location" value="{{ u.location }}" class="th-form-control" placeholder="City, Country">
+            </div>
+            <div class="col-12">
+              <label class="th-form-label">Phone</label>
+              <input type="text" name="contact" value="{{ u.contact }}" class="th-form-control" placeholder="+254 700 000 000">
+            </div>
+          </div>
+
+          <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="btn-primary-th" style="padding:12px 28px;border-radius:8px;">
+              <i class="fa-solid fa-floppy-disk me-2"></i>Save Changes
+            </button>
+            <a href="{% url 'my-profile' %}" class="btn-outline-th" style="padding:11px 24px;border-radius:8px;">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

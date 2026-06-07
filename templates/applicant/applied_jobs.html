@@ -52,6 +52,18 @@
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;">
         <span class="badge-status badge-{{ app.status }}">{{ app.get_status_display }}</span>
         <a href="{% url 'job-details' app.job.id %}" class="btn-outline-th" style="font-size:.78rem;padding:4px 12px;">View Job</a>
+        {% if app.status == 'pending' %}
+        <form id="withdraw-{{ app.id }}" method="post" action="{% url 'withdraw-application' app.id %}">
+          {% csrf_token %}
+        </form>
+        <button type="button"
+                onclick="confirmWithdraw({{ app.id }})"
+                style="background:none;border:none;color:#888888;font-size:.78rem;padding:4px 12px;cursor:pointer;transition:color .15s;"
+                onmouseover="this.style.color='#CC1016';"
+                onmouseout="this.style.color='#888888';">
+          <i class="fa-solid fa-xmark"></i> Withdraw
+        </button>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
@@ -66,5 +78,13 @@
   {% endif %}
 
 </div>
+
+<script>
+function confirmWithdraw(appId) {
+  if (confirm('Are you sure you want to withdraw this application? This cannot be undone.')) {
+    document.getElementById('withdraw-' + appId).submit();
+  }
+}
+</script>
 
 {% endblock %}

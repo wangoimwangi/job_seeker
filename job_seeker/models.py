@@ -70,6 +70,10 @@ class Applicant(models.Model):
 class Staff(models.Model):
     user = models.OneToOneField(User, on_delete=CASCADE, primary_key=True, related_name='staff')
 
+    class Meta:
+        verbose_name = 'Staff Member'
+        verbose_name_plural = 'Staff Members'
+
     def __str__(self):
         return self.user.full_name
 
@@ -110,6 +114,10 @@ class Profile(models.Model):
     slug = AutoSlugField(populate_from='user', unique=True)
     linkedin_url = models.URLField(blank=True, null=True, verbose_name='LinkedIn Profile URL')
 
+    class Meta:
+        verbose_name = 'Applicant Profile'
+        verbose_name_plural = 'Applicant Profiles'
+
     def get_absolute_url(self):
         return '/profile/{}'.format(self.slug)
 
@@ -137,6 +145,8 @@ class SavedJobs(models.Model):
 
     class Meta:
         unique_together = ['job', 'user']
+        verbose_name = 'Saved Job'
+        verbose_name_plural = 'Saved Jobs'
 
     def __str__(self):
         return self.job.title
@@ -182,6 +192,10 @@ class AppliedJobs(models.Model):
     user = models.ForeignKey(User, related_name='applied_user', on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        verbose_name = 'Applied Job'
+        verbose_name_plural = 'Applied Jobs'
+
     def __str__(self):
         return self.job.title
 
@@ -191,8 +205,16 @@ class Candidates(models.Model):
     candidate = models.ForeignKey(User, related_name='applied', on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        verbose_name = 'Candidate'
+        verbose_name_plural = 'Candidates'
+
 
 class Selected(models.Model):
     job = models.ForeignKey(Job, related_name='select_job', on_delete=models.CASCADE)
     candidate = models.ForeignKey(User, related_name='select_candidate', on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = 'Selection'
+        verbose_name_plural = 'Selections'

@@ -30,6 +30,11 @@
       </a>
     </li>
     <li>
+      <a href="{% url 'my-profile' %}" class="{% if request.resolver_match.url_name == 'my-profile' %}active{% endif %}">
+        <i class="fa-solid fa-user"></i> My Profile
+      </a>
+    </li>
+    <li>
       <a href="{% url 'add-job' %}" class="{% if request.resolver_match.url_name == 'add-job' %}active{% endif %}">
         <i class="fa-solid fa-plus-circle"></i> Post New Job
       </a>

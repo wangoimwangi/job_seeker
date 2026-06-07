@@ -188,6 +188,15 @@ def applicant_dashboard(request):
 @login_required
 def my_profile(request):
     user = request.user
+
+    if user.user_type == User.STAFF:
+        context = {
+            'u': user,
+            'jobs_count': Job.objects.filter(staff=user).count(),
+            'applications_count': Application.objects.filter(job__staff=user).count(),
+        }
+        return render(request, 'staff/staff_profile.html', context)
+
     profile, _ = Profile.objects.get_or_create(user=user)
     skills = Skill.objects.filter(user=user)
 
@@ -215,6 +224,20 @@ def my_profile(request):
 @login_required
 def edit_profile(request):
     user = request.user
+
+    if user.user_type == User.STAFF:
+        if request.method == 'POST':
+            full_name = request.POST.get('full_name', '').strip()
+            parts = full_name.split(' ', 1)
+            user.first_name = parts[0]
+            user.last_name = parts[1] if len(parts) > 1 else ''
+            user.location = request.POST.get('location', '').strip()
+            user.contact = request.POST.get('contact', '').strip()
+            user.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('my-profile')
+        return render(request, 'staff/staff_edit_profile.html', {'u': user})
+
     profile, _ = Profile.objects.get_or_create(user=user)
 
     if request.method == 'POST':
@@ -228,7 +251,12 @@ def edit_profile(request):
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
-        form = ProfileUpdateForm(instance=profile)
+        initial = {}
+        if not profile.full_name:
+            initial['full_name'] = request.user.get_full_name()
+        if not profile.location:
+            initial['location'] = request.user.location
+        form = ProfileUpdateForm(instance=profile, initial=initial)
 
     return render(request, 'applicant/edit_profile.html', {'form': form, 'profile': profile})
 
@@ -435,6 +463,22 @@ def applied_jobs(request):
     ).select_related('job').order_by('-date_applied')
     context = {'applications': applications}
     return render(request, 'applicant/applied_jobs.html', context)
+
+
+@login_required
+def withdraw_application(request, application_id):
+    if request.method == 'POST':
+        application = get_object_or_404(
+            Application,
+            id=application_id,
+            applicant=request.user.applicant
+        )
+        if application.status == 'pending':
+            application.delete()
+            messages.success(request, 'Application withdrawn successfully.')
+        else:
+            messages.error(request, 'Only pending applications can be withdrawn.')
+    return redirect('applied-jobs')
 
 
 # ─── Staff Dashboard ──────────────────────────────────────────────────────────
@@ -672,10 +716,28 @@ def applied_any_month(request, month=None):
         month = today.month
 
     months = [(i, DT.date(2000, i, 1).strftime('%B')) for i in range(1, 13)]
+
+    status_counts = {}
+    top_jobs = []
+    if request.user.is_authenticated and request.user.user_type == User.STAFF:
+        staff_apps = Application.objects.filter(job__staff=request.user)
+        status_counts = {
+            'pending': staff_apps.filter(status='pending').count(),
+            'in_process': staff_apps.filter(status='in_process').count(),
+            'shortlisted': staff_apps.filter(status='shortlisted').count(),
+            'rejected': staff_apps.filter(status='rejected').count(),
+        }
+        top_jobs = Job.objects.filter(staff=request.user).annotate(
+            app_count=Count('application')
+        ).order_by('-app_count')[:5]
+
     context = {
         'count': count,
         'selected_month': month,
         'months': months,
+        'status_counts': status_counts,
+        'top_jobs': top_jobs,
+        'today': DT.date.today(),
     }
     return render(request, 'staff/all_months.html', context)
 

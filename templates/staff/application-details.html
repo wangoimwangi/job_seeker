@@ -13,9 +13,14 @@
         <h1 class="page-title">Application Details</h1>
         <p class="page-subtitle">{{ application.job.title }}</p>
       </div>
-      <a href="{% url 'job-applicants' application.job.id %}" class="btn-outline-th">
-        <i class="fa-solid fa-arrow-left"></i> Back to Applicants
-      </a>
+      <div style="display:flex;gap:8px;">
+        <a href="{% url 'staff-applicant-profile' application.applicant.user.id %}" class="btn-outline-th">
+          <i class="fa-solid fa-user me-1"></i> View Profile
+        </a>
+        <a href="{% url 'job-applicants' application.job.id %}" class="btn-outline-th">
+          <i class="fa-solid fa-arrow-left"></i> Back to Applicants
+        </a>
+      </div>
     </div>
 
     <!-- Applicant Card -->

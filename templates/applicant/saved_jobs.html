@@ -43,11 +43,14 @@
         <div class="job-footer">
           <span class="job-posted-date">Posted {{ job.date_posted|timesince }} ago</span>
           <div class="job-actions">
-            <!-- Remove from saved -->
-            <form action="{% url 'save-job' job.slug %}?next={{ request.path }}" method="post">
+            <span class="badge-status badge-shortlisted"><i class="fa-solid fa-bookmark me-1"></i>Saved</span>
+            <form action="{% url 'save-job' job.slug %}?next={{ request.path }}" method="post" style="display:inline;">
               {% csrf_token %}
-              <button type="submit" class="save-btn saved">
-                <i class="fa-solid fa-bookmark"></i> Saved
+              <button type="submit"
+                      style="background:none;border:1px solid #888888;border-radius:6px;color:#888888;font-size:.78rem;padding:4px 12px;cursor:pointer;transition:color .15s,border-color .15s;"
+                      onmouseover="this.style.color='#CC1016';this.style.borderColor='#CC1016';"
+                      onmouseout="this.style.color='#888888';this.style.borderColor='#888888';">
+                <i class="fa-solid fa-bookmark-slash"></i> Remove
               </button>
             </form>
             {% if job.id in applied_ids %}
